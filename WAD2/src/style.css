@@ -27,7 +27,6 @@ body {
   display: flex;
   place-items: center;
   min-width: 320px;
-  min-height: 100vh;
 }
 
 h1 {
@@ -59,16 +58,15 @@ button:focus-visible {
 }
 
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  margin: 0 auto; 
+  width:100%;
+  background-color: black;
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: black;
   }
   a:hover {
     color: #747bff;
