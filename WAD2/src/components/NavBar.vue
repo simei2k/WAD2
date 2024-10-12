@@ -1,3 +1,16 @@
+<script>
+import { createMemoryHistory, createRouter, RouterLink } from 'vue-router'
+
+export default {
+    name: 'NavBar',
+    methods: {
+        navigateToHome() {
+            this.$router.push({ name: 'home' });
+        }
+    }
+}
+</script>
+
 <template>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
@@ -13,23 +26,26 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home </a>
+            <li class="nav-item">
+                <RouterLink to="/home" class="nav-link">Home</RouterLink>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Profile</a>
+                <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Services</a>
+                <RouterLink to="/services" class="nav-link">Services</RouterLink>            
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Map</a>
-            </li><li class="nav-item">
-                <a class="nav-link" href="#">Chat</a>
-            </li><li class="nav-item">
-                <a class="nav-link" href="#">Shop</a>
-            </li><li class="nav-item">
-                <a class="nav-link" href="#">Emergency</a>
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
             </li>
             </ul>
         </div>
@@ -54,7 +70,11 @@ nav{
   font-weight: bold;
   color: #ecdfcc; /* Pale text color for the brand name */
 }
-
+.navbar {
+  border-bottom: solid #697565;
+  border-width: calc(2px + .1vw);
+  background-color: black;
+}
 li{
     margin: 10px;
 }
@@ -62,6 +82,10 @@ nav .navbar-nav li a{
   color: #ecdfcc !important;
   }
 
+.nav-link{
+    color: #ecdfcc !important;
+}  
+
+
 
 </style>
-<script></script>
