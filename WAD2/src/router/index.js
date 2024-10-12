@@ -5,6 +5,7 @@ import Chat from '../components/pages/Chat.vue'
 import Profile from '../components/pages/Profile.vue'
 import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
+import Map from '../components/pages/map.vue'
 
 
 const routes =[
@@ -37,6 +38,11 @@ const routes =[
         path: '/services',
         name: 'services',
         component: Services
+      },
+      {
+        path: '/map',
+        name: 'map',
+        component: Map
       },
     ]
   
