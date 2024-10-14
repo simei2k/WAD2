@@ -36,7 +36,7 @@ export default {
                 <RouterLink to="/services" class="nav-link">Services</RouterLink>            
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Map</a>
+                <RouterLink to="/map" class="nav-link">Map</RouterLink>            
             </li>
             <li class="nav-item">
                 <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
