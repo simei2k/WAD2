@@ -3,5 +3,5 @@ import NavBar from '../NavBar.vue'
 </script>
 <template>
     <NavBar></NavBar>
-    <h1>this is profile</h1>
 </template>
+
