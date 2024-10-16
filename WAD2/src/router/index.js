@@ -6,6 +6,8 @@ import Profile from '../components/pages/Profile.vue'
 import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
 import Map from '../components/pages/map.vue'
+import login from '../components/pages/LogIn.vue'
+import register from '../components/pages/GettingStartedPg1.vue'
 
 
 const routes =[
@@ -43,6 +45,16 @@ const routes =[
         path: '/map',
         name: 'map',
         component: Map
+      },
+      {
+        path: '/login',
+        name: 'login',
+        component: login
+      },
+      {
+        path: '/register',
+        name: 'register',
+        component: register
       },
     ]
   

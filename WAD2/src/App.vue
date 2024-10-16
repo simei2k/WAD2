@@ -11,6 +11,7 @@ export default {
 <template>
   <NavBar />
   <router-view></router-view> 
+  
 </template>
 
 <style scoped>
