@@ -2,6 +2,7 @@
 import NavBar from '../NavBar.vue'
 </script>
 <template>
+    <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></head>
     <NavBar></NavBar>
     <div class="container-fluid box">
         <div class="row">
@@ -53,30 +54,25 @@ import NavBar from '../NavBar.vue'
                                  <!-- BS card: Start --> 
                                  <div class="card-div" > 
                                      <div class="card-body"> 
+                                        <div class="card-top">                                     
                                         <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
                                         <h1 class="reviewer-name">DogLover</h1> 
                                         <div class="stars">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="yellow" class="bi bi-star" viewBox="0 0 16 16">
-                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
-                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
-                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
-                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
-                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
-                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
-                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
-                                            </svg><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
-                                            <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
-                                            </svg>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
                                         </div>
+                                    </div>
+                                    </div> 
                                      </div> 
-                                     <ul class="list-group list-group-flush"> 
-                                         <li class="list-group-item">An item</li> 
-                                         <li class="list-group-item">A second item</li> 
-                                         <li class="list-group-item">A third item</li> 
-                                     </ul> 
                                      <div class="card-body"> 
-                                         <a href="#" class="card-link">Card link</a> 
-                                         <a href="#" class="card-link">Another link</a> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
                                      </div> 
                                  </div> 
                                  <!-- BS card: End --> 
@@ -85,17 +81,53 @@ import NavBar from '../NavBar.vue'
                                  <!-- BS card: Start --> 
                                  <div class="card-div" > 
                                      <div class="card-body"> 
-                                         <h5 class="card-title">Card title</h5> 
-                                         <p class="card-text">Some quick example text to make up the bulk of the card's content.</p>  
+                                        <div class="card-top">                                     
+                                        <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
+                                        <h1 class="reviewer-name">DogLover</h1> 
+                                        <div class="stars">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                        </div>
+                                    </div>
+                                    </div> 
                                      </div> 
-                                     <ul class="list-group list-group-flush"> 
-                                         <li class="list-group-item">An item</li> 
-                                         <li class="list-group-item">A second item</li> 
-                                         <li class="list-group-item">A third item</li> 
-                                     </ul> 
                                      <div class="card-body"> 
-                                         <a href="#" class="card-link">Card link</a> 
-                                         <a href="#" class="card-link">Another link</a> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
+                                     </div> 
+                                 </div> 
+                                 <!-- BS card: End --> 
+                            </li>
+                            
+                            <li class="card">
+                                 <!-- BS card: Start --> 
+                                 <div class="card-div" > 
+                                     <div class="card-body"> 
+                                        <div class="card-top">                                     
+                                        <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
+                                        <h1 class="reviewer-name">DogLover</h1> 
+                                        <div class="stars">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                        </div>
+                                    </div>
+                                    </div> 
+                                     </div> 
+                                     <div class="card-body"> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
                                      </div> 
                                  </div> 
                                  <!-- BS card: End --> 
@@ -104,79 +136,108 @@ import NavBar from '../NavBar.vue'
                                  <!-- BS card: Start --> 
                                  <div class="card-div" > 
                                      <div class="card-body"> 
-                                         <h5 class="card-title">Card title</h5> 
-                                         <p class="card-text">Some quick example text to make up the bulk of the card's content.</p>  
+                                        <div class="card-top">                                     
+                                        <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
+                                        <h1 class="reviewer-name">DogLover</h1> 
+                                        <div class="stars">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                        </div>
+                                    </div>
+                                    </div> 
                                      </div> 
-                                     <ul class="list-group list-group-flush"> 
-                                         <li class="list-group-item">An item</li> 
-                                         <li class="list-group-item">A second item</li> 
-                                         <li class="list-group-item">A third item</li> 
-                                     </ul> 
                                      <div class="card-body"> 
-                                         <a href="#" class="card-link">Card link</a> 
-                                         <a href="#" class="card-link">Another link</a> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
                                      </div> 
                                  </div> 
                                  <!-- BS card: End --> 
-                            </li>
-                            <li class="card">
+                            </li>  <li class="card">
                                  <!-- BS card: Start --> 
                                  <div class="card-div" > 
                                      <div class="card-body"> 
-                                         <h5 class="card-title">Card title</h5> 
-                                         <p class="card-text">Some quick example text to make up the bulk of the card's content.</p>  
+                                        <div class="card-top">                                     
+                                        <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
+                                        <h1 class="reviewer-name">DogLover</h1> 
+                                        <div class="stars">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                        </div>
+                                    </div>
+                                    </div> 
                                      </div> 
-                                     <ul class="list-group list-group-flush"> 
-                                         <li class="list-group-item">An item</li> 
-                                         <li class="list-group-item">A second item</li> 
-                                         <li class="list-group-item">A third item</li> 
-                                     </ul> 
                                      <div class="card-body"> 
-                                         <a href="#" class="card-link">Card link</a> 
-                                         <a href="#" class="card-link">Another link</a> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
                                      </div> 
                                  </div> 
                                  <!-- BS card: End --> 
-                            </li>
-                            <li class="card">
-                                 <!-- BS card: Start --> 
-                                 <div class="card-div"> 
-                                     <div class="card-body"> 
-                                         <h5 class="card-title">Card title</h5> 
-                                         <p class="card-text">Some quick example text to make up the bulk of the card's content.</p>  
-                                     </div> 
-                                     <ul class="list-group list-group-flush"> 
-                                         <li class="list-group-item">An item</li> 
-                                         <li class="list-group-item">A second item</li> 
-                                         <li class="list-group-item">A third item</li> 
-                                     </ul> 
-                                     <div class="card-body"> 
-                                         <a href="#" class="card-link">Card link</a> 
-                                         <a href="#" class="card-link">Another link</a> 
-                                     </div> 
-                                 </div> 
-                                 <!-- BS card: End --> 
-                            </li>
-                            <li class="card">
+                            </li>  <li class="card">
                                  <!-- BS card: Start --> 
                                  <div class="card-div" > 
                                      <div class="card-body"> 
-                                         <h5 class="card-title">Card title</h5> 
-                                         <p class="card-text">Some quick example text to make up the bulk of the card's content.</p>  
+                                        <div class="card-top">                                     
+                                        <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
+                                        <h1 class="reviewer-name">DogLover</h1> 
+                                        <div class="stars">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                        </div>
+                                    </div>
+                                    </div> 
                                      </div> 
-                                     <ul class="list-group list-group-flush"> 
-                                         <li class="list-group-item">An item</li> 
-                                         <li class="list-group-item">A second item</li> 
-                                         <li class="list-group-item">A third item</li> 
-                                     </ul> 
                                      <div class="card-body"> 
-                                         <a href="#" class="card-link">Card link</a> 
-                                         <a href="#" class="card-link">Another link</a> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
+                                     </div> 
+                                 </div> 
+                                 <!-- BS card: End --> 
+                            </li>  <li class="card">
+                                 <!-- BS card: Start --> 
+                                 <div class="card-div" > 
+                                     <div class="card-body"> 
+                                        <div class="card-top">                                     
+                                        <img src="../../assets/reviewer1_pic.png" class="reviewer-pic">
+                                        <div class="reviewer-info">
+                                        <h1 class="reviewer-name">DogLover</h1> 
+                                        <div class="stars">
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star checked"></span>
+                                            <span class="fa fa-star"></span>
+                                            <span class="fa fa-star"></span>
+                                        </div>
+                                    </div>
+                                    </div> 
+                                     </div> 
+                                     <div class="card-body"> 
+                                         <p>I got Cat Woman to dogsit my puppy for 2 weeks and my pup was very well taken care of. 10/10 service provided and updates provided regularly. </p>
+                                         <div class="review-photos">
+                                            <img class="review-photo" src="../../assets/dog_sitting.jpg">
+                                         </div>
                                      </div> 
                                  </div> 
                                  <!-- BS card: End --> 
                             </li>
-                        </ul>
+                         </ul>
                     </div>
                 </div>
             </div>
@@ -232,6 +293,8 @@ svg{
     font-size: 70%;
 }
 
+/* For the scrolling elements */
+
 .cards {
   display: flex;
   overflow-x: scroll;
@@ -253,11 +316,31 @@ svg{
     display: flex;
     overflow-x: scroll;
 }
+.card-top{
+    display:flex;
+    text-align:left;
+}
 .reviewer-pic{
     display:inline;
 }
 .reviewer-name{
     display:inline;
-    margin-right: 20px;
+    margin-left: 20px;
+    margin: 0;
 }
+.reviewer-info{
+    margin-left: 20px;
+}
+.review-photo{
+    width: 30%;
+}
+/* for the stars */
+.stars{
+    margin-top: 5px;
+}
+.checked{
+    color: orange;
+}
+
+
 </style>
