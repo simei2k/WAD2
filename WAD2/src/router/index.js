@@ -8,6 +8,9 @@ import Emergency from '../components/pages/Emergency.vue'
 import Map from '../components/pages/map.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/GettingStartedPg1.vue'
+import GettingStartedPg2 from '../components/pages/GettingStartedPg2.vue'
+import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
+import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
 
 
 const routes =[
@@ -55,6 +58,21 @@ const routes =[
         path: '/register',
         name: 'register',
         component: register
+      },
+      {
+        path: '/GettingStartedPg2',
+        name: 'GettingStartedPg2',
+        component: GettingStartedPg2
+      },  
+      {
+        path: '/GettingStartedPetOwnerPg1', 
+        name: 'GettingStartedPetOwnerPg1',
+        component: GettingStartedPetOwnerPg1
+      },
+      {
+        path: '/GettingStartedServiceProviderPg1', 
+        name: 'GettingStartedServiceProviderPg1',
+        component: GettingStartedServiceProviderPg1
       },
     ]
   
