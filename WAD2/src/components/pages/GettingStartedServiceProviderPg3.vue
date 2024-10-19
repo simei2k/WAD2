@@ -8,18 +8,25 @@ import NavBar from '../NavBar.vue'
     <img class="cat-icon" src="../../assets/cat_icon.png">
     <h1>Getting Started</h1>
     <div class="form-group">
-        <label for="profile-desc">Tell us more about yourself: </label><br>
-        <textarea id="profile-desc" class="form-control profile-desc" value="" placeholder="I want to eat dogs"></textarea>
-        <label for="experience">Experience with Animals:</label><br>
-        <input type="checkbox" id="experience" class="form-check-input experience" value="volunteer">Volunteer with animals<br>
-        <input type="checkbox" id="experience" class="form-check-input experience" value="pet-owner">Pet owner<br>
-        
-        <div class="next-button-container">
-        <RouterLink to="/GettingStartedServiceProviderPg3" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="5%" height="5%" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16" onclick="">
-        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
-        </svg></RouterLink>
+        <label for="rates">Rates: </label><br>
+        <textarea id="rates" class="form-control rates" value="" placeholder="Pet Sitting: $10/h"></textarea>
+        <label for="preferences">Preferences:</label><br>
+        <select>
+        <option>Big dogs</option>
+        <option>Medium dogs</option>
+        <option>Small dogs</option>
+        <option>Cats</option>
+        </select><br>
+        <label for="preferences">Willingness to travel:</label><br>
+        <select>
+        <option>5-10km radius</option>
+        <option>11-20km radius</option>
+        <option>Beyond</option>
+        </select><br>
+       
+        <div class="begin">
+            <RouterLink to="/profile" class="nav-link"><button class="submit-button" type="button" value="begin">Begin!</button></RouterLink>
         </div>
-      
     </div>
     </div>
 </template>
@@ -79,8 +86,5 @@ option{
 }
 #experience{
     margin-right: 1%;
-}
-.next-button-container{
-    text-align: right;
 }
 </style>
