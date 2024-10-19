@@ -4,7 +4,6 @@ export default {
 
   },
   props: {
-    // title: String,
     itemName: String,
     itemPrice: Number,
     itemRating: Number
@@ -13,7 +12,7 @@ export default {
 </script>
 
 <template>
-  <a href="#" class="text-decoration-none">
+  <a href="#" class="text-decoration-none" @click="this.$emit('shopToggle')">
     <div class="card">
       <img src="../assets/dog_sitting.jpg" class="card-img" alt="...">
       <div class="card-body">
