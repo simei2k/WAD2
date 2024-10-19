@@ -11,6 +11,7 @@ import register from '../components/pages/GettingStartedPg1.vue'
 import GettingStartedPg2 from '../components/pages/GettingStartedPg2.vue'
 import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
 import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
+import GettingStartedServiceProviderPg2 from '../components/pages/GettingStartedServiceProviderPg2.vue'
 
 
 const routes =[
@@ -73,6 +74,11 @@ const routes =[
         path: '/GettingStartedServiceProviderPg1', 
         name: 'GettingStartedServiceProviderPg1',
         component: GettingStartedServiceProviderPg1
+      },
+      {
+        path: '/GettingStartedServiceProviderPg2', 
+        name: 'GettingStartedServiceProviderPg2',
+        component: GettingStartedServiceProviderPg2
       },
     ]
   
