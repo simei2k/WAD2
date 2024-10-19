@@ -25,7 +25,7 @@ import NavBar from '../NavBar.vue'
         </select><br>
        
         <div class="begin">
-            <RouterLink to="/profile" class="nav-link"><button class="submit-button" type="button" value="begin">Begin!</button></RouterLink>
+            <RouterLink to="/profile" class="nav-link"><button class="submit-button begin" type="button" value="begin">Begin!</button></RouterLink>
         </div>
     </div>
     </div>
@@ -83,6 +83,8 @@ option{
 }
 .begin{
     text-align: center;
+    margin: auto 0;
+    align-items: center;
 }
 #experience{
     margin-right: 1%;
