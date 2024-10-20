@@ -12,7 +12,7 @@ export default {
 </script>
 
 <template>
-  <a href="#" class="text-decoration-none" @click="this.$emit('shopToggle')">
+  <a href="#" class="text-decoration-none" @click="this.$emit('toggleShop')">
     <div class="card">
       <img src="../assets/dog_sitting.jpg" class="card-img" alt="...">
       <div class="card-body">

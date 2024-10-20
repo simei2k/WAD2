@@ -3,8 +3,8 @@
     <div class='container-fluid'>
 
         <div class='row'>
-            <div class='col-1 d-flex justify-content-center'>
-                <button type="button" class="shop-item-backbutton-margin" @click="this.$emit('shopToggle')">Back</button>
+            <div class='col-2 d-flex justify-content-left'>
+                <button type="button" class="shop-item-backbutton" @click="this.$emit('toggleShop')">Back to Shop</button>
             </div>
         </div>
         
@@ -24,12 +24,12 @@
                 <div class='container-fluid'>
                     <div class='row'>
                         <div class='col'>
-                            <h1>Item Name</h1>
+                            <h1>{{ itemObject.name }}</h1>
                         </div>
                     </div>
                     <div class='row pb-4'>
                         <div class='col'>
-                            <h4>Item Price</h4>
+                            <h4>${{ itemObject.price }}</h4>
                         </div>
                     </div>
                     <div class='row pb-2'>
@@ -58,7 +58,8 @@
                             Quantity
                         </div>
                         <div class='col'>
-                            Quantity info
+                            <input type="number" v-model="quantity">
+                            <button type="button" class="shop-item-button" @click="addQuantity">+</button>
                         </div>
                     </div>
                     <div class='row pt-5'>
@@ -97,22 +98,36 @@ export default {
     components: {
 
     },
+    props:{
+        itemId:String,
+        itemObject:Object,
+    },
     data() {
         return {
-
+            quantity: 1,
         }
+    },
+    methods:{
+        addQuantity(){
+            this.quantity += 1
+        },
     }
 }
 </script>
 
 <style scoped>
-.shop-item-backbutton-margin{
+.shop-item-backbutton{
     margin: 10px 0 10px 0 ;
+    font-size: 0.75em;
 }
 
 .shop-item-img-margin{
     width: 70%;
     height: fit-content;
     margin: 50px 0px 0px 0px;
+}
+
+.shop-item-button{
+    margin-left: 10px;
 }
 </style>
