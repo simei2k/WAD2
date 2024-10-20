@@ -18,7 +18,7 @@
             <!-- Image Column -->
 
             <!-- Item Info Column -->
-            <div class='col'>
+            <div class='col-6'>
 
                 <!-- Item Info Container -->
                 <div class='container-fluid'>
@@ -33,50 +33,47 @@
                         </div>
                     </div>
                     <div class='row pb-2'>
-                        <div class='col-2'>
+                        <div class='col-3'>
                             Shipping
                         </div>
                         <div class='col'>
-                            Shipping info
+                            {{itemObject.shipping}}
                         </div>
                     </div>
                     <div class='row pb-2'>
-                        <div class='col-2'>
+                        <div class='col-3 d-flex align-items-center'>
                             Type
                         </div>
-                        <div class='col'>
-                            <select name="" id="">
+                        <div class='col-9'>
+                            <select class="form-select shop-item-type-select">
                                 <option value="" selected hidden>Select Type</option>
-                                <option value="">Option 1</option>
-                                <option value="">Option 2</option>
-                                <option value="">Option 3</option>
+                                <option v-for="type in itemObject.types">{{ type }}</option>
                             </select>
                         </div>
                     </div>
                     <div class='row pb-2'>
-                        <div class='col-2'>
+                        <div class='col-3 d-flex align-items-center'>
                             Quantity
                         </div>
                         <div class='col'>
-                            <input type="number" v-model="quantity">
-                            <button type="button" class="shop-item-button" @click="addQuantity">+</button>
+                            <input type="number" v-model="quantity" class="form-control w-25 d-inline shop-item-quantity-input">
+                            <button type="button" class="shop-item-quantity-button" @click="addQuantity">+</button>
                         </div>
                     </div>
                     <div class='row pt-5'>
-                        <div class='col-9'>
+                        <div class='col'>
                             <h4>Item Description</h4>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
+                            <p>{{ itemObject.description }}</p>
                         </div>
                     </div>
                     <div class='row pt-5'>
-                        <div class='col-9'>
+                        <div class='col'>
                             <h4>Product Ratings</h4>
                         </div>
                     </div>
                     <div class='row'>
-                        <div class='col-9'>
-                            review component here
+                        <div class='col'>
+                            <Review v-for="review in itemObject.reviews" :name="review.name" :rating="review.rating" :reviewText="review.reviewText"></Review>
                         </div>
                     </div>
                 </div>
@@ -92,11 +89,12 @@
 
 <script>
 import NavBar from '../NavBar.vue'
+import Review from './Review.vue'
 
 export default {
     name: 'ShopItem',
     components: {
-
+        Review,
     },
     props:{
         itemId:String,
@@ -127,7 +125,30 @@ export default {
     margin: 50px 0px 0px 0px;
 }
 
-.shop-item-button{
+.shop-item-quantity-button{
+    font-size: 0.82em;
     margin-left: 10px;
+    border-radius: 5px;
+    border: #ecdfcc solid 1px;
 }
+
+.shop-item-type-select{
+    background-color: #1a1a1a;
+    color: #ecdfcc;
+    border: #ecdfcc solid 1px;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.shop-item-quantity-input, input[type="number"].shop-item-quantity-input:focus{
+    background-color: #1a1a1a;
+    color: #ecdfcc;
+    border: #ecdfcc solid 1px;
+    text-align: center;
+}
+
+input[type="number"].shop-item-quantity-input::-webkit-inner-spin-button, input[type="number"].shop-item-quantity-input::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
 </style>

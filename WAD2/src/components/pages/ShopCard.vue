@@ -14,7 +14,7 @@ export default {
 <template>
   <a href="#" class="text-decoration-none" @click="this.$emit('toggleShop')">
     <div class="card">
-      <img src="../assets/dog_sitting.jpg" class="card-img" alt="...">
+      <img src="../../assets/dog_sitting.jpg" class="card-img" alt="...">
       <div class="card-body">
         <h5 class="card-title">{{ itemName }}</h5>
         <p class="card-text">$ {{ itemPrice }}</p>
