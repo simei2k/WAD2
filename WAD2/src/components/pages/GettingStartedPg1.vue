@@ -1,7 +1,8 @@
 <script>
-import { RouterLink } from 'vue-router';
-import NavBar from '../NavBar.vue'
+
+
 </script>
+
 <template>
     <NavBar></NavBar>
     <div class="registration">
