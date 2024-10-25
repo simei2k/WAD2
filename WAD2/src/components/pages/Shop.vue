@@ -7,42 +7,49 @@
         </head>
         <NavBar></NavBar>
 
-        <div v-if="isShop">
+        <div v-if="shopPage==='shop'">
             <!-- Filter Panel Start -->
             <div class="filterpanel">
-                <p>Filter Panel</p>
+                <FilterBar/>
             </div>
             <!-- Filter Panel End -->
 
-            <!-- Start Cards -->
             <div class="shop-cards-container">
-                <!-- <ShopCard v-for="n in 10" itemName='name' itemPrice="price"></ShopCard> -->
-                <ShopCard @toggleShop="toggleShop()" @click="setcurrItemId(idx)" v-for="(item, idx) in items"
-                    :itemName='item.name' :itemPrice="item.price" :itemRating="item.rating">
-                </ShopCard>
+                <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItemId(idx)" v-for="(item, idx) in items"
+                    :itemName='item.name' :itemPrice="item.price" :itemRating="item.rating"/>
             </div>
-            <!-- End Cards -->
         </div>
-        <div v-if="!isShop">
-            <ShopItem @toggleShop="toggleShop()" :itemId="currItemId" :itemObject="items[currItemId]"></ShopItem>
+
+        <div v-if="shopPage==='item'">
+            <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity" @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="items[currItemId]" :cartItemCount="cartItemCount" :imageSource="currImageSource"/>
+        </div>
+
+        <div v-if="shopPage==='cart'">
+            <ShopCart @toggleShop="toggleShop" :shopcartCart="cart"/>
         </div>
     </div>
 </template>
 
 <script>
-import NavBar from '../NavBar.vue'
 import ShopCard from './ShopCard.vue'
 import ShopItem from './ShopItem.vue'
+import ShopCart from './ShopCart.vue'
+import FilterBar from './FilterBar.vue';
 
 export default {
     components: {
         ShopCard,
         ShopItem,
+        ShopCart,
+        FilterBar,
     },
     data() {
         return {
-            isShop: true,
+            shopPage: 'shop',
             currItemId: '',
+            currQuantity: 1,
+            currImageSource: "../../assets/dog_sitting.jpg",
+            cart : {},
             items: {
                 '1': {
                     name: 'Dog Food',
@@ -82,22 +89,51 @@ export default {
         }
     },
     methods: {
-        toggleShop() {
+        toggleShop(shopPage) {
             // Toggle shop from cards to item
-            this.isShop = !this.isShop
-            // console.log('shopToggle')
+            this.shopPage = shopPage
+            this.currQuantity = 1
+            console.log('toggleShop: ', shopPage)
         },
         setcurrItemId(itemId) {
             this.currItemId = itemId
             // console.log(this.currItemId)
+        },
+        addQuantity(){
+            this.currQuantity += 1
+            console.log('addQuantity',this.currQuantity)
+        },
+        minusQuantity(){
+            this.currQuantity -= 1
+            if (this.currQuantity < 1){
+                this.currQuantity = 1
+            }
+            console.log('minusQuantity',this.currQuantity)
+        },
+        addToCart(itemObj){
+            if (itemObj.id in this.cart){
+                this.cart[itemObj.id].quantity += itemObj.quantity
+            }else{
+                this.cart[itemObj.id] = {}
+                this.cart[itemObj.id].quantity = itemObj.quantity
+                this.cart[itemObj.id].name = itemObj.name
+                this.cart[itemObj.id].type = itemObj.type
+                this.cart[itemObj.id].imageSource = itemObj.imageSource
+            }
+            console.log('addToCart', this.cart)
+        },
+    },
+    computed:{
+        cartItemCount(){
+            return Object.keys(this.cart).length
         }
-    }
+    },
 }
 </script>
 
 <style scoped>
 .filterpanel {
-    width: 17%;
+    width: 20%;
     height: auto;
     display: inline-block;
     color: white;
@@ -107,7 +143,7 @@ export default {
 
 div.shop-cards-container {
     display: inline-block;
-    width: 83%;
+    width: 80%;
 }
 </style>
 
