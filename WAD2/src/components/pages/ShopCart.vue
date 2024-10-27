@@ -42,7 +42,7 @@
     <div class="row">
       <div class="col-8"></div>
       <div class="col-4">
-        <button type="button" class="shop-cart-checkout-button">Check Out (not done)</button>
+        <button type="button" class="shop-cart-checkout-button" @click="checkout()">Check Out</button>
       </div>
     </div>
   </div>
@@ -64,7 +64,10 @@ export default {
     }
   },
   methods: {
-
+    checkout(){
+      this.$emit('toggleShop','checkout')
+      this.$emit('checkout')
+    }
   }
 }
 </script>

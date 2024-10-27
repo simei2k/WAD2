@@ -1,16 +1,16 @@
 <template>
   <div class="price-filter">
     <div class="filter-title">
-
+      Filter
     </div>
 
     <div>
-      <label class="filter-label" for="min-price">Min Price:</label>
+      <label class="filter-label" for="min-price">Min Price: WIP</label>
       <input type="number" v-model="minPrice" class="min-price" placeholder="0" @input="updatePriceFilter" min="0" />
     </div>
 
     <div>
-      <label class="filter-label" for="max-price">Max Price:</label>
+      <label class="filter-label" for="max-price">Max Price: WIP</label>
       <input type="number" v-model="maxPrice" class="max-price" placeholder="1000" @input="updatePriceFilter"
         :min="minPrice" />
     </div>
@@ -39,12 +39,12 @@ export default {
 <style scoped>
 /* Container for the filter bar */
 .price-filter {
-  /* display: flex;
-  align-items: left;
   padding: 10px;
-  background-color: #1a1a1a;
-  border: 1px solid #fff;
-  border-radius: 5px; */
+}
+
+.filter-title{
+  margin: 0 10px 10px 10px;
+  text-align: center;
 }
 
 /* Style for the labels */

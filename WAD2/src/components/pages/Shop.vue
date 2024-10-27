@@ -8,6 +8,7 @@
         <NavBar></NavBar>
 
         <div v-if="shopPage==='shop'">
+
             <!-- Filter Panel Start -->
             <div class="filterpanel">
                 <FilterBar/>
@@ -15,8 +16,8 @@
             <!-- Filter Panel End -->
 
             <div class="shop-cards-container">
-                <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItemId(idx)" v-for="(item, idx) in items"
-                    :itemName='item.name' :itemPrice="item.price" :itemRating="item.rating"/>
+                <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItemId(item.asin)" v-for="item in items"
+                    :itemName='item.name' :itemPrice="item.price" :itemRating="1"/>
             </div>
         </div>
 
@@ -25,7 +26,11 @@
         </div>
 
         <div v-if="shopPage==='cart'">
-            <ShopCart @toggleShop="toggleShop" :shopcartCart="cart"/>
+            <ShopCart @toggleShop="toggleShop" @checkout="checkout()" :shopcartCart="cart"/>
+        </div>
+
+        <div v-if="shopPage==='checkout'">
+            <ShopCheckOut @toggleShop="toggleShop"/>
         </div>
     </div>
 </template>
@@ -34,7 +39,10 @@
 import ShopCard from './ShopCard.vue'
 import ShopItem from './ShopItem.vue'
 import ShopCart from './ShopCart.vue'
-import FilterBar from './FilterBar.vue';
+import FilterBar from './FilterBar.vue'
+import ShopCheckOut from './ShopCheckOut.vue'
+
+import data from '../../assets/amazon_pet_supplies_dataset_sample_small.json'
 
 export default {
     components: {
@@ -42,6 +50,7 @@ export default {
         ShopItem,
         ShopCart,
         FilterBar,
+        ShopCheckOut,
     },
     data() {
         return {
@@ -50,6 +59,7 @@ export default {
             currQuantity: 1,
             currImageSource: "../../assets/dog_sitting.jpg",
             cart : {},
+            items2:data,
             items: {
                 '1': {
                     name: 'Dog Food',
@@ -121,6 +131,12 @@ export default {
                 this.cart[itemObj.id].imageSource = itemObj.imageSource
             }
             console.log('addToCart', this.cart)
+        },
+        checkout(){
+            console.log('checkout')
+            this.cart = {}
+            this.currItemId = ''
+            this.currQuantity = 1
         },
     },
     computed:{
