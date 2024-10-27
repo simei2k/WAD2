@@ -2,7 +2,7 @@
 
     <div class='container-fluid'>
 
-        <div class='row'>
+        <!-- <div class='row'>
             <div class='col-2 d-flex justify-content-left'>
                 <button type="button" class="shop-item-backbutton" @click="this.$emit('toggleShop', 'shop')">Back to
                     Shop</button>
@@ -12,7 +12,7 @@
                 <button type="button" class="shop-item-backbutton" @click="this.$emit('toggleShop', 'cart')">Cart {{
                     cartItemCount }}</button>
             </div>
-        </div>
+        </div> -->
 
         <div class='row'>
 
@@ -66,7 +66,7 @@
                         <div class='col'>
                             <button type="button" class="shop-item-quantity-button d-inline"
                                 @click="changeQuantityInput(-1)">-</button>
-                            <input id="quantity-input" type="number" min="1"
+                            <input id="shop-item-quantity-input" type="number" min="1"
                                 class="form-control w-25 d-inline shop-item-quantity-input" value=1>
                             <button type="button" class="shop-item-quantity-button d-inline"
                                 @click="changeQuantityInput(1)">+</button>
@@ -140,7 +140,7 @@ export default {
                     id: this.itemId + "-" + t,
                     name: this.itemObject.name,
                     type: t,
-                    quantity: Number(document.getElementById('quantity-input').value),
+                    quantity: Number(document.getElementById('shop-item-quantity-input').value),
                     imageSource: this.getImageUrl(this.imageSource),
                 }
                 this.$emit('addToCart', cartItem)
@@ -149,7 +149,7 @@ export default {
             }
         },
         changeQuantityInput(amount) {
-            let quantityInputEle = document.getElementById('quantity-input')
+            let quantityInputEle = document.getElementById('shop-item-quantity-input')
             quantityInputEle.value = Number(quantityInputEle.value) + amount
             if (Number(quantityInputEle.value) < 1) {
                 quantityInputEle.value = 1
@@ -161,10 +161,6 @@ export default {
 </script>
 
 <style>
-.shop-item-backbutton {
-    margin: 10px 0 10px 0;
-    font-size: 0.75em;
-}
 
 .shop-item-img-margin {
     width: 70%;

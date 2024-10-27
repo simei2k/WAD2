@@ -1,36 +1,92 @@
 <template>
-  <div class="price-filter">
-    <div class="filter-title">
-      Filter
-    </div>
+  <div class="container m-0">
+    <div class="row">
 
-    <div>
-      <label class="filter-label" for="min-price">Min Price: WIP</label>
-      <input type="number" v-model="minPrice" class="min-price" placeholder="0" @input="updatePriceFilter" min="0" />
-    </div>
+      <div class="col-2 my-auto">
+        Filter:
+      </div>
 
-    <div>
-      <label class="filter-label" for="max-price">Max Price: WIP</label>
-      <input type="number" v-model="maxPrice" class="max-price" placeholder="1000" @input="updatePriceFilter"
-        :min="minPrice" />
+      <div class="col">
+        <div class="mb-1">
+          <label class="filter-label" for="min-price">Min Price:</label>
+          <input id="min-price" type="number" :value="minPrice" class="min-price" placeholder="0" @input="updateFilter"
+            min="0" />
+        </div>
+        <div class="">
+          <label class="filter-label" for="max-price">Max Price:</label>
+          <input id="max-price" type="number" :value="maxPrice" class="max-price" placeholder="0" @input="updateFilter"
+            min="0" />
+        </div>
+      </div>
+
+      <div class="col">
+        <!-- Rating -->
+        <div class="d-inline-block">
+          <label class="filter-label" for="max-price">Rating:</label>
+          5<span class="fa fa-star checked"></span>
+          <input id="shop-filter-rating-input" type="range" class="" @input="updateFilter" min="0" max="4" />
+          1<span class="fa fa-star checked"></span>
+        </div>
+        <!-- Rating -->
+      </div>
+
+      <div class="col"></div>
+
     </div>
   </div>
+
+<!-- 
+  <div class="price-filter align-items-center">
+    <div class="filter-title d-inline-block my-auto">
+      Filter:
+    </div>
+
+    <div class="d-inline-block mx-3">
+      <div class="mb-1">
+        <label class="filter-label" for="min-price">Min Price:</label>
+        <input id="min-price" type="number" :value="minPrice" class="min-price" placeholder="0" @input="updateFilter"
+          min="0" />
+      </div>
+
+      <div class="">
+        <label class="filter-label" for="max-price">Max Price:</label>
+        <input id="max-price" type="number" :value="maxPrice" class="max-price" placeholder="0" @input="updateFilter"
+          min="0" />
+      </div>
+    </div>
+
+    <div class="d-inline-block mx-3">
+      <label class="filter-label" for="max-price">Rating:</label>
+      1 <input id="shop-filter-rating-input" type="range" class="" @input="updateFilter" min="0" max="5" /> 5
+    </div>
+
+    <div class="d-inline mx-3">
+
+    </div>
+  </div> -->
 </template>
 
 <script>
 export default {
+  props: {
+    maxPrice: Number,
+    minPrice: Number
+  },
   data() {
     return {
-      minPrice: 0,
-      maxPrice: 1000,
-      min: 0,
-      max: 1000,
-      currentPriceRange: 500,
+      // minPrice: 0,
+      // maxPrice: 1000,
+      // currentPriceRange: 500,
     }
   },
   methods: {
-    updatePriceFilter() {
-      this.$emit("price-filter", { min: this.minPrice, max: this.maxPrice });
+    updateFilter() {
+      this.$emit("updateShopCards", {
+        min: Number(document.getElementById('min-price').value),
+        max: Number(document.getElementById('max-price').value),
+        rating: 5-Number(document.getElementById('shop-filter-rating-input').value),
+      });
+      console.log("FilterBar.vue > updatePriceFilter()")
     }
   }
 }
@@ -42,7 +98,7 @@ export default {
   padding: 10px;
 }
 
-.filter-title{
+.filter-title {
   margin: 0 10px 10px 10px;
   text-align: center;
 }
@@ -67,5 +123,14 @@ export default {
   border: 1px solid #ced4da;
   border-radius: 4px;
   text-align: center; */
+}
+
+#shop-filter-rating-input {
+  width: 4em;
+}
+
+.stars {
+  font-size: 0.7em;
+  margin-bottom: 1em;
 }
 </style>

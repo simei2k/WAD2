@@ -1,16 +1,20 @@
 <template>
   <div class='container-fluid'>
 
-    <div class='row'>
+    <!-- <div class='row'>
       <div class='col-2 d-flex justify-content-left'>
         <button type="button" class="shop-item-backbutton" @click="this.$emit('toggleShop', 'shop')">Back to
           Shop</button>
       </div>
-    </div>
+    </div> -->
+
+    <!-- No items in Cart -->
+    <div v-if="Object.keys(shopcartCart).length === 0" class="row justify-content-center my-3">No items in cart</div>
 
     <div class='row mb-2' v-for="(info, id) in shopcartCart">
       <div class="col-2"></div>
       <div class="col-8">
+        <!-- Item Card -->
         <div class="card">
           <div class='container-fluid'>
             <div class='row'>
@@ -26,7 +30,7 @@
               <div class='col my-auto'>
                 Quantity:
                 <button type="button" class="shop-item-quantity-button d-inline" @click="minusQuantity">-</button>
-                <input id="quantity-input" type="number" min="1"
+                <input id="shop-cart-quantity-input" type="number" min="1"
                   class="form-control w-25 d-inline shop-item-quantity-input" :value="info.quantity">
                 <button type="button" class="shop-item-quantity-button d-inline"
                   @click="this.$emit('addQuantity')">+</button>
@@ -39,7 +43,7 @@
       <div class="col-2"></div>
     </div>
 
-    <div class="row">
+    <div class="row" v-if="Object.keys(shopcartCart).length !== 0">
       <div class="col-8"></div>
       <div class="col-4">
         <button type="button" class="shop-cart-checkout-button" @click="checkout()">Check Out</button>
@@ -64,9 +68,16 @@ export default {
     }
   },
   methods: {
-    checkout(){
-      this.$emit('toggleShop','checkout')
+    checkout() {
+      this.$emit('toggleShop', 'checkout')
       this.$emit('checkout')
+    },
+    changeQuantityInput(amount) {
+      let quantityInputEle = document.getElementById('shop-cart-quantity-input')
+      quantityInputEle.value = Number(quantityInputEle.value) + amount
+      if (Number(quantityInputEle.value) < 1) {
+        quantityInputEle.value = 1
+      }
     }
   }
 }
@@ -103,7 +114,7 @@ input[type="number"].shop-item-quantity-input::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.shop-cart-checkout-button{
+.shop-cart-checkout-button {
   margin: 10px;
   border-radius: 5px;
 }
