@@ -32,22 +32,24 @@
 
             <!-- Filter Panel Start -->
             <div class="filterpanel p-3">
-                <FilterBar @updateShopCards="updateShopCards" :maxPrice="highestItemPrice" :minPrice="lowestItemPrice"/>
+                <FilterBar @updateShopCards="updateShopCards" :maxPrice="filter.maxPrice" :minPrice="0" />
             </div>
             <!-- Filter Panel End -->
 
-            <div class="shop-cards-container px-5 py-3">
-                <div v-for="(item, id) in filteredItems" class="d-inline-block">
-                    <ShopCard v-if="(Number(item.price) > priceRange.min)" @toggleShop="toggleShop('item')"
-                        @click="setcurrItemId(id)" :itemName='item.name' :itemPrice="item.price" :itemRating="item.rating" />
+            <!-- Cards -->
+            <div class="shop-cards-container py-3 mx-5">
+                <div v-for="item in filteredItems" class="d-inline-block justify-content-center">
+                    <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItem(item)" :itemName='item.title'
+                        :itemPrice="item.price" :itemImageSource="item.images" :itemRating="item.rating" />
                 </div>
             </div>
+            <!-- Cards -->
         </div>
 
         <div v-if="shopPage === 'item'">
             <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
-                @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity"
-                :itemObject="items[currItemId]" :cartItemCount="cartItemCount" :imageSource="currImageSource" />
+                @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="currItem"
+                :imageSource="currImageSource" />
         </div>
 
         <div v-if="shopPage === 'cart'">
@@ -67,7 +69,8 @@ import ShopCart from './ShopCart.vue'
 import FilterBar from './FilterBar.vue'
 import ShopCheckOut from './ShopCheckOut.vue'
 
-// import data from '../../assets/amazon_pet_supplies_dataset_sample_small.json'
+import data from '../../assets/amazon_pet_supplies_dataset_sample_small.json'
+// console.log(data[0])
 
 export default {
     components: {
@@ -80,14 +83,18 @@ export default {
     data() {
         return {
             shopPage: 'shop',
-            currItemId: '',
+            currItem: {},
             currQuantity: 1,
             currImageSource: "../../assets/dog_sitting.jpg",
-            priceRange: { min: 0, max: this.highestItemPrice },
-            maxRating: 5,
+            filter: {
+                minPrice: 0,
+                maxPrice: 1000,
+                maxRating: 5,
+                search: '',
+            },
             cart: {},
-            // items2: data,
-            items: {
+            items: data,
+            items2: {
                 1: {
                     name: 'Dog Food',
                     price: 1.01,
@@ -123,7 +130,6 @@ export default {
                     },
                 },
             },
-            filteredItems : this.items,
         }
     },
     methods: {
@@ -133,9 +139,9 @@ export default {
             this.currQuantity = 1
             console.log('Shop.vue > toggleShop()', shopPage)
         },
-        setcurrItemId(itemId) {
-            this.currItemId = itemId
-            console.log(this.currItemId)
+        setcurrItem(item) {
+            this.currItem = item
+            console.log(this.currItem)
         },
         addQuantity() {
             this.currQuantity += 1
@@ -167,9 +173,9 @@ export default {
             this.currQuantity = 1
         },
         updateShopCards(filter) {
-            this.priceRange.min = filter.min
-            this.priceRange.max = filter.max
-            this.maxRating = filter.rating
+            this.filter.minPrice = filter.minPrice
+            this.filter.maxPrice = filter.maxPrice
+            this.filter.maxRating = filter.maxRating
             console.log("Shop.vue > updateShopCards()", filter)
         },
     },
@@ -177,38 +183,44 @@ export default {
         cartItemCount() {
             return Object.keys(this.cart).length
         },
-        filteredItems(){
-            let filtered = {}
-            for (const [id, item] of Object.entries(this.items)) {
-                // console.log("Shop.vue > computed > filteredItems", info.price, this.priceRange.min)
+        filteredItems() {
+            let filtered = []
+            // console.log("Total items: ",Object.keys(this.items).length)
+            for (const item of this.items) {
+                // console.log("Shop.vue > computed > filteredItems", this.filter)
                 if (
-                    Number(item.price) >= Number(this.priceRange.min) && 
-                    Number(item.price) <= Number(this.priceRange.max) &&
-                    Number(item.rating) <= Number(this.maxRating)
-                ){
-                    filtered[id] = item
+                    Number(item.price) >= Number(this.filter.minPrice)
+                    && Number(item.price) <= Number(this.filter.maxPrice)
+                    && Number(item.rating) >= Number(this.filter.maxRating)
+                    // && (item.title.toLowerCase().includes(this.filter.search.toLowerCase()) || this.filter.search==='')
+                ) {
+                    filtered.push(item)
+                } else {
+                    // console.log(item.price)
                 }
             }
+            // console.log("Filtered items",Object.keys(filtered).length)
             return filtered
         },
-        highestItemPrice(){
+        highestPrice() {
             let highest = 0
-            for (const [id, item] of Object.entries(this.items)) {
-                if (item.price > highest){
+            for (const item of this.items) {
+                if (Number(item.price) > Number(highest)) {
                     highest = item.price
                 }
             }
+            console.log(highest)
             return highest
         },
-        lowestItemPrice(){
-            let lowest = Infinity
-            for (const [id, item] of Object.entries(this.items)) {
-                if (item.price < lowest){
-                    lowest = item.price
-                }
-            }
-            return lowest
-        }
+        // lowestItemPrice(){
+        //     let lowest = Infinity
+        //     for (const [id, item] of Object.entries(this.items)) {
+        //         if (Number(item.price) < Number(lowest)){
+        //             lowest = item.price
+        //         }
+        //     }
+        //     return lowest
+        // }
     },
 }
 </script>
@@ -218,14 +230,15 @@ export default {
     /* width: 20%; */
     height: auto;
     /* display: inline-block; */
-    color: white;
-    border: 1px solid white;
+    color: #ecdfcc;
+    border: 1px solid #ecdfcc;
     margin: 0 15px 0 15px;
 }
 
 div.shop-cards-container {
-    /* display: inline-block; */
-    /* width: 80%; */
+    display: inline-block;
+    width: fit-content;
+    margin: auto;
 }
 
 .shop-item-backbutton {

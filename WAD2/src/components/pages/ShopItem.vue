@@ -18,7 +18,7 @@
 
             <!-- Image Column -->
             <div class='col-3 d-flex justify-content-center'>
-                <img :src="getImageUrl(imageSource)" class="item-img shop-item-img-margin
+                <img :src="itemObject.images" class="item-img shop-item-img-margin
 " alt="Item Image">
             </div>
             <!-- Image Column -->
@@ -30,12 +30,12 @@
                 <div class='container-fluid'>
                     <div class='row'>
                         <div class='col'>
-                            <h1>{{ itemObject.name }}</h1>
+                            <h5>{{ itemObject.title }}</h5>
                         </div>
                     </div>
                     <div class='row pb-4'>
                         <div class='col'>
-                            <h4>${{ itemObject.price }}</h4>
+                            <h6>${{ itemObject.price }}</h6>
                         </div>
                     </div>
                     <div class='row pb-2'>
@@ -90,7 +90,7 @@
                             <h4>Product Ratings</h4>
                         </div>
                     </div>
-                    <div class='row'>
+                    <div class='row' v-if="review!==undefined">
                         <div class='col'>
                             <Review v-for="review in itemObject.reviews" :name="review.name" :rating="review.rating"
                                 :reviewText="review.reviewText"></Review>
