@@ -48,15 +48,20 @@
                     </div>
                     <div class='row pb-2'>
                         <!-- TYPE INPUT -->
-                        <div class='col-3 d-flex align-items-center'>
+                        <div class='col-3'>
                             Type
                         </div>
-                        <div class='col-9'>
+                        <div class='col-9' v-if="itemObject.types!==undefined">
                             <select id="type-input" class="form-select shop-item-type-select">
                                 <option value="" selected hidden>Select Type</option>
                                 <option v-for="type in itemObject.types">{{ type }}</option>
                             </select>
                         </div>
+                        <div class="col-9" v-else>
+                            <p>Normal</p>
+                            <input type="text" id="type-input" value="Normal" hidden>
+                        </div>
+                        <!-- TYPE INPUT -->
                     </div>
                     <div class='row pb-2'>
                         <!-- QUANTITY INPUT -->
@@ -90,11 +95,14 @@
                             <h4>Product Ratings</h4>
                         </div>
                     </div>
-                    <div class='row' v-if="review!==undefined">
+                    <div class='row' v-if="itemObject.reviews!==undefined">
                         <div class='col'>
                             <Review v-for="review in itemObject.reviews" :name="review.name" :rating="review.rating"
                                 :reviewText="review.reviewText"></Review>
                         </div>
+                    </div>
+                    <div v-else>
+                        <p>No ratings yet</p>
                     </div>
                 </div>
                 <!-- Item Info Container -->
@@ -116,11 +124,9 @@ export default {
         Review,
     },
     props: {
-        itemId: String,
         itemObject: Object,
-        cartItemCount: Number,
-        type: String,
-        imageSource: String,
+        // cartItemCount: Number,
+        // type: String,
     },
     data() {
         return {
@@ -134,15 +140,16 @@ export default {
         },
         addToCart() {
             let t = document.getElementById('type-input').value
-            console.log(t)
+            // console.log(t)   
             if (t !== '') {
                 let cartItem = {
-                    id: this.itemId + "-" + t,
-                    name: this.itemObject.name,
+                    id: this.itemObject.uniq_id + "-" + t,
+                    name: this.itemObject.title,
                     type: t,
                     quantity: Number(document.getElementById('shop-item-quantity-input').value),
-                    imageSource: this.getImageUrl(this.imageSource),
+                    imageSource: this.getImageUrl(this.itemObject.images),
                 }
+                console.log("ShopItem > addTOCart() > cartItem", cartItem)
                 this.$emit('addToCart', cartItem)
             } else {
                 alert("Please select a type!") // Change to display modal

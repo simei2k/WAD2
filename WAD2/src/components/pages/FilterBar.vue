@@ -8,7 +8,7 @@
 
       <div class="col">
         Search:
-        <input class="mt-1" type="text" id="shop-filter-searchbar">
+        <input class="mt-1" type="text" id="shop-filter-searchbar" @input="updateFilter">
       </div>
 
       <div class="col">
@@ -31,10 +31,10 @@
       <div class="col">
         <!-- Rating -->
         <div class="d-inline-block">
-          <label class="filter-label" for="max-price">Rating:</label>
-          5<span class="fa fa-star checked"></span>
-          <input id="shop-filter-rating-input" type="range" class="" value=5 @input="updateFilter" min="1" max="5" />
+          <label class="filter-label" for="shop-filter-rating-input">Rating:</label>
           1<span class="fa fa-star checked"></span>
+          <input id="shop-filter-rating-input" type="range" class="" value=1 @input="updateFilter" min="1" max="5" />
+          5<span class="fa fa-star checked"></span>
         </div>
         <!-- Rating -->
       </div>
@@ -93,10 +93,10 @@ export default {
       this.$emit("updateShopCards", {
         minPrice: Number(document.getElementById('min-price').value),
         maxPrice: Number(document.getElementById('max-price').value),
-        maxRating: Number(document.getElementById('shop-filter-rating-input').value),
+        minRating: Number(document.getElementById('shop-filter-rating-input').value),
         search: document.getElementById('shop-filter-searchbar').value,
       });
-      // console.log("FilterBar.vue > updatePriceFilter()")
+      console.log("FilterBar.vue > updatePriceFilter()", document.getElementById('shop-filter-searchbar').value)
     }
   }
 }

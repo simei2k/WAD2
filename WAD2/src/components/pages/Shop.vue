@@ -39,8 +39,7 @@
             <!-- Cards -->
             <div class="shop-cards-container py-3 mx-5">
                 <div v-for="item in filteredItems" class="d-inline-block justify-content-center">
-                    <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItem(item)" :itemName='item.title'
-                        :itemPrice="item.price" :itemImageSource="item.images" :itemRating="item.rating" />
+                    <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItem(item)" :itemObject=item />
                 </div>
             </div>
             <!-- Cards -->
@@ -48,8 +47,7 @@
 
         <div v-if="shopPage === 'item'">
             <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
-                @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="currItem"
-                :imageSource="currImageSource" />
+                @minusQuantity="minusQuantity" :itemObject="currItem" />
         </div>
 
         <div v-if="shopPage === 'cart'">
@@ -89,7 +87,7 @@ export default {
             filter: {
                 minPrice: 0,
                 maxPrice: 1000,
-                maxRating: 5,
+                minRating: 1,
                 search: '',
             },
             cart: {},
@@ -175,7 +173,8 @@ export default {
         updateShopCards(filter) {
             this.filter.minPrice = filter.minPrice
             this.filter.maxPrice = filter.maxPrice
-            this.filter.maxRating = filter.maxRating
+            this.filter.minRating = filter.minRating
+            this.filter.search = filter.search
             console.log("Shop.vue > updateShopCards()", filter)
         },
     },
@@ -191,8 +190,8 @@ export default {
                 if (
                     Number(item.price) >= Number(this.filter.minPrice)
                     && Number(item.price) <= Number(this.filter.maxPrice)
-                    && Number(item.rating) >= Number(this.filter.maxRating)
-                    // && (item.title.toLowerCase().includes(this.filter.search.toLowerCase()) || this.filter.search==='')
+                    && Number(item.rating) >= Number(this.filter.minRating)
+                    && (item.title.toLowerCase().includes(this.filter.search.toLowerCase()) || this.filter.search==='')
                 ) {
                     filtered.push(item)
                 } else {
