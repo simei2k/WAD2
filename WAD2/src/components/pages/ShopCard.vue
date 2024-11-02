@@ -6,7 +6,8 @@ export default {
   props: {
     itemName: String,
     itemPrice: Number,
-    itemRating: Number
+    itemRating: Number,
+    itemImageSource:String,
   }
 }
 </script>
@@ -14,9 +15,10 @@ export default {
 <template>
   <a href="#" class="text-decoration-none" @click="this.$emit('toggleShop')">
     <div class="card">
-      <img src="../../assets/dog_sitting.jpg" class="card-img" alt="...">
+      <img :src="itemImageSource" class="card-img" alt="...">
       <div class="card-body">
-        <h5 class="card-title">{{ itemName }}</h5>
+        <h5 v-if="itemName.length < 40" class="card-title">{{ itemName }}</h5>
+        <h5 v-else class="card-title">{{ itemName.slice(0,40)+"..." }}</h5>
         <p class="card-text">$ {{ itemPrice }}</p>
         <div class="stars">
           <!-- Do math and display no. of stars. No rating above 5 stars -->
@@ -31,8 +33,8 @@ export default {
 <style scoped>
 a {
   width: 250px;
-  display: inline-block;
-  margin: 10px 5px 0px 5px;
+  display:inline-block;
+  margin: 10px 5px 10px 5px;
 }
 
 .card-body {
