@@ -1,8 +1,280 @@
 <script>
 import NavBar from '../NavBar.vue'
+import axios from 'axios';
+
+export default {
+    data () {
+        return {
+            isPetOwner: true,
+            alerttext: '',
+            currentPage: 'Find Services',
+            iscurrentPage: [true,false,false,true,false,false],
+            calendarId: 'c_0f2f898c6a3672acfdbe678ec1574c61105132ce603d502fd0b4ea49fb1410fa@group.calendar.google.com',
+            timeZone: 'Asia/Singapore',
+            showButton: false,
+            reqServiceType: false,
+            currServicePage: 'mainServicesPage',
+            confirmPopup: false,
+            events: [],
+        };
+    },
+    props: {
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    image: {
+      type: String,
+      default: 'https://via.placeholder.com/150',
+    },
+  },
+    methods: {
+        toggle() {
+            if (this.isPetOwner) {
+                this.isPetOwner = false;
+                this.currentPage= 'Find Jobs';
+            }
+            else {
+                this.isPetOwner = true;
+                this.currentPage= 'Find Services';
+            }
+        },
+        showalert() {
+            if (this.isPetOwner) {
+                this.alerttext = 'Pet Owner'
+            }
+            else {
+                this.alerttext = 'Service Provider'
+            }
+            alert('You are changing the service mode to ' + this.alerttext)
+        },
+        checkpage(index) {
+            this.iscurrentPage = [false,false,false,false,false,false];
+            if (index === 0 || index === 3) {
+                this.iscurrentPage[0] = true;
+                this.iscurrentPage[3] = true;
+            }
+            else {
+                this.iscurrentPage[index] = true;
+            }
+        },
+        showbutton() {
+            if (!this.showButton) {
+                this.showButton=true;
+            }
+        },
+        showServiceTypes() {
+            if (!this.reqServiceType) {
+                this.reqServiceType=true;
+            }
+            else {
+                this.reqServiceType=false;
+            }
+        },
+        handleAuthClick() {
+      // Access the Google Auth instance from the global variable
+      const authInstance = window.gapiAuthInstance;
+
+      if (authInstance) {
+        authInstance.signIn().then(() => {
+          console.log('User signed in');
+        }).catch((error) => {
+          console.error('Error signing in:', error);
+        });
+      } else {
+        console.error('Google Auth instance not initialized');
+      }
+    },
+        listUpcomingEvents() {
+        gapi.client.calendar.events.list({
+        calendarId: 'primary',
+        timeMin: (new Date()).toISOString(),
+        showDeleted: false,
+        singleEvents: true,
+        maxResults: 10,
+        orderBy: 'startTime'
+      }).then((response) => {
+        const events = response.result.items;
+        this.events = events;
+        if (events.length > 0) {
+          console.log('Upcoming events:', events);
+        } else {
+          console.log('No upcoming events found.');
+        }
+      });
+    },
+    handleClick() {
+      alert(`You clicked on this card`);
+    },
+  },
+    computed: {
+        calendarSrc() {
+            return 'https://calendar.google.com/calendar/embed?src='+ this.calendarId + '&ctz=' + this.timeZone
+        },
+    },
+
+}
+
 </script>
+<style>
+    .ServiceNavBar {
+        color: #ECDFCC;
+        padding-left: 15px;
+        background-color: #1a1a1a;
+        
+    }
+    .PetOwner {
+        display:inline-block;
+        background-color:white;
+        border-radius:50%;
+        padding: 8px;
+        z-index: 1;
+        position:relative;
+        right: 58px;
+        bottom: 6px;
+        border:3px solid darkgreen;
+    }
+    .ServiceProvider {
+        display:inline-block;
+        background-color:white;
+        border-radius:50%;
+        padding: 8px;
+        z-index: 1;
+        position:relative;
+        right:23px;
+        bottom:6px;
+        border: 3px solid darkgreen;
+    }
+    .buttonBackground { 
+        background-color:#697565;
+        display: inline-flex;
+        z-index: 0;
+        width: 60px;
+        color:#697565;
+        border-radius:9999px;
+        text-align:left;
+    }
+    p {
+        display:inline-block;
+        padding-right: 20px;
+        color: grey;
+        
+    }
+    .CurrentlyOwner {
+        color: #ECDFCC;
+    }
+    .mainbody {
+        border-top: 3px solid #697565;
+        color: #ECDFCC;
+        width:99.5%;
+        margin:auto;
+    }
+    .ServicePage {
+        background-color: #242424;
+    }
+    .curPage {
+        display:inline-block;
+        border-top: 3px solid #697565;
+        border-left: 3px solid #697565;
+        border-right: 3px solid #697565;
+        border-bottom: 3px solid #242424;
+        background-color: #242424;
+        position:relative;
+        height:50px;
+        top: 5px;
+        padding-top:5px;
+        transition:  border-color 0.5s ease;
+    }
+    .calendar-container {
+        margin-top: 20px;
+        margin-left: 20px; 
+    }
+    .addIcon {
+        border-color: #697565;
+        background-color:#242424;
+        color: #242424;
+        border-radius: 50%;
+        margin-right: 10px;
+    }
+    .jobButton {
+        position: absolute;
+        margin-left: 20%;
+        border: 3px solid #697565;
+        border-radius: 15px;  
+    }  
+    .createJobForm {
+        position:relative;
+        left:57.5%;
+        bottom: 805px;
+        border: 3px solid #697565;
+        border-radius: 15px; 
+        padding: 20px;
+        width:35%;
+        align-content:center;
+        box-shadow:10px 10px 5px  rgb(71, 71, 71);
+    }
+    .jobsubmit {
+        position:relative;
+        left: 85%;
+    }
+    .searchbar {
+        padding-left: 10px;
+        display:inline-block;
+    }
+    .filterbar {
+        margin-left: 3%;
+        display:inline-block;
+    }
+    .getRecommendations {
+        margin-left:3%;
+        display:inline-block;
+        padding:10px;
+    }
+    .filteroption {
+        margin-left: 20px;
+    }
+    .extrafilteroptions {
+        display:inline-block;
+        border: 2px solid #697565;
+        margin-left:10px;
+        padding-right: 20px;
+        border-radius:8px;
+    }
+    .FindServicesSearchBar {
+        border-bottom: 3px solid #464545;
+
+    }
+    .cfmPopup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgb(0,0,0,0.5);
+        justify-content: center;
+        align-items: center;
+    }
+    .popupContent {
+        background-color: #242424;
+        padding: 20px;
+        border-radius: 8px;
+        text-align:center;
+        border: 3px solid #697565;
+        margin:auto;
+        width:20%;
+        margin-top:400px;
+    }
+    .card-text {
+        color: #ECDFCC;
+        border-bottom: 3px solid #697565;
+        width: 100%;
+    }
+</style>
 <template>
-    <h1>this is Services</h1>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <NavBar></NavBar>
