@@ -3,7 +3,6 @@ import { RouterLink } from 'vue-router';
 import NavBar from '../NavBar.vue'
 </script>
 <template>
-    <NavBar></NavBar>
     <div class="registration">
     <img class="cat-icon" src="../../assets/cat_icon.png">
     <h1>Getting Started</h1>

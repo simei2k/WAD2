@@ -7,8 +7,7 @@ import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
 import Map from '../components/pages/Map.vue'
 import login from '../components/pages/LogIn.vue'
-import register from '../components/pages/GettingStartedPg1.vue'
-import GettingStartedPg2 from '../components/pages/GettingStartedPg2.vue'
+import register from '../components/pages/register.vue'
 import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
 import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
 import GettingStartedServiceProviderPg2 from '../components/pages/GettingStartedServiceProviderPg2.vue'
@@ -61,11 +60,7 @@ const routes =[
         name: 'register',
         component: register
       },
-      {
-        path: '/GettingStartedPg2',
-        name: 'GettingStartedPg2',
-        component: GettingStartedPg2
-      },  
+
       {
         path: '/GettingStartedPetOwnerPg1', 
         name: 'GettingStartedPetOwnerPg1',
@@ -80,7 +75,13 @@ const routes =[
         path: '/GettingStartedServiceProviderPg2', 
         name: 'GettingStartedServiceProviderPg2',
         component: GettingStartedServiceProviderPg2
-      },{
+      },
+      {
+        path: '/GettingStartedServiceProviderPg3', 
+        name: 'GettingStartedServiceProviderPg3',
+        component: GettingStartedServiceProviderPg3
+      },
+       {
         path: '/GettingStartedServiceProviderPg3', 
         name: 'GettingStartedServiceProviderPg3',
         component: GettingStartedServiceProviderPg3
