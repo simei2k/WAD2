@@ -1,5 +1,4 @@
 <template>
-    <NavBar></NavBar>
     <div class="chatbot">
       <div class="chat-window">
         <div v-for="(message, index) in messages" :key="index" :class="{'user': message.user, 'bot': !message.user}">

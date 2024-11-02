@@ -1,5 +1,4 @@
 <template>
-    <NavBar></NavBar>
    <h1>Emergency Clinics Nearby </h1>
     <!--backend pull nearest clinics available and put them in card-->
     <!--hard coded, need to make it dynamic-->
