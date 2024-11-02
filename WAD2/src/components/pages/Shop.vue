@@ -5,109 +5,249 @@
      </head>
     <div>
 
-        
+<!-- Nav Bar -->
+<NavBar></NavBar>
+<!-- Nav Bar -->
 
-        <div v-if="isShop">
-            <!-- Filter Panel Start -->
-            <div class="filterpanel">
-                <p>Filter Panel</p>
-            </div>
-            <!-- Filter Panel End -->
-
-            <!-- Start Cards -->
-            <div class="shop-cards-container">
-                <!-- <ShopCard v-for="n in 10" itemName='name' itemPrice="price"></ShopCard> -->
-                <ShopCard @toggleShop="toggleShop()" @click="setcurrItemId(idx)" v-for="(item, idx) in items"
-                    :itemName='item.name' :itemPrice="item.price" :itemRating="item.rating">
-                </ShopCard>
-            </div>
-            <!-- End Cards -->
+<!-- Back Button & Cart -->
+<div class="container">
+    <div class='row'>
+        <div class='col d-flex justify-content-start'>
+            <button v-if="['item', 'cart'].includes(shopPage)" type="button" class="shop-item-backbutton"
+                @click="toggleShop('shop')">Back to Shop</button>
         </div>
-        <div v-if="!isShop">
-            <ShopItem @toggleShop="toggleShop()" :itemId="currItemId" :itemObject="items[currItemId]"></ShopItem>
+        <div class='col d-flex justify-content-end '>
+            <button v-if="['shop', 'item'].includes(shopPage)" type="button" class="shop-item-backbutton"
+                @click="toggleShop('cart')">
+                <img src="../../assets/cart.png" class="shop-item-backbutton-img mx-2">Cart
+                ({{ cartItemCount }})
+            </button>
         </div>
     </div>
+</div>
+<!-- Back Button & Cart -->
+
+<div v-if="shopPage === 'shop'">
+>>>>>>> main
+
+    <!-- Filter Panel Start -->
+    <div class="filterpanel p-3">
+        <FilterBar @updateShopCards="updateShopCards" :maxPrice="filter.maxPrice" :minPrice="0" />
+    </div>
+    <!-- Filter Panel End -->
+
+    <!-- Cards -->
+    <div class="shop-cards-container py-3 mx-5">
+        <div v-for="item in filteredItems" class="d-inline-block justify-content-center">
+            <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItem(item)" :itemName='item.title'
+                :itemPrice="item.price" :itemImageSource="item.images" :itemRating="item.rating" />
+        </div>
+    </div>
+    <!-- Cards -->
+</div>
+
+<div v-if="shopPage === 'item'">
+    <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
+        @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="currItem"
+        :imageSource="currImageSource" />
+</div>
+
+<div v-if="shopPage === 'cart'">
+    <ShopCart @toggleShop="toggleShop" @checkout="checkout()" :shopcartCart="cart" />
+</div>
+
+<div v-if="shopPage === 'checkout'">
+    <ShopCheckOut @toggleShop="toggleShop" />
+</div>
+</div>
 </template>
 
 <script>
-import NavBar from '../NavBar.vue'
 import ShopCard from './ShopCard.vue'
 import ShopItem from './ShopItem.vue'
+import ShopCart from './ShopCart.vue'
+import FilterBar from './FilterBar.vue'
+import ShopCheckOut from './ShopCheckOut.vue'
+
+import data from '../../assets/amazon_pet_supplies_dataset_sample_small.json'
+// console.log(data[0])
 
 export default {
-    components: {
-        ShopCard,
-        ShopItem,
+components: {
+ShopCard,
+ShopItem,
+ShopCart,
+FilterBar,
+ShopCheckOut,
+},
+data() {
+return {
+    shopPage: 'shop',
+    currItem: {},
+    currQuantity: 1,
+    currImageSource: "../../assets/dog_sitting.jpg",
+    filter: {
+        minPrice: 0,
+        maxPrice: 1000,
+        maxRating: 5,
+        search: '',
     },
-    data() {
-        return {
-            isShop: true,
-            currItemId: '',
-            items: {
-                '1': {
-                    name: 'Dog Food',
-                    price: 1.01,
-                    rating: 1.1,
-                    shipping: 'Free',
-                    types: ['Small', 'Medium', 'Large'],
-                    description: 'Desc 1',
-                    reviews: {
-                        '1':{name:'Abe', rating:1, reviewText:'Taste good! Yes I ate it.'},
-                        '2':{name:'Ben', rating:2, reviewText:'Taste bad! I\'m a dog'}
-                    },
-                },
-                '2': {
-                    name: 'Kitty Litter',
-                    price: 2.02, 
-                    rating: 2.2, 
-                    shipping: '$2.00', 
-                    types: ['Small', 'Medium', 'Large'],
-                    description: 'Desc 2',
-                    reviews: {
-                        '3':{name:'Cathryn', rating:4, reviewText:'Taste good! Yes I ate it.'}
-                    },
-                },
-                '3': { 
-                    name: 'Cat Food', 
-                    price: 3.03, 
-                    rating: 3.3, 
-                    shipping: 'Free', 
-                    types: ['Small', 'Medium', 'Large'],
-                    description: 'Desc 3',
-                    reviews: {
-                        '4':{name:'David', rating:5, reviewText:'Works very good'},
-                    },
-                },
-            }
-        }
-    },
-    methods: {
-        toggleShop() {
-            // Toggle shop from cards to item
-            this.isShop = !this.isShop
-            // console.log('shopToggle')
+    cart: {},
+    items: data,
+    items2: {
+        1: {
+            name: 'Dog Food',
+            price: 1.01,
+            rating: 1.1,
+            shipping: 'Free',
+            types: ['Small', 'Medium', 'Large'],
+            description: 'Desc 1',
+            reviews: {
+                '1': { name: 'Abe', rating: 1, reviewText: 'Taste good! Yes I ate it.' },
+                '2': { name: 'Ben', rating: 2, reviewText: 'Taste bad! I\'m a dog' }
+            },
         },
-        setcurrItemId(itemId) {
-            this.currItemId = itemId
-            // console.log(this.currItemId)
+        2: {
+            name: 'Kitty Litter',
+            price: 2.02,
+            rating: 2.2,
+            shipping: '$2.00',
+            types: ['Small', 'Medium', 'Large'],
+            description: 'Desc 2',
+            reviews: {
+                '3': { name: 'Cathryn', rating: 4, reviewText: 'Taste good! Yes I ate it.' }
+            },
+        },
+        3: {
+            name: 'Cat Food',
+            price: 3.03,
+            rating: 3.3,
+            shipping: 'Free',
+            types: ['Small', 'Medium', 'Large'],
+            description: 'Desc 3',
+            reviews: {
+                '4': { name: 'David', rating: 5, reviewText: 'Works very good' },
+            },
+        },
+    },
+}
+},
+methods: {
+toggleShop(shopPage) {
+    // Toggle shop from cards to item
+    this.shopPage = shopPage
+    this.currQuantity = 1
+    console.log('Shop.vue > toggleShop()', shopPage)
+},
+setcurrItem(item) {
+    this.currItem = item
+    console.log(this.currItem)
+},
+addQuantity() {
+    this.currQuantity += 1
+    console.log('Shop.vue > addQuantity()', this.currQuantity)
+},
+minusQuantity() {
+    this.currQuantity -= 1
+    if (this.currQuantity < 1) {
+        this.currQuantity = 1
+    }
+    console.log('Shop.vue > minusQuantity()', this.currQuantity)
+},
+addToCart(itemObj) {
+    if (itemObj.id in this.cart) {
+        this.cart[itemObj.id].quantity += itemObj.quantity
+    } else {
+        this.cart[itemObj.id] = {}
+        this.cart[itemObj.id].quantity = itemObj.quantity
+        this.cart[itemObj.id].name = itemObj.name
+        this.cart[itemObj.id].type = itemObj.type
+        this.cart[itemObj.id].imageSource = itemObj.imageSource
+    }
+    console.log('Shop.vue > addToCart()', this.cart)
+},
+checkout() {
+    console.log('checkout')
+    this.cart = {}
+    this.currItemId = ''
+    this.currQuantity = 1
+},
+updateShopCards(filter) {
+    this.filter.minPrice = filter.minPrice
+    this.filter.maxPrice = filter.maxPrice
+    this.filter.maxRating = filter.maxRating
+    console.log("Shop.vue > updateShopCards()", filter)
+},
+},
+computed: {
+cartItemCount() {
+    return Object.keys(this.cart).length
+},
+filteredItems() {
+    let filtered = []
+    // console.log("Total items: ",Object.keys(this.items).length)
+    for (const item of this.items) {
+        // console.log("Shop.vue > computed > filteredItems", this.filter)
+        if (
+            Number(item.price) >= Number(this.filter.minPrice)
+            && Number(item.price) <= Number(this.filter.maxPrice)
+            && Number(item.rating) >= Number(this.filter.maxRating)
+            // && (item.title.toLowerCase().includes(this.filter.search.toLowerCase()) || this.filter.search==='')
+        ) {
+            filtered.push(item)
+        } else {
+            // console.log(item.price)
         }
     }
+    // console.log("Filtered items",Object.keys(filtered).length)
+    return filtered
+},
+highestPrice() {
+    let highest = 0
+    for (const item of this.items) {
+        if (Number(item.price) > Number(highest)) {
+            highest = item.price
+        }
+    }
+    console.log(highest)
+    return highest
+},
+// lowestItemPrice(){
+//     let lowest = Infinity
+//     for (const [id, item] of Object.entries(this.items)) {
+//         if (Number(item.price) < Number(lowest)){
+//             lowest = item.price
+//         }
+//     }
+//     return lowest
+// }
+},
 }
 </script>
 
 <style scoped>
 .filterpanel {
-    width: 17%;
-    height: auto;
-    display: inline-block;
-    color: white;
-    border: 1px solid white;
-    margin: 0px;
+/* width: 20%; */
+height: auto;
+/* display: inline-block; */
+color: #ecdfcc;
+border: 1px solid #ecdfcc;
+margin: 0 15px 0 15px;
 }
 
 div.shop-cards-container {
-    display: inline-block;
-    width: 83%;
+display: inline-block;
+width: fit-content;
+margin: auto;
+}
+
+.shop-item-backbutton {
+margin: 10px 0 10px 0;
+font-size: 0.75em;
+}
+
+.shop-item-backbutton-img {
+width: 1.5em;
+height: 1.5em;
 }
 </style>
-
