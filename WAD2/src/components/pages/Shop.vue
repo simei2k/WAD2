@@ -71,7 +71,6 @@
         <div v-if="shopPage === 'checkout'">
             <ShopCheckOut @toggleShop="toggleShop" />
         </div>
-    </div>
 </template>
 
 <script>
@@ -258,8 +257,6 @@ div.shop-cards-container {
     font-size: 0.75em;
 }
 
-=======
-}
 
 .shop-item-backbutton {
     margin: 10px 0 10px 0;
@@ -271,3 +268,4 @@ div.shop-cards-container {
     height: 1.5em;
 }
 
+</style>
