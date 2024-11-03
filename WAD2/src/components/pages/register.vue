@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="registration">
     <img class="cat-icon" src="../../assets/cat_icon.png">
@@ -23,8 +21,6 @@
         <input type="text" id="address"  v-model="address"  class="form-control address">
         <label for="email">Contact Number:</label>
         <input type="number" id="contact-number"  v-model="contactNumber"  class="form-control contact-number">
-        <label for="emergency-contact-name">Emergency Contact Name:</label>
-        <input type="text" id="emergency-contact-name"  v-model="emergencyContactName"  class="form-control emergency-contact-name">
         <label for="pet-number"> Number of Pets</label>
         <input type="number" id="pet-number"  v-model="petNumber"  class="form-control pet-number">
         <br>
@@ -73,6 +69,10 @@ label{
 </style>
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import  { getFirestore, collection, setDoc, getDocs } from "firebase/firestore";
+import db from "../../../database"
+
+//checking which checkbox is checked
 
 export default {
     name: 'Register',
@@ -85,11 +85,12 @@ export default {
             accountType: [],
             address: '',
             contactNumber: '',
-            emergencyContactName: '',
             petNumber: ''
         };
     },
     methods: {
+        
+        //create user for authentication
         createUser() {
             const { email, password } = this;
             const auth = getAuth();
@@ -111,8 +112,23 @@ export default {
                     console.error("Error:", errorCode, errorMessage);
                     alert(errorMessage)
                 });
-        }
+        },
+    //create user in database
+    createUserdb(){
+        const colRef = collection(db, 'users')
+        setDoc(colRef,{
+            name: this.name,
+            email: this.email,
+            password: this.password,
+            accountType: this.accountType,
+            address: this.address,
+            contactNumber: this.contactNumber,
+            petNumber: this.petNumber,
+        })
     }
+    }
+    
+
 };
 
   </script>
