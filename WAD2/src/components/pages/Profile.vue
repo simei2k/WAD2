@@ -3,7 +3,6 @@ import NavBar from '../NavBar.vue'
 </script>
 <template>
     <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></head>
-    <NavBar></NavBar>
     <div class="container-fluid box">
         <div class="row">
             <div class="col-3 profile-bar">
@@ -39,12 +38,12 @@ import NavBar from '../NavBar.vue'
                 <h1>More About CatWoman</h1>
                 <p>I am a big fan of cats. I have experience of up to 10 years with cats. Currently I have 4 cats at home, and this is my retirement job. yada yada yada yada </p>
                 <h2>Preferences</h2>
-                <p>&#128054; <b>Animals:</b> 10-20kg dogs, cats</p>
-                <p>&#128168; <b>Willing to travel:</b> 10km radius</p>
-                <p><b>&#128176;Rates:</b></p>
-                <p>&#127968;Pet Sitting</p>
-                <p>&#128694;Pet walking</p>
-                <p>&#128663;Pet transport:</p>
+                <p>&#128054; <b>Animals:</b> 10-20kg dogs, cats</p><br>
+                <p>&#128168; <b>Willing to travel:</b> 10km radius</p><br>
+                <p><b>&#128176;Rates:</b></p><br>
+                <p>&#127968;Pet Sitting</p><br>
+                <p>&#128694;Pet walking</p><br>
+                <p>&#128663;Pet transport:</p><br>
                 <div class="reviews">
                     <h1>What Customers Say</h1>
                     <h3>Average: 5/5 &#127775; ratings</h3>

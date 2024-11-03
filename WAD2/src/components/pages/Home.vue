@@ -1,7 +1,9 @@
 <script>
 import NavBar from '../NavBar.vue'
+import app from '../../../firebase.js'
+
 </script>
 <template>
-    <NavBar></NavBar>
-    <h1>this is home</h1>
+
+    This is Home to check whether you have logged in
 </template>

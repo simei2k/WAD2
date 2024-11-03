@@ -48,7 +48,7 @@ export default {
                 <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
             </li>
             <li class="nav-item">
-                <div class="button"><RouterLink to="/GettingStartedServiceProviderPg1" class="nav-link">Log In</RouterLink> </div>          
+                <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
             </li>
             <li class="nav-item">
                 <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          

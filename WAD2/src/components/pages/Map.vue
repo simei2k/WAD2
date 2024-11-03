@@ -1,6 +1,5 @@
 <template>
     <div>
-    <NavBar></NavBar>
     <h1>This is a map!!!</h1>
 
     <!-- Input field and button for manual location entry -->
