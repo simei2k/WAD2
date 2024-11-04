@@ -1,8 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
-import { getAuth, EmailAuthProvider } from 'firebase/auth';
-import * as firebaseui from 'firebaseui';
-import firebase from 'firebase/compat/app';
+
 
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
