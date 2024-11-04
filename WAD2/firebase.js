@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp } from "@firebase/app";
 
 
 // TODO: Replace the following with your app's Firebase project configuration
@@ -25,51 +25,4 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-
-//adding data
-//try {
-//  const docRef = await addDoc(collection(db, "users"), {
-//    first: "Ada",
-//    last: "Lovelace",
-//    born: 1815
-//  });
-//  console.log("Document written with ID: ", docRef.id);
-//} catch (e) {
-//console.error("Error adding document: ", e);
-//}
-
-//read data
-//const querySnapshot = await getDocs(collection(db, "users"));
-//querySnapshot.forEach((doc) => {
-//  console.log(`${doc.id} => ${doc.data()}`);
-//});
-//
-//custom object 
-//
-//class City {
-//  constructor (name, state, country ) {
-//    this.name = name;
-//    this.state = state;
-//    this.country = country;
-//}
-//toString() {
-//    return this.name + ', ' + this.state + ', ' + this.country;
-//}
-//}
-
-// Firestore data converter
-//const cityConverter = {
-//toFirestore: (city) => {
-//    return {
-//        name: city.name,
-//        state: city.state,
-//        country: city.country
-//        };
-//},
-//fromFirestore: (snapshot, options) => {
-//    const data = snapshot.data(options);
-//    return new City(data.name, data.state, data.country);
-//}
-//};
-
-export default app
+export { app }
