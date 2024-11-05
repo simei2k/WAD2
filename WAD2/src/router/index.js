@@ -7,10 +7,12 @@ import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
 import Messaging from '../components/pages/Messaging.vue'
 import Map from '../components/pages/Map.vue'
+import Messaging from '../components/pages/Messaging.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/register.vue'
 import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
 import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
+
 
 
 
@@ -74,6 +76,11 @@ const routes =[
       {
         path: '/messaging', 
         name: 'messaging',
+        component: Messaging
+      },
+      {
+        path: '/Messaging', 
+        name: 'Messaging',
         component: Messaging
       },
     ]
