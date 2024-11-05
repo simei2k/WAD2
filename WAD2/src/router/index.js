@@ -1,17 +1,17 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import Home from '../components/pages/Home.vue'
 import Shop from '../components/pages/Shop.vue'
-import Chat from '../components/pages/Chat.vue'
+import Chat from '../components/pages/Chatbot.vue'
 import Profile from '../components/pages/Profile.vue'
 import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
+import Messaging from '../components/pages/Messaging.vue'
 import Map from '../components/pages/Map.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/register.vue'
 import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
 import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
-import GettingStartedServiceProviderPg2 from '../components/pages/GettingStartedServiceProviderPg2.vue'
-import GettingStartedServiceProviderPg3 from '../components/pages/GettingStartedServiceProviderPg3.vue'
+
 
 
 const routes =[
@@ -72,19 +72,9 @@ const routes =[
         component: GettingStartedServiceProviderPg1
       },
       {
-        path: '/GettingStartedServiceProviderPg2', 
-        name: 'GettingStartedServiceProviderPg2',
-        component: GettingStartedServiceProviderPg2
-      },
-      {
-        path: '/GettingStartedServiceProviderPg3', 
-        name: 'GettingStartedServiceProviderPg3',
-        component: GettingStartedServiceProviderPg3
-      },
-       {
-        path: '/GettingStartedServiceProviderPg3', 
-        name: 'GettingStartedServiceProviderPg3',
-        component: GettingStartedServiceProviderPg3
+        path: '/messaging', 
+        name: 'messaging',
+        component: Messaging
       },
     ]
   

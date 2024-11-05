@@ -1,5 +1,5 @@
 //accessing database
-import { getFirestore, collection, doc, setDoc, getDocs } from "firebase/firestore"; 
+import { getFirestore, collection, doc, setDoc, getDocs } from "@firebase/firestore"; 
 
 //init database
 const db = getFirestore()

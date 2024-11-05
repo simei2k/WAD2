@@ -45,6 +45,9 @@ export default {
                 <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
             </li>
             <li class="nav-item">
+                <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>            
+            </li>
+            <li class="nav-item">
                 <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
             </li>
             <li class="nav-item">
