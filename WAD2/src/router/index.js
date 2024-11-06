@@ -1,15 +1,17 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 import Home from '../components/pages/Home.vue'
 import Shop from '../components/pages/Shop.vue'
-import Chat from '../components/pages/Chat.vue'
+import Chat from '../components/pages/Chatbot.vue'
 import Profile from '../components/pages/Profile.vue'
 import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
+import Messaging from '../components/pages/Messaging.vue'
 import Map from '../components/pages/Map.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/register.vue'
 import GettingStartedPetOwner from '../components/pages/GettingStartedPetOwner.vue'
 import GettingStartedServiceProvider from '../components/pages/GettingStartedServiceProvider.vue'
+
 
 
 const routes =[
@@ -69,7 +71,11 @@ const routes =[
         name: 'GettingStartedServiceProvider',
         component: GettingStartedServiceProvider
       },
-
+      {
+        path: '/Messaging', 
+        name: 'Messaging',
+        component: Messaging
+      },
     ]
   
 const router = createRouter({
