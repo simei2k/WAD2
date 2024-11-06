@@ -7,7 +7,6 @@ import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
 import Messaging from '../components/pages/Messaging.vue'
 import Map from '../components/pages/Map.vue'
-import Messaging from '../components/pages/Messaging.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/register.vue'
 import GettingStartedPetOwner from '../components/pages/GettingStartedPetOwner.vue'
@@ -76,8 +75,7 @@ const routes =[
         path: '/Messaging', 
         name: 'Messaging',
         component: Messaging
-      },\
-
+      },
     ]
   
 const router = createRouter({

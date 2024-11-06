@@ -22,11 +22,47 @@
       return {
         chats: [
           {
-            name: 'User',
-            lastMessage: 'https://www.linkedin.com/pulse/...',
-            time: '1:31 AM',
-            avatar: 'https://via.placeholder.com/40',
+            name: 'Alice',
+            lastMessage: 'How are you?',
+            time: '17:46',
+            avatar: 'https://avatar.iran.liara.run/public/73',
           },
+          {
+            name: 'Bob',
+            lastMessage: 'How is your dog?',
+            time: '17:44',
+            avatar: 'https://avatar.iran.liara.run/public/46',
+          },
+          {
+            name: 'Mallory',
+            lastMessage: 'Have you gone to the vet yet?',
+            time: '17:40',
+            avatar: 'https://avatar.iran.liara.run/public/89',
+          },
+          {
+            name: 'John',
+            lastMessage: 'How do I find good pet food?',
+            time: '17:35',
+            avatar: 'https://avatar.iran.liara.run/public/46',
+          },
+          {
+            name: 'Emily',
+            lastMessage: 'My dog is barking at me',
+            time: '17:30',
+            avatar: 'https://avatar.iran.liara.run/public/73',
+          },
+          {
+            name: 'David',
+            lastMessage: 'How many dogs do you have?',
+            time: '17:20',
+            avatar: 'https://avatar.iran.liara.run/public/73',
+          },
+          {
+            name: 'Greg',
+            lastMessage: 'Do you plan to adopt a cat?',
+            time: '17:17',
+            avatar: 'https://avatar.iran.liara.run/public/73',
+          }
           // Add more chat items based on your need
         ],
       };
@@ -49,7 +85,7 @@
     display: flex;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #ECDFCC;
     cursor: pointer;
   }
   
@@ -73,5 +109,6 @@
     font-size: 0.8rem;
     color: #888;
   }
+
   </style>
   
