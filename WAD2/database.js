@@ -1,8 +1,8 @@
 //accessing database
-import { getFirestore, collection, doc, setDoc, getDocs } from "@firebase/firestore"; 
+import { app } from "./firebase.js"
 
 //init database
-const db = getFirestore()
+const db = getFirestore(app)
 
 //accessing users in database
 //collection of users, each user is a document

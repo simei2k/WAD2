@@ -1,5 +1,3 @@
-import { initializeApp } from "@firebase/app";
-
 
 const firebaseConfig = {
   apiKey: "AIzaSyAXBijdCQvs-mmBfowIVZikzWhla_48vsA",
@@ -11,4 +9,5 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export default app
+export { app }
+

@@ -10,9 +10,8 @@ import Map from '../components/pages/Map.vue'
 import Messaging from '../components/pages/Messaging.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/register.vue'
-import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
-import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
-
+import GettingStartedPetOwner from '../components/pages/GettingStartedPetOwner.vue'
+import GettingStartedServiceProvider from '../components/pages/GettingStartedServiceProvider.vue'
 
 
 
@@ -64,25 +63,21 @@ const routes =[
       },
 
       {
-        path: '/GettingStartedPetOwnerPg1', 
-        name: 'GettingStartedPetOwnerPg1',
-        component: GettingStartedPetOwnerPg1
+        path: '/GettingStartedPetOwner', 
+        name: 'GettingStartedPetOwner',
+        component: GettingStartedPetOwner
       },
       {
-        path: '/GettingStartedServiceProviderPg1', 
-        name: 'GettingStartedServiceProviderPg1',
-        component: GettingStartedServiceProviderPg1
-      },
-      {
-        path: '/messaging', 
-        name: 'messaging',
-        component: Messaging
+        path: '/GettingStartedServiceProvider', 
+        name: 'GettingStartedServiceProvider',
+        component: GettingStartedServiceProvider
       },
       {
         path: '/Messaging', 
         name: 'Messaging',
         component: Messaging
-      },
+      },\
+
     ]
   
 const router = createRouter({
