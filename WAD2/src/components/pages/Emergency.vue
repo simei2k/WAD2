@@ -8,15 +8,17 @@
           <ul class="cards">
             <li v-for="clinic in clinics"  class="card">
               <!-- Clinic Card Start -->
-              <img :src="clinic.imageUrl" class="card-img-top" :alt="clinic.name" />
               <div class="card-body">
                 <h3 class="card-title"><b>{{ clinic.NAME }}</b></h3>
-                <p class="card-text">&#128205; {{ clinic.distance ? clinic.distance : 'Fetching distance...' }} km away</p>              
+                <p class="card-text">&#128205; {{ clinic.distance ? clinic.distance : 'Fetching distance...' }} km away</p>    
+                <h4 class="card-text">{{ clinic.TYPE }}</h4>          
             </div>
               <div class="card-body">
                 <div class="buttons">
                   <button class="call">Call</button>
-                  <button class="directions">Directions</button>
+                  <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
+                  Directions
+                </a>
                   <button class="send">Send pet details</button>
                 </div>
               </div>
@@ -227,6 +229,12 @@ export default {
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
       return R * c; // returns the distance in meters
+    },
+    getDirectionsUrl(clinic) {
+      if (this.userLocation.lat && this.userLocation.lon && clinic.lat && clinic.lon) {
+        return `https://www.google.com/maps/dir/?api=1&origin=${this.userLocation.lat},${this.userLocation.lon}&destination=${clinic.lat},${clinic.lon}&travelmode=driving`;
+      }
+      return '#'; // Fallback link in case coordinates are missing
     }
   }
 }
@@ -267,10 +275,27 @@ export default {
     color: #ecdfcc;
     align-items: center;
   }
+  button,
+a.directions-link {
+  display: block;
+  background-color: #3C3D37;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 15px;
+  color: #ecdfcc;
+  text-align: center;
+  text-decoration: none; /* Remove underline from links */
+  border: none;
+  cursor: pointer;
+  align-items: center;
+}
   .buttons {
     display: grid;
     align-items: center;
     text-align: center;
+  }
+  .card-title{
+    color:#ecdfcc !important;
   }
   </style>
   
