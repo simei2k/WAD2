@@ -1,5 +1,6 @@
 //accessing database
 import { app } from "./firebase.js"
+import {getFirestore, collection, getDocs} from "@firebase/firestore"
 
 //init database
 const db = getFirestore(app)
