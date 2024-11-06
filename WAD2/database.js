@@ -14,10 +14,7 @@ getDocs(usercolRef)
         let users= []
         snapshot.docs.forEach((doc) => {
             users.push({...doc.data(),id: doc.id})
-            console.log(doc.data())
         })
-        console.log(snapshot.docs[0].id)
-        console.log(users)
     })
 
     
@@ -28,10 +25,11 @@ getDocs(usercolRef)
             snapshot.docs.forEach((doc) => {
                 petOwners.push({...doc.data(),id: doc.id})
                 //doc.data() will find the e
-                console.log(doc.data())
+                
             })
-            console.log(snapshot.docs[0].id)
+            //this one prints out each owner 
             console.log(petOwners)
         })
+        
 
 export default db

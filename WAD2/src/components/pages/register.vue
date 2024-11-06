@@ -69,8 +69,8 @@ label{
 </style>
 <script>
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import  { getFirestore, collection, setDoc, getDocs, doc } from "firebase/firestore";
-import db from "../../../database"
+import  { setDoc, getDocs, doc } from "firebase/firestore";
+import db from "../../../database.js"
 
 //checking which checkbox is checked
 
@@ -123,17 +123,18 @@ export default {
             contactNumber: this.contactNumber,
             petNumber: this.petNumber,
         });
+      
         localStorage.setItem('name', this.name);
         localStorage.setItem('accountType', this.accountType);
           // Determine routing based on accountType selection
-          if (this.accountType.includes('service-provider')) {
+        if (this.accountType.includes('service-provider')) {
             // Navigate to service provider page first
             await setDoc(doc(db,'serviceproviders',this.name),{
                 name: this.name
         }); 
             this.$router.push('/GettingStartedServiceProvider');
-        } else if (this.accountType.includes('pet-owner')) {
-            // If only pet owner is selected, go to the pet owner page
+        } 
+        if (this.accountType.includes('pet-owner')) {
             await setDoc(doc(db,'petowners',this.name),{
                 name:this.name
         });
