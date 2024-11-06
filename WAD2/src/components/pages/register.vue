@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div class="registration">
     <img class="cat-icon" src="../../assets/cat_icon.png">
     <div id="firebaseui-auth-container"></div>
@@ -148,7 +148,6 @@ export default {
 
 };
 
-  </script> -->
+  </script>
 
-<template></template>
 <script></script>
