@@ -1,5 +1,4 @@
 //accessing database
-import { getFirestore, collection, doc, setDoc, getDocs } from "@firebase/firestore"; 
 import { app } from "./firebase.js"
 
 //init database
