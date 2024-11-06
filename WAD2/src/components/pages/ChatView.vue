@@ -1,6 +1,7 @@
 <template>
     <div class="chat-view">
       <div class="chat-header">
+        <!-- <button class="back-button" @click="goBack">← Back</button> -->
         <h3>{{ selectedChat.name }}</h3>
       </div>
       <div class="chat-messages">
@@ -57,6 +58,15 @@
     padding: 10px;
     text-align: center;
   }
+
+/* 
+  .back-button {
+    background: none;
+    border: 1px solid #ECDFCC;
+    color: #ECDFCC;
+    font-size: 1rem;
+    cursor: pointer;
+  } */
   
   .chat-messages {
     flex-grow: 1;
@@ -75,7 +85,6 @@
   .incoming {
     background-color: #3C3D37;
     color: #ECDFCC;
-    /* align-self: flex-start; */
     margin-right: auto;
     border-top-left-radius: 0;
     width: 100%;
@@ -83,7 +92,6 @@
   .outgoing {
     background-color: #ECDFCC;
     color: #3C3D37;
-    /* align-self: flex-end; */
     margin-left: auto;
     border-top-right-radius: 0;
   }
