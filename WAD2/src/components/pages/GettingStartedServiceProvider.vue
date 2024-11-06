@@ -82,7 +82,7 @@ label{
 
 <script>
 
-import  { getFirestore, collection, setDoc, getDocs, doc } from "firebase/firestore";
+import  { setDoc, doc } from "firebase/firestore";
 import db from "../../../database"
 
 export default {
