@@ -25,7 +25,7 @@
         <input type="number" id="pet-number"  v-model="petNumber"  class="form-control pet-number">
         <br>
         <div class="next-button-container" @click="createUser(); createUserdb()">
-        <RouterLink to="/GettingStartedServiceProviderPg1" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="5%" height="5%" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16" onclick="">
+        <RouterLink to="/GettingStartedServiceProvider" class="nav-link"><svg xmlns="http://www.w3.org/2000/svg" width="5%" height="5%" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16" onclick="">
         <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
         </svg></RouterLink>
         </div>
@@ -122,7 +122,25 @@ export default {
             address: this.address,
             contactNumber: this.contactNumber,
             petNumber: this.petNumber,
-        })
+        });
+        localStorage.setItem('name', this.name);
+        localStorage.setItem('accountType', this.accountType);
+          // Determine routing based on accountType selection
+          if (this.accountType.includes('service-provider')) {
+            // Navigate to service provider page first
+            await setDoc(doc(db,'serviceproviders',this.name),{
+                name: this.name
+        }); 
+            this.$router.push('/GettingStartedServiceProvider');
+        } else if (this.accountType.includes('pet-owner')) {
+            // If only pet owner is selected, go to the pet owner page
+            await setDoc(doc(db,'petowners',this.name),{
+                name:this.name
+        });
+            localStorage.setItem('petNumber', this.petNumber);
+            this.$router.push('/GettingStartedPetOwner');
+            
+        }
     }
     }
     
