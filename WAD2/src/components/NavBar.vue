@@ -1,13 +1,34 @@
 <script>
-import { createMemoryHistory, createRouter, RouterLink } from 'vue-router'
+import { ref, onMounted } from 'vue';
+import { auth } from '../../firebase';
+import {useRouter} from "vue-router";
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default {
     name: 'NavBar',
+   
+    setup() {
+    const uid = ref(null);
+    onAuthStateChanged(auth, (user)=>{
+        if (user){
+            uid.value = user.uid;
+            console.log(uid.value)
+            console.log("User logged in, UID:", uid.value); 
+        }
+        else{
+            uid.value = null
+            console.log("No user logged in"); 
+        }
+      
+    })
+    return uid
+
+    },
     methods: {
         navigateToHome() {
             this.$router.push({ name: 'home' });
         }
-    }
+    },
 }
 </script>
 
@@ -26,19 +47,19 @@ export default {
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
+            <li  class="nav-item">
                 <RouterLink to="/home" class="nav-link">Home</RouterLink>
             </li>
-            <li class="nav-item">
+            <li  class="nav-item">
                 <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
             </li>
-            <li class="nav-item">
+            <li  class="nav-item">
                 <RouterLink to="/services" class="nav-link">Services</RouterLink>            
             </li>
-            <li class="nav-item">
+            <li  class="nav-item">
                 <RouterLink to="/map" class="nav-link">Map</RouterLink>            
             </li>
-            <li class="nav-item">
+            <li  class="nav-item">
                 <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
             </li>
             <li class="nav-item">
@@ -50,10 +71,10 @@ export default {
             <li class="nav-item">
                 <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
             </li>
-            <li class="nav-item">
+            <li v-if='uid' class="nav-item">
                 <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
             </li>
-            <li class="nav-item">
+            <li  v-if='uid' class="nav-item">
                 <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          
             </li>
             </ul>
