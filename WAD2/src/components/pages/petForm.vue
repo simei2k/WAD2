@@ -1,9 +1,7 @@
 <template>
   <div class="form-group">
     <label for="profile_pic">Pet Pic:</label>
-    <div class="profile_pic-container">
-      <img :src="profile_pic || '../../assets/profile.png'" class="profile-pic">
-    </div>
+    
     <input type="file" @change="onFileChange" class="form-control profile_pic">
     
     <label for="pet_name">Pet Name:</label>
@@ -54,7 +52,6 @@ export default {
   props: ['index'],
   data() {
     return {
-      profile_pic: '',
       pet_name: '',
       pet_type: '',
       size: '',

@@ -118,11 +118,7 @@ export default {
            if (this.accountType.includes('pet-owner')){
             this.$router.push('/GettingStartedPetOwner')
            }
-           else{
-            localStorage.removeItem('name');
-            localStorage.removeItem('accountType');
-           }
-        
+          
         }
     }
 }

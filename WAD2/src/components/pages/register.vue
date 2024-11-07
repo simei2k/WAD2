@@ -134,11 +134,10 @@ export default {
         }); 
             this.$router.push('/GettingStartedServiceProvider');
         } 
-        if (this.accountType.includes('pet-owner')) {
+        else if (this.accountType.includes('pet-owner')) {
             await setDoc(doc(db,'petowners',this.name),{
                 name:this.name
         });
-            localStorage.setItem('petNumber', this.petNumber);
             this.$router.push('/GettingStartedPetOwner');
             
         }

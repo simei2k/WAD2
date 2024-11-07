@@ -17,57 +17,35 @@
   </template>
   
   <script>
+  import db from "../../../database"
+  import { collection, getDocs } from 'firebase/firestore';
+
   export default {
     data() {
       return {
+        
         chats: [
-          {
-            name: 'Alice',
-            lastMessage: 'How are you?',
-            time: '17:46',
-            avatar: 'https://avatar.iran.liara.run/public/73',
-          },
-          {
-            name: 'Bob',
-            lastMessage: 'How is your dog?',
-            time: '17:44',
-            avatar: 'https://avatar.iran.liara.run/public/46',
-          },
-          {
-            name: 'Mallory',
-            lastMessage: 'Have you gone to the vet yet?',
-            time: '17:40',
-            avatar: 'https://avatar.iran.liara.run/public/89',
-          },
-          {
-            name: 'John',
-            lastMessage: 'How do I find good pet food?',
-            time: '17:35',
-            avatar: 'https://avatar.iran.liara.run/public/46',
-          },
-          {
-            name: 'Emily',
-            lastMessage: 'My dog is barking at me',
-            time: '17:30',
-            avatar: 'https://avatar.iran.liara.run/public/73',
-          },
-          {
-            name: 'David',
-            lastMessage: 'How many dogs do you have?',
-            time: '17:20',
-            avatar: 'https://avatar.iran.liara.run/public/73',
-          },
-          {
-            name: 'Greg',
-            lastMessage: 'Do you plan to adopt a cat?',
-            time: '17:17',
-            avatar: 'https://avatar.iran.liara.run/public/73',
-          }
-          // Add more chat items based on your need
         ],
       };
     },
+    created() {
+      this.getChatsFromDatabase();
+    },
     methods: {
+       getChatsFromDatabase() {
+        const chatColRef = collection(db, 'chats')
+        getDocs(chatColRef)
+        .then((snapshot)=>{
+          let chats = []
+          snapshot.docs.forEach((doc)=>{
+            chats.push({...doc.data(),id:doc.id})
+          })
+          this.chats = chats;
+          console.log(chats)
+          
+        })    
+      
+    },
       selectChat(chat) {
         this.$emit('chatSelected', chat);
       },
