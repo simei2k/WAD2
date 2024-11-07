@@ -204,14 +204,11 @@ export default {
             clinic.lat,
             clinic.lon
           );
-          console.log(clinic)
           clinic.distance = (distance / 1000).toFixed(1); // Convert meters to kilometers
-          console.log(`Distance to ${clinic.NAME}: ${clinic.distance} km`);
         } else {
           console.warn(`Missing coordinates for clinic: ${clinic.NAME}`);
         }
         this.clinics.sort((a, b) => a.distance - b.distance);
-        console.log('Sorted clinics by distance:', this.clinics);
       });
     },
 

@@ -24,7 +24,6 @@ getDocs(usercolRef)
             let petOwners= []
             snapshot.docs.forEach((doc) => {
                 petOwners.push({...doc.data(),id: doc.id})
-                //doc.data() will find the e
                 
             })
             //this one prints out each owner 

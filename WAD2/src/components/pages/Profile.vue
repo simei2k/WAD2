@@ -1,6 +1,4 @@
-<script>
-import NavBar from '../NavBar.vue'
-</script>
+
 <template>
     <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></head>
     <div class="container-fluid box">
@@ -244,6 +242,20 @@ import NavBar from '../NavBar.vue'
     </div>
 </template>
 
+<script>
+import  { getDocs, doc } from "firebase/firestore";
+//to view my own profile
+//get name from local storage
+
+
+
+//retrieve information
+
+
+//determine whether it's pet owner or service provider
+
+//display information accordingly from database
+</script>
 
 <style>
 .box{
