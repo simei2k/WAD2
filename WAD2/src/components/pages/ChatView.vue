@@ -1,49 +1,89 @@
 <template>
-    <div class="chat-view">
-      <div class="chat-header">
-        <!-- <button class="back-button" @click="goBack">← Back</button> -->
-        <h3>{{ selectedChat.name }}</h3>
-      </div>
-      <div class="chat-messages">
-        <div
-          v-for="(message, index) in messages"
-          :key="index"
-          :class="['message', message.type === 'outgoing' ? 'outgoing' : 'incoming']"
-        >
-          <p class="message-content">{{ message.text }}</p>
-          <span class="message-time">{{ message.time }}</span>
-        </div>
-      </div>
-      <div class="chat-input">
-        <input v-model="newMessage" placeholder="Type a message" @keyup.enter="sendMessage" />
-        <button @click="sendMessage">Send</button>
+  <div class="chat-view">
+    <div class="chat-header">
+      <h3>{{ selectedChat.name }}</h3>
+    </div>
+    <div class="chat-messages">
+      <div
+        v-for="(message, index) in messages"
+        :key="index"
+        :class="['message', message.uid === currentUser ? 'outgoing' : 'incoming']"
+      >
+        <p class="message-content">{{ message.text }}</p>
+        <span class="message-time">{{ message.createdAt?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }}</span>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    props: ['selectedChat'],
-    data() {
-      return {
-        messages: [
-          { text: 'Hello!', type: 'incoming', time: '17:45' },
-          { text: 'How are you?', type: 'outgoing', time: '17:46' },
-          // Add more sample messages for demonstration
-        ],
-        newMessage: '',
-      };
-    },
-    methods: {
-      sendMessage() {
-        if (this.newMessage.trim()) {
-          this.messages.push({ text: this.newMessage, type: 'outgoing', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
-          this.newMessage = '';
+    <div class="chat-input">
+      <input v-model="newMessage" placeholder="Type a message" @keyup.enter="sendMessage" />
+      <button @click="sendMessage">Send</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted, watch } from 'vue';
+import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import db from '../../../database'; // Your Firebase Firestore instance
+import { auth } from '../../../firebase'; // Firebase Authentication instance
+
+export default {
+  props: ['selectedChat'],
+  setup(props) {
+    const messages = ref([]);
+    const newMessage = ref('');
+    const currentUser = auth.currentUser?.uid; // Current logged-in user's UID
+
+    // Watch for changes in selectedChat to update the messages
+    watch(
+      () => props.selectedChat,
+      (newChat) => {
+        if (newChat) {
+          const messagesCollection = collection(db, `chats/${newChat.id}/messages`);
+          const messagesQuery = query(messagesCollection, orderBy('createdAt'));
+
+          // Real-time Firestore listener for the selected chat
+          onSnapshot(messagesQuery, (snapshot) => {
+            messages.value = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+          });
         }
       },
-    },
-  };
-  </script>
+      { immediate: true } // Execute the watcher immediately on mount
+    );
+
+    // Function to send message to Firestore
+    const sendMessage = async () => {
+      if (newMessage.value.trim() && props.selectedChat) {
+        try {
+          // Add the message to the messages subcollection
+          const messageData = {
+            text: newMessage.value,
+            uid: auth.currentUser.uid, // Sender's UID
+            createdAt: serverTimestamp(), // Firestore timestamp
+          };
+
+          await addDoc(collection(db, `chats/${props.selectedChat.id}/messages`), messageData);
+
+          // Update the chat document with the last message and its timestamp
+          await updateDoc(doc(db, 'chats', props.selectedChat.id), {
+            lastMessage: newMessage.value,
+            lastMessageTime: serverTimestamp(),
+          });
+
+          newMessage.value = ''; // Clear the input field after sending the message
+        } catch (error) {
+          console.error('Error sending message:', error);
+        }
+      }
+    };
+
+    return { messages, newMessage, currentUser, sendMessage };
+  },
+};
+</script>
+  
   
   <style scoped>
   .chat-view {

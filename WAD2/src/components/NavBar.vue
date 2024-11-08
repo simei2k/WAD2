@@ -71,10 +71,10 @@ export default {
             <li class="nav-item">
                 <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
             </li>
-            <li v-if='uid' class="nav-item">
+            <li  class="nav-item">
                 <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
             </li>
-            <li  v-if='uid' class="nav-item">
+            <li   class="nav-item">
                 <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          
             </li>
             </ul>
