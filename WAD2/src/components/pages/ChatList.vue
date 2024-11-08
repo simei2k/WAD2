@@ -11,14 +11,14 @@
           <h4>{{ chat.name }}</h4>
           <p class="last-message">{{ chat.lastMessage }}</p>
         </div>
-        <span class="chat-time">{{ chat.time }}</span>
+        <span class="chat-time">{{ formatTime(chat.lastMessageTime) }}</span>
       </div>
     </div>
   </template>
   
   <script>
   import db from "../../../database"
-  import { collection, getDocs, query, onSnapshot,orderBy } from 'firebase/firestore';
+  import { collection, query, onSnapshot,orderBy } from 'firebase/firestore';
 
   export default {
     data() {
