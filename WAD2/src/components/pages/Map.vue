@@ -4,10 +4,10 @@
 
     <!-- Input field and button for manual location entry -->
     <input v-model="location" placeholder="Enter your location (e.g., city or address)" />
-    <button @click="getManualLocation">Find Location</button>
+    <button class="enterloc" @click="getManualLocation">Enter Location</button>
 
     <!-- Map container -->
-    <div id="map" style="height: 400px; width: 100%;"></div>
+    <div id="map" style="height: 400px; width: 90%; margin:auto;"></div>
 
     <!-- Display the closest locations -->
     <div v-if="closestLocations.length">
@@ -121,7 +121,7 @@ export default {
       });
 
       // Sort by distance and return the top 3 closest locations
-      return distances.sort((a, b) => a.distance - b.distance).slice(0, 3);
+      return distances.sort((a, b) => a.distance - b.distance).slice(0, 5);
     }
   }
 };
@@ -132,4 +132,44 @@ export default {
     height: 70vh;
     width: 100%;
     }
+
+    .enterloc {
+    margin-left: 30px;
+    align-items: center;
+    appearance: none;
+    background-image: radial-gradient(100% 100% at 100% 0, #ECDFCC 0, #697565 100%);
+    border: 0;
+    border-radius: 6px;
+    box-shadow: rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, rgba(58, 65, 111, .5) 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: "JetBrains Mono", monospace;
+    height: 48px;
+    justify-content: center;
+    line-height: 1;
+    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s, transform .15s;
+    user-select: none;
+    font-size: 18px;
+  }
+
+  .enterloc:focus {
+    box-shadow: #3C3D37 0 0 0 1.5px inset, rgba(45, 35, 66, .4) 0 2px 4px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3c4fe0 0 -3px 0 inset;
+  }
+
+  .enterloc:hover {
+    box-shadow: rgba(45, 35, 66, .4) 0 4px 8px, rgba(45, 35, 66, .3) 0 7px 13px -3px, #3C3D37 0 -3px 0 inset;
+    transform: translateY(-2px);
+  }
+
+  .enterloc:active {
+    box-shadow: #3c4fe0 0 3px 7px inset;
+    transform: translateY(2px);
+  }
 </style>
