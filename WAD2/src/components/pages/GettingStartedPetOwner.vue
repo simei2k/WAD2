@@ -1,48 +1,48 @@
 <template>
     <div class="registration">
-    <img class="cat-icon" src="../../assets/cat_icon.png">
-    <h1>Getting Started</h1>
-    <div class="form-group">
-        <label for="profile_pic">Pet Pic:</label>
-        <div class="profile_pic-container"> <img src="../../assets/profile.png" class="profile-pic"></div>
-        <input type="file" id="profile_pic" class="form-control profile_pic">
-        <label for="pet_name">Pet Name:</label>
-        <input type="text" id="pet_name" class="form-control name">
-        <label for="pet_type">Type</label><br>
-        <select>
-        <option>Dog</option>
-        <option>Cat</option>
-        <option>Bird</option>
-        <option>Fish</option>
-        <option>Lizard</option>
-        <option>Snake</option>
-        </select><br>
-        <label for="size">Size</label><br>
-        <select>
-        <option>small</option>
-        <option>medium</option>
-        <option>big</option>
-        </select><br>
-        <label for="breed">Breed</label><br>
-        <select>
-        <option>Golden</option>
-        <option>Shiba</option>
-        <option>Berner</option>
-        <option>Chihuahua</option>
-        <option>GSD</option>
-        </select><br>
+      <h1>Getting Started</h1>
+      <div v-for="(pet, index) in pets" :key="index">
+        <pet-form :index="index"></pet-form>
+      </div>
+      
+      <div class="add-pet-button">
+        <button @click="addPet">Add Another Pet</button>
+      </div>
+  
+      <div class="begin">
+        <RouterLink to="/profile" class="nav-link">
+          <button class="submit-button" @click="submitPets">Begin!</button>
+        </RouterLink>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import PetForm from './PetForm.vue'; // Import your pet-form component
+  
+  export default {
+    components: {
+      PetForm
+    },
+    data() {
+      return {
+        pets: [{}]  // Initially one empty object to represent the first pet form
+      };
+    },
+    methods: {
+      addPet() {
+        this.pets.push({});  // Adds a new pet form
+      },
+      submitPets() {
+        // Handle submission logic for all pets
+        console.log(this.pets);
+      }
+    }
+  };
+  </script>
+  
 
-        <label for="medical_conditions">Medical Conditions:</label>
-        <textarea id="medical_conditions" class="form-control medical_conditions" value="" placeholder="Allergic to water"></textarea>
-        <label for="dietary_restrictions">Dietary Restrictions:</label>
-        <textarea id="dietary_restrictions" placeholder="Allergic to humans" class="form-control dietary_restrictions" ></textarea>
-        <br>
-        <div class="begin">
-            <RouterLink to="/profile" class="nav-link"><button class="submit-button" type="button" value="begin">Begin!</button></RouterLink>
-        </div>
-    </div>
-    </div>
-</template>
+  
 
 <style>
 label{
@@ -100,33 +100,3 @@ option{
 }
 </style>
 
-<script>
-import  { setDoc, doc } from "firebase/firestore";
-import db from "../../../database"
-export default{
-    name: 'pet_owner',
-    data(){
-        return {
-        profile_pic: '', 
-        pet_name: '', 
-        pet_type: '',
-        size: '',
-        breed: '',
-        medical_conditions: '',
-        };
-    },
-    methods:{
-        //EACH PET WILL BE A COLLECTION WITH THE PETNAME, AND SUBCOLLECTION WILL BE PET OWNER'S NAME
-        async createPetOwnerdb(){
-            await setDoc(doc(db,'petowners',this.name, this.pet_name),{
-            profile_pic: '', 
-            pet_name: '', 
-            pet_type: '',
-            size: '',
-            breed: '',
-            medical_conditions: '',
-        });
-        }
-    }
-}
-</script>

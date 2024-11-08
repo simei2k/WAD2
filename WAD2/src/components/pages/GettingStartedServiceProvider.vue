@@ -82,7 +82,7 @@ label{
 
 <script>
 
-import  { getFirestore, collection, setDoc, getDocs, doc } from "firebase/firestore";
+import  { setDoc, doc } from "firebase/firestore";
 import db from "../../../database"
 
 export default {
@@ -118,11 +118,7 @@ export default {
            if (this.accountType.includes('pet-owner')){
             this.$router.push('/GettingStartedPetOwner')
            }
-           else{
-            localStorage.removeItem('name');
-            localStorage.removeItem('accountType');
-           }
-        
+          
         }
     }
 }
