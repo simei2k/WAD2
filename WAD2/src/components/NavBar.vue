@@ -1,93 +1,108 @@
 <script>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import { auth } from '../../firebase';
-import {useRouter} from "vue-router";
 import { onAuthStateChanged } from 'firebase/auth';
 
 export default {
     name: 'NavBar',
-   
-    setup() {
-    const uid = ref(null);
-    onAuthStateChanged(auth, (user)=>{
-        if (user){
-            uid.value = user.uid;
-            console.log(uid.value)
-            console.log("User logged in, UID:", uid.value); 
-        }
-        else{
-            uid.value = null
-            console.log("No user logged in"); 
-        }
-      
-    })
-    return uid
 
+    setup() {
+        const uid = ref(null);
+
+        // Watch for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                uid.value = user.uid;
+                console.log("I am logged in");
+            } else {
+                uid.value = null;
+                console.log("No user logged in");
+            }
+        });
+
+        // Return uid so it's available in the template
+        return {
+            uid
+        };
+    },
+    computed: {
+        isLoggedIn() {
+            return this.uid != null;
+        }
     },
     methods: {
         navigateToHome() {
             this.$router.push({ name: 'home' });
         }
     },
-}
+};
 </script>
 
 <template>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">    
-    <nav class="navbar navbar-expand-sm sticky-top">
+     <head><meta name="viewport" content="width=device-width, initial-scale=1">
+     </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
-        <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">        
-        <span class="ms-2" style="color:#ecdfcc">PawPal</span>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-            <li  class="nav-item">
-                <RouterLink to="/home" class="nav-link">Home</RouterLink>
-            </li>
-            <li  class="nav-item">
-                <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
-            </li>
-            <li  class="nav-item">
-                <RouterLink to="/services" class="nav-link">Services</RouterLink>            
-            </li>
-            <li  class="nav-item">
-                <RouterLink to="/map" class="nav-link">Map</RouterLink>            
-            </li>
-            <li  class="nav-item">
-                <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
-            </li>
-            <li  class="nav-item">
-                <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
-            </li>
-            <li   class="nav-item">
-                <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          
-            </li>
-            </ul>
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">
+                <span class="ms-2" style="color:#ecdfcc">PawPal</span>
+            </a>
+
+            <button class="navbar-toggler"  data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <RouterLink to="/home" class="nav-link">Home</RouterLink>
+                    </li>
+                    <li class="nav-item" v-if="isLoggedIn">
+                        <RouterLink to="/profile" class="nav-link">Profile</RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/services" class="nav-link">Services</RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/map" class="nav-link">Map</RouterLink>
+                    </li>
+                    <li class="nav-item" v-if="isLoggedIn">
+                        <RouterLink to="/chat" class="nav-link">Chat</RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
+                    </li>
+                    <li class="nav-item" v-if="isLoggedIn">
+                        <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>
+                    </li>
+                    <li class="nav-item">
+                        <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>
+                    </li>
+                    <li class="nav-item" v-if="!isLoggedIn">
+                        <div class="button">
+                            <RouterLink to="/login" class="nav-link">Log In</RouterLink>
+                        </div>
+                    </li>
+                    <li class="nav-item" v-if="!isLoggedIn">
+                        <div class="button">
+                            <RouterLink to="/register" class="nav-link">Register</RouterLink>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-    <hr>
+        <hr>
     </nav>
+
+</template>
+
    
 
 
-
-
-</template>
 <style>
 nav{
     margin: 5px;
@@ -115,6 +130,7 @@ nav .navbar-nav li a{
 .nav-link{
     color: #ecdfcc !important;
 }  
+
 
 
 
