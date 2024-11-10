@@ -15,6 +15,15 @@
   <script>
   import NavBar from '../NavBar.vue'
   import axios from 'axios';
+  import OpenAI from "openai";
+  
+  const openai = new OpenAI({
+    organization: "org-re6Hli8fSTwShdYvKvYj6Egs",
+    project: "$proj_fwYr1xqeNiTBwmFXYzgMvvCP",
+    apiKey: "Bearer API_KEY",
+    dangerouslyAllowBrowser: true
+  });
+
 
   export default {
     data() {
@@ -35,12 +44,12 @@
     async getBotResponse(userMessage) {
       try {
         let response = await axios.post("https://api.openai.com/v1/chat/completions", {
-          model: "gpt-4",
+          model: "gpt-3.5",
           messages: [{ role: "user", content: userMessage }]
         }, {
-          headers: {
-            "Authorization": `Bearer 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`
-          }
+          // headers: {
+          //   "Authorization": `API_KEY`
+          // }
         });
         return response.data.choices[0].message.content;
       } catch (error) {

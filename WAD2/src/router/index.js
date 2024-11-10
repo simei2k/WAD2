@@ -16,7 +16,7 @@ import GettingStartedServiceProvider from '../components/pages/GettingStartedSer
 
 const routes =[
     {
-        path: '/home',
+        path: '/',
         name: 'home',
         component: Home
       },

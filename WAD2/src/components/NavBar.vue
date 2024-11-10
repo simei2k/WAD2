@@ -47,53 +47,45 @@ export default {
 
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">
-                <span class="ms-2" style="color:#ecdfcc">PawPal</span>
-            </a>
-
-            <button class="navbar-toggler"  data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <RouterLink to="/home" class="nav-link">Home</RouterLink>
-                    </li>
-                    <li class="nav-item" v-if="isLoggedIn">
-                        <RouterLink to="/profile" class="nav-link">Profile</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <RouterLink to="/services" class="nav-link">Services</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <RouterLink to="/map" class="nav-link">Map</RouterLink>
-                    </li>
-                    <li class="nav-item" v-if="isLoggedIn">
-                        <RouterLink to="/chat" class="nav-link">Chat</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <RouterLink to="/shop" class="nav-link">Shop</RouterLink>
-                    </li>
-                    <li class="nav-item" v-if="isLoggedIn">
-                        <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>
-                    </li>
-                    <li class="nav-item">
-                        <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>
-                    </li>
-                    <li class="nav-item" v-if="!isLoggedIn">
-                        <div class="button">
-                            <RouterLink to="/login" class="nav-link">Log In</RouterLink>
-                        </div>
-                    </li>
-                    <li class="nav-item" v-if="!isLoggedIn">
-                        <div class="button">
-                            <RouterLink to="/register" class="nav-link">Register</RouterLink>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+        <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">        
+        <span class="ms-2" style="color:#ecdfcc">
+            <RouterLink to="/" class="nav-link">PawPal</RouterLink>
+        </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/services" class="nav-link">Services</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/map" class="nav-link">Map</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
+            </li>
+            <li class="nav-item">
+                <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          
+            </li>
+            </ul>
         </div>
         <hr>
     </nav>
