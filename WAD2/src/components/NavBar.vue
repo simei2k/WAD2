@@ -1,21 +1,51 @@
 <script>
-import { createMemoryHistory, createRouter, RouterLink } from 'vue-router'
+import { ref } from 'vue';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default {
     name: 'NavBar',
+
+    setup() {
+        const uid = ref(null);
+
+        // Watch for auth state changes
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                uid.value = user.uid;
+                console.log("I am logged in");
+            } else {
+                uid.value = null;
+                console.log("No user logged in");
+            }
+        });
+
+        // Return uid so it's available in the template
+        return {
+            uid
+        };
+    },
+    computed: {
+        isLoggedIn() {
+            return this.uid != null;
+        }
+    },
     methods: {
         navigateToHome() {
             this.$router.push({ name: 'home' });
         }
-    }
-}
+    },
+};
 </script>
 
 <template>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">    
-    <nav class="navbar navbar-expand-sm sticky-top">
+     <head><meta name="viewport" content="width=device-width, initial-scale=1">
+     </head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
         <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">        
@@ -57,15 +87,14 @@ export default {
             </li>
             </ul>
         </div>
-    </div>
-    <hr>
+        <hr>
     </nav>
+
+</template>
+
    
 
 
-
-
-</template>
 <style>
 nav{
     margin: 5px;
@@ -93,6 +122,7 @@ nav .navbar-nav li a{
 .nav-link{
     color: #ecdfcc !important;
 }  
+
 
 
 

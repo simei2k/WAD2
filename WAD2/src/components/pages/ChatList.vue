@@ -11,14 +11,14 @@
           <h4>{{ chat.name }}</h4>
           <p class="last-message">{{ chat.lastMessage }}</p>
         </div>
-        <span class="chat-time">{{ chat.time }}</span>
+        <span class="chat-time">{{ formatTime(chat.lastMessageTime) }}</span>
       </div>
     </div>
   </template>
   
   <script>
   import db from "../../../database"
-  import { collection, getDocs } from 'firebase/firestore';
+  import { collection, query, onSnapshot,orderBy } from 'firebase/firestore';
 
   export default {
     data() {
@@ -31,23 +31,27 @@
     created() {
       this.getChatsFromDatabase();
     },
+   
     methods: {
-       getChatsFromDatabase() {
-        const chatColRef = collection(db, 'chats')
-        getDocs(chatColRef)
-        .then((snapshot)=>{
-          let chats = []
-          snapshot.docs.forEach((doc)=>{
-            chats.push({...doc.data(),id:doc.id})
-          })
-          this.chats = chats;
-          console.log(chats)
-          
-        })    
-      
+      //getting messagings from the database
+      getChatsFromDatabase() {
+      const chatColRef = collection(db, 'chats');
+      const chatQuery = query(chatColRef, orderBy('lastMessageTime', 'desc')); // Order by lastMessageTime
+
+      // Real-time Firestore listener
+      onSnapshot(chatQuery, (snapshot) => {
+        this.chats = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+      });
     },
+
       selectChat(chat) {
         this.$emit('chatSelected', chat);
+      },
+      formatTime(timestamp) {
+      return timestamp?.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       },
     },
   };

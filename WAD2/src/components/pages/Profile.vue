@@ -242,20 +242,7 @@
     </div>
 </template>
 
-<script>
-import  { getDocs, doc } from "firebase/firestore";
-//to view my own profile
-//get name from local storage
 
-
-
-//retrieve information
-
-
-//determine whether it's pet owner or service provider
-
-//display information accordingly from database
-</script>
 
 <style>
 .box{

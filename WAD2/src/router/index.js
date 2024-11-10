@@ -1,4 +1,4 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/pages/Home.vue'
 import Shop from '../components/pages/Shop.vue'
 import Chat from '../components/pages/Chatbot.vue'
@@ -79,7 +79,8 @@ const routes =[
     ]
   
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
+
   routes,
 })
 

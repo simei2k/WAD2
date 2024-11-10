@@ -254,6 +254,7 @@ export default {
     text-align: center;
     align-items: center;
     height: 100%;
+    overflow: hidden;
   }
   .cards {
     align-items: center;
@@ -271,6 +272,9 @@ export default {
     border-radius: 15px;
     color: #ecdfcc;
     align-items: center;
+  }
+  .card{
+    height: 60vh;
   }
   button,
 a.directions-link {

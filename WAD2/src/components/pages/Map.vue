@@ -1,135 +1,171 @@
 <template>
-    <div>
-    <h1>This is a map!!!</h1>
+  <div>
+    <section class="ui two column centered grid" style="position:relative;z-index:1">
+      <div class="column">
+        <form class="ui segment large form">
+          <div class="ui message red" v-show="error">{{error}}</div>
+          <div class="ui segment">
+            <div class="field">
+              <div class="ui right icon input large" :class="{loading:spinner}">
+                <input
+                  type="text"
+                  placeholder="Enter your address"
+                  v-model="address"
+                  ref="autocomplete"
+                />
+                <i class="dot circle link icon" @click="locatorButtonPressed"></i>
+              </div>
+            </div>
+            <button class="ui button">Go</button>
+          </div>
+        </form>
+      </div>
+    </section>
 
-    <!-- Input field and button for manual location entry -->
-    <input v-model="location" placeholder="Enter your location (e.g., city or address)" />
-    <button @click="getManualLocation">Find Location</button>
-
-    <!-- Map container -->
-    <div id="map" style="height: 400px; width: 100%;"></div>
-
-    <!-- Display the closest locations -->
-    <div v-if="closestLocations.length">
-      <h2>Closest Locations:</h2>
-      <ul>
-        <li v-for="(loc, index) in closestLocations" :key="index">
-          {{ loc.name }} (Distance: {{ loc.distance.toFixed(2) }} km)
-        </li>
-      </ul>
-    </div>
+    <section id="map" ref="map"></section>
   </div>
 </template>
 
 <script>
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import axios from 'axios';
+import axios from "axios";
+
 
 export default {
-  name: 'MapComponent',
   data() {
     return {
-      map: null,           // Leaflet map instance
-      marker: null,        // Marker instance
-      location: '',        // User's input location
-      predefinedLocations: [  // Array of predefined locations
-        { name: 'Location 1', coords: [1.29027, 103.851959] }, // Singapore example
-        { name: 'Location 2', coords: [1.3521, 103.8198] },    // Another point in Singapore
-        { name: 'Location 3', coords: [1.3000, 103.8000] },    // Another point
-        { name: 'Location 4', coords: [1.2820, 103.8423] },    // Another point
-        { name: 'Location 5', coords: [1.3600, 103.989] },     // Another point
-      ],
-      closestLocations: [] // Array to hold the closest locations
+      address: "",
+      error: "",
+      spinner: false,
     };
   },
+
   mounted() {
-    this.initMap();
+    var autocomplete = new google.maps.places.Autocomplete(
+      this.$refs["autocomplete"],
+      {
+        bounds: new google.maps.LatLngBounds(
+          new google.maps.LatLng(45.4215296, -75.6971931)
+        ),
+      }
+    );
+
+    autocomplete.addListener("place_changed", () => {
+      var place = autocomplete.getPlace();
+
+      this.showLocationOnTheMap(
+        place.geometry.location.lat(),
+        place.geometry.location.lng()
+      );
+    });
   },
+
   methods: {
-    initMap() {
-      // Initialize the map and set its default view
-      this.map = L.map('map').setView([1.3521, 103.8198], 13);
+    locatorButtonPressed() {
+      this.spinner = true;
 
-      // Load the tile layer from OpenStreetMap
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors',
-      }).addTo(this.map);
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.getAddressFrom(
+              position.coords.latitude,
+              position.coords.longitude
+            );
 
-      // Add a default marker at the initial location
-      this.marker = L.marker([1.3521, 103.8198])
-        .addTo(this.map)
-        .bindPopup('Singapore')
-        .openPopup();
-    },
-
-    // Method to fetch the location based on user input and find closest points
-    getManualLocation() {
-      const locationQuery = this.location;
-
-      // Use Nominatim API to geocode the input location
-      axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${locationQuery}`)
-        .then(response => {
-          if (response.data && response.data.length > 0) {
-            const result = response.data[0];
-            const userLat = parseFloat(result.lat);
-            const userLon = parseFloat(result.lon);
-
-            // Center the map to the user's new location
-            this.map.setView([userLat, userLon], 13);
-
-            // Move the marker to the new location
-            this.marker.setLatLng([userLat, userLon])
-              .bindPopup(`You searched for: ${locationQuery}`)
-              .openPopup();
-
-            // Calculate distances to predefined locations and sort by closest
-            this.closestLocations = this.getClosestLocations(userLat, userLon);
-          } else {
-            alert('Location not found. Please try again.');
+            this.showLocationOnTheMap(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+          },
+          (error) => {
+            this.error =
+              "Locator is unable to find your address. Please type your address manually.";
+            this.spinner = false;
+            // console.log(error.message);
           }
+        );
+      } else {
+        this.error = error.message;
+        this.spinner = false;
+        console.log("Your browser does not support geolocation API ");
+      }
+    },
+    getAddressFrom(lat, long) {
+      axios
+        .get(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+            lat +
+            "," +
+            long +
+            "&key=AIzaSyCVQ5-GupDOBPpHcOPYsrsGJVc_Y0bENfA"
+        )
+        .then((response) => {
+          if (response.data.error_message) {
+            this.error = response.data.error_message;
+            console.log(response.data.error_message);
+          } else {
+            this.address = response.data.results[0].formatted_address;
+            // console.log(response.data.results[0].formatted_address);
+          }
+          this.spinner = false;
         })
-        .catch(error => {
-          console.error('Error fetching location:', error);
-          alert('There was an error finding the location.');
+        .catch((error) => {
+          this.error = error.message;
+          this.spinner = false;
+          console.log(error.message);
         });
     },
 
-    // Haversine formula to calculate distance between two coordinates
-    calculateDistance(lat1, lon1, lat2, lon2) {
-      const R = 6371; // Radius of the Earth in kilometers
-      const dLat = this.deg2rad(lat2 - lat1);
-      const dLon = this.deg2rad(lon2 - lon1);
-      const a = 
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) *
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c; // Distance in kilometers
-    },
-
-    // Helper to convert degrees to radians
-    deg2rad(deg) {
-      return deg * (Math.PI / 180);
-    },
-
-    // Get the closest locations based on the user's input
-    getClosestLocations(userLat, userLon) {
-      const distances = this.predefinedLocations.map(location => {
-        const distance = this.calculateDistance(userLat, userLon, location.coords[0], location.coords[1]);
-        return { name: location.name, distance };
+    showLocationOnTheMap(latitude, longitude) {
+      // Show & center the Map based oon
+      var map = new google.maps.Map(this.$refs["map"], {
+        zoom: 15,
+        center: new google.maps.LatLng(latitude, longitude),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
       });
 
-      // Sort by distance and return the top 3 closest locations
-      return distances.sort((a, b) => a.distance - b.distance).slice(0, 3);
-    }
-  }
+      new google.maps.Marker({
+        position: new google.maps.LatLng(latitude, longitude),
+        map: map,
+      });
+    },
+  },
 };
 </script>
 
-<style scoped>
-    #map {
-    height: 70vh;
-    width: 100%;
-    }
+
+<style>
+.ui.button,
+.dot.circle.icon {
+  background-color: #ff5a5f;
+  color: white;
+}
+
+.pac-icon {
+  display: none;
+}
+
+.pac-item {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.pac-item:hover {
+  background-color: #ececec;
+}
+
+.pac-item-query {
+  font-size: 16px;
+}
+
+#map {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
 </style>
+
+
+
