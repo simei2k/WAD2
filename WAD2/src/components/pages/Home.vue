@@ -12,7 +12,7 @@
         <div class="card-content">
             <h3 class="card-title">Services</h3>
             <p class="card-description">
-                Looking for pet sitters/walkers or wanting to provide such services? Check out our <span>services</span> page to post your jobs!
+                Looking for pet sitter/walker jobs? Check out our <span>services</span> page to post your jobs!
             </p>
 
         <!-- Card Button -->
@@ -103,7 +103,7 @@
 
   .card-container {
     display: flex;
-    height: auto;
+    height: auto
   }
 
   .card-button {
