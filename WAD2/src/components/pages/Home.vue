@@ -3,8 +3,8 @@
       <h1>Welcome to PawPal!</h1>
       <p>Your one-stop solution for all things related to your furry pals!</p>
 
-      <div class="card-container">
-      <div class="card col-lg-3">
+      <div class="card-deck">
+      <div class="card col-lg-3 col-md-2">
         <!-- Card Image -->
         <!-- <img src="https://via.placeholder.com/300x180" alt="Sample Image" class="card-image"> -->
 
@@ -20,7 +20,7 @@
         </div>
       </div>
 
-      <div class="card col-lg-3">
+      <div class="card col-lg-3 col-md-2">
         <!-- Card Image -->
         <!-- <img src="https://via.placeholder.com/300x180" alt="Sample Image" class="card-image"> -->
 
@@ -28,7 +28,7 @@
         <div class="card-content">
             <h3 class="card-title">Map</h3>
             <p class="card-description">
-                Looking for pet resources or nearby veterinarian clinics? Use the <span>map</span> to find pet stores nearest to you!
+                Looking for pet resources or nearby veterinarian clinics? Use the <span>map</span> to find pet stores near you!
             </p>
 
         <!-- Card Button -->
@@ -36,7 +36,7 @@
         </div>
       </div>
 
-      <div class="card col-lg-3">
+      <div class="card col-lg-3 col-md-2">
         <!-- Card Image -->
         <!-- <img src="https://via.placeholder.com/300x180" alt="Sample Image" class="card-image"> -->
 
@@ -101,19 +101,20 @@
     font-size: medium;
   }
 
-  .card-container {
+  .card-deck {
     display: flex;
-    height: auto
+    flex-wrap: wrap;
+    align-items: stretch;
   }
 
   .card-button {
     border-radius: 5px;
+    align-self: start;
   } 
 
   .card {
-    margin: auto;
-    justify-content: center;
-    height: auto;
+    margin: 10px; 
+    flex: 1 0 auto;
   }
 
   </style>
