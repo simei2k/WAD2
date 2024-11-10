@@ -1,34 +1,51 @@
 <template>
-    <div>
-      <h1>Emergency Clinics Nearby</h1>
-      
-      <!-- Loop through clinics and display ClinicMap component for each -->
-      <div class="clinics">
-        <div class="card-container">
-          <ul class="cards">
-            <li v-for="clinic in clinics"  class="card">
-              <!-- Clinic Card Start -->
-              <div class="card-body">
-                <h3 class="card-title"><b>{{ clinic.NAME }}</b></h3>
-                <p class="card-text">&#128205; {{ clinic.distance ? clinic.distance : 'Fetching distance...' }} km away</p>    
-                <h4 class="card-text">{{ clinic.TYPE }}</h4>          
+  <div>
+    <h1>Emergency Clinics Nearby</h1>
+    
+    <!-- Loop through clinics and display ClinicMap component for each -->
+    <div class="clinics">
+      <div class="card-container">
+        <ul class="cards">
+          <li v-for="clinic in clinics" :key="clinic.NAME" class="card">
+            <!-- Clinic Card Start -->
+            <div class="card-body">
+              <h3 class="card-title"><b>{{ clinic.NAME }}</b></h3>
+              <p class="card-text">&#128205; {{ clinic.distance ? clinic.distance : 'Fetching distance...' }} km away</p>    
+              <h4 class="card-text">{{ clinic.TYPE }}</h4>          
             </div>
-              <div class="card-body">
-                <div class="buttons">
-                  <button class="call">Call</button>
-                  <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
+            <div class="card-body">
+              <div class="buttons">
+                <button class="call">Call</button>
+                <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
                   Directions
                 </a>
-                  <button class="send">Send pet details</button>
-                </div>
+                <button @click="fetchPetDetails('ownerName', 'petName')" class="send">Send pet details</button>
               </div>
-              <!-- Clinic Card End -->
-            </li>
-          </ul>
+            </div>
+            <!-- Clinic Card End -->
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Modal to display pet details -->
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <span class="close" @click="showModal = false">&times;</span>
+        <h2>Pet Details</h2>
+        
+        <!-- Loop through petDetails and display each pet -->
+        <div v-for="(pet, index) in petDetails" :key="index">
+          <p>Name: {{ pet.name }}</p>
+          <p>Breed: {{ pet.breed }}</p>
+          <p>Age: {{ pet.age }}</p>
+          <!-- Add more fields as needed -->
         </div>
       </div>
     </div>
-  </template>
+  </div>
+</template>
+
   
   <script>
 import axios from 'axios';
@@ -39,7 +56,7 @@ export default {
     return {
       userLocation: { lat: null, lon: null },
       clinics: [
-        {"NAME":"BEECROFT ANIMAL SPECIALIST & EMERGENCY HOSPITAL","TYPE":"HOSPITAL","ADDRESS":"991E ALEXANDRA ROAD","TEL-OFFICE":69961812, "lon": null, "lat":null},
+      {"NAME":"BEECROFT ANIMAL SPECIALIST & EMERGENCY HOSPITAL","TYPE":"HOSPITAL","ADDRESS":"991E ALEXANDRA ROAD","TEL-OFFICE":69961812, "lon": null, "lat":null},
 {"NAME":"SINGAPORE TURF CLUB EQUINE HOSPITAL","TYPE":"HOSPITAL","ADDRESS":"1 TURF CLUB AVENUE, #01-01, S(738078)","TEL-OFFICE":68791000, "lon": null, "lat":null},
 {"NAME":"VES HOSPITAL (VETERINARY EMERGENCY & SPECIALTY HOSPITAL)","TYPE":"HOSPITAL","ADDRESS":"2 ROCHDALE ROAD, #01-01, S(535815)","TEL-OFFICE":65817028, "lon": null, "lat":null},
 {"NAME":"AAVC - ANIMAL & AVIAN VETERINARY CLINIC","TYPE":"CLINIC","ADDRESS":"716 YISHUN STREET 71, #01-254, S(760716)","TEL-OFFICE":68539397, "lon": null, "lat":null},
@@ -148,9 +165,10 @@ export default {
     };
   },
   async created() {
-    await this.getUserLocation();
-    await this.getClinicsCoordinates();  // Ensure clinics coordinates are fetched before calculating distance
-  },
+  await this.getUserLocation();
+  await this.getClinicsCoordinates();  // Ensure clinics coordinates are fetched before calculating distance
+},
+
   methods: {
     async getClinicsCoordinates() {
   const geocodeUrl = 'http://localhost:3000/api/geocode';
@@ -171,6 +189,29 @@ export default {
   this.calculateDistances();
 },
 
+async fetchPetDetails() {
+  try {
+    const ownerName = localStorage.getItem('name');
+
+    // Reference to the pets collection for the current owner
+    const petsCollectionRef = collection(db, `petowners/${ownerName}/pets`);
+
+    // Get all pet documents for the given owner
+    const querySnapshot = await getDocs(petsCollectionRef);
+    if (querySnapshot.empty) {
+      console.log('No pets found for this owner!');
+      return;
+    }
+
+    // Map over all documents and extract pet data
+    this.petDetails = querySnapshot.docs.map(doc => doc.data());
+
+    // Show modal to display pet details
+    this.showModal = true;
+  } catch (error) {
+    console.log('Error fetching pet details:', error);
+  }
+},
 
     getUserLocation() {
       return new Promise((resolve, reject) => {
@@ -195,22 +236,29 @@ export default {
     },
 
     calculateDistances() {
-      // Calculate the distance from the user's location to each clinic
-      this.clinics.forEach(clinic => {
-        if (this.userLocation.lat && this.userLocation.lon && clinic.lat && clinic.lon) {
-          const distance = this.calculateDistance(
-            this.userLocation.lat,
-            this.userLocation.lon,
-            clinic.lat,
-            clinic.lon
-          );
-          clinic.distance = (distance / 1000).toFixed(1); // Convert meters to kilometers
-        } else {
-          console.warn(`Missing coordinates for clinic: ${clinic.NAME}`);
-        }
-        this.clinics.sort((a, b) => a.distance - b.distance);
-      });
-    },
+  // Calculate the distance from the user's location to each clinic
+  this.clinics.forEach(clinic => {
+    if (this.userLocation.lat && this.userLocation.lon && clinic.lat && clinic.lon) {
+      const distance = this.calculateDistance(
+        this.userLocation.lat,
+        this.userLocation.lon,
+        clinic.lat,
+        clinic.lon
+      );
+      clinic.distance = (distance / 1000).toFixed(1); // Convert meters to kilometers
+    } else {
+      console.warn(`Missing coordinates for clinic: ${clinic.NAME}`);
+      clinic.distance = Number.MAX_VALUE; // Assign a high value to missing distances so they appear last
+    }
+  });
+
+  // Sort clinics by distance numerically in ascending order
+  this.clinics.sort((a, b) => {
+    return parseFloat(a.distance) - parseFloat(b.distance);
+  });
+  this.clinics = [...this.clinics.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance))];
+
+},
 
     calculateDistance(lat1, lon1, lat2, lon2) {
       const R = 6371000; // Earth radius in meters
