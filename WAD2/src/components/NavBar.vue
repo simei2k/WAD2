@@ -87,6 +87,7 @@ export default {
             </li>
             </ul>
         </div>
+        </div>
         <hr>
     </nav>
 
