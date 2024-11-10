@@ -1,8 +1,6 @@
 <template>
   <div class="form-group">
-    <label for="profile_pic">Pet Pic:</label>
     
-    <input type="file" @change="onFileChange" class="form-control profile_pic">
     
     <label for="pet_name">Pet Name:</label>
     <input type="text" v-model="pet_name" class="form-control pet_name">
@@ -61,12 +59,8 @@ export default {
     };
   },
   methods: {
-    onFileChange(event) {
-      const file = event.target.files[0];
-      if (file) {
-        this.profile_pic = URL.createObjectURL(file);
-      }
-    },
+    
+
     async addPetdb() {
       try {
         // Reference to the 'petowners' collection and the document for the specific owner
@@ -75,15 +69,7 @@ export default {
     // Log to check the owner value
         console.log(owner);
 
-        //this document already exists
-
-        //await setDoc(doc(db,ownerDocRef,thi))
-        // Reference to the pet's document within the owner's subcollection
-        //const petDocRef = doc(collection(ownerDocRef, this.pet_name)); // Collection for each pet
-        
-        // Add pet details to Firestore under 'petname' collection
-        await setDoc(doc(db,'petowners',owner, this.pet_name, this.pet_name), {
-          profile_pic: this.profile_pic,
+        await setDoc(doc(db,'petowners',owner, 'pets', this.pet_name), {
           pet_name: this.pet_name,
           pet_type: this.pet_type,
           size: this.size,
@@ -99,8 +85,7 @@ export default {
       }
     }
   }
-};
-
+  }
 </script>
 
 <style>
@@ -138,15 +123,7 @@ option{
 .next-button-container{
     text-align: right;
 }
-.profile-pic{
-    border-radius: 50%;
-    width: 20%;
-    margin: auto 0;
-}
-.profile-pic-container{
-    margin: auto 0;
-    text-align: center;
-}
+
 .submit-button{
     color: #ecdfcc;
     background-color: #3C3D37 !important;
