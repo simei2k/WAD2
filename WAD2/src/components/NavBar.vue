@@ -19,16 +19,15 @@ export default {
         <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
         <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">        
-        <span class="ms-2" style="color:#ecdfcc">PawPal</span>
+        <span class="ms-2" style="color:#ecdfcc">
+            <RouterLink to="/" class="nav-link">PawPal</RouterLink>
+        </span>
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <RouterLink to="/home" class="nav-link">Home</RouterLink>
-            </li>
             <li class="nav-item">
                 <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
             </li>
