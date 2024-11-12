@@ -18,7 +18,7 @@
   </template>
   
   <script>
-  import PetForm from './PetForm.vue'; // Import your pet-form component
+  import PetForm from './petForm.vue'; // Import your pet-form component
   
   export default {
     components: {
