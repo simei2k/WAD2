@@ -2,11 +2,11 @@
   
   <div>
     <h1>Emergency Clinics Nearby</h1>
-    
+  
     <div class="clinics">
   <div class="card-container">
     <ul class="cards">
-      <li v-for="clinic in clinics" :key="clinic.NAME" class="card">
+      <li id="clinic-list" v-for="clinic in clinics" :key="clinic.NAME" class="card">
         <!-- Clinic Card Start -->
         <div class="card-body">
           <h3 class="card-title"><b>{{ clinic.NAME }}</b></h3>
@@ -19,7 +19,7 @@
             <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
               Directions
             </a>
-            <button type="button" class="btn send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
+            <button type="button" class="send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
           </div>
         </div>
         <!-- Clinic Card End -->
@@ -42,7 +42,8 @@
         <!-- Render pet details -->
       <ul>
         <li v-for="(pet, index) in petDetailsArray" :key="index">
-          <img class rc="pet[6]" alt="Pet image">
+
+          <img class :src="pet[6]"  alt="Pet image"><br>
           <strong>{{ pet[0] }}</strong> <!-- Pet Name -->
           <ul>
             <li>Type: {{ pet[1] }} </li> <!-- Pet Type -->
@@ -55,8 +56,8 @@
       </ul>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn " @click="showModal = false" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn ">Save changes</button>
+        <button type="button" class="btcn " @click="showModal = false" data-bs-dismiss="modal">Close</button>
+        <button type="button" class=" ">Save changes</button>
       </div>
     </div>
   </div>
@@ -783,29 +784,37 @@ async fetchPetDetails() {
     },
 
     calculateDistances() {
-  // Calculate the distance from the user's location to each clinic
-  this.clinics.forEach(clinic => {
-    if (this.userLocation.lat && this.userLocation.lon && clinic.lat && clinic.lon) {
-      const distance = this.calculateDistance(
-        this.userLocation.lat,
-        this.userLocation.lon,
-        clinic.lat,
-        clinic.lon
-      );
-      clinic.distance = (distance / 1000).toFixed(1); // Convert meters to kilometers
-    } else {
-      console.warn(`Missing coordinates for clinic: ${clinic.NAME}`);
-      clinic.distance = Number.MAX_VALUE; // Assign a high value to missing distances so they appear last
+    // Calculate the distance from the user's location to each clinic
+    this.clinics.forEach(clinic => {
+      if (this.userLocation.lat && this.userLocation.lon && clinic.lat && clinic.lon) {
+        const distance = this.calculateDistance(
+          this.userLocation.lat,
+          this.userLocation.lon,
+          clinic.lat,
+          clinic.lon
+        );
+        clinic.distance = (distance / 1000).toFixed(1); // Convert meters to kilometers
+      } else {
+        console.warn(`Missing coordinates for clinic: ${clinic.NAME}`);
+        clinic.distance = Number.MAX_VALUE; // Assign a high value to missing distances so they appear last
+      }
+    });
+
+    // Sort clinics by distance in ascending order
+    this.clinics.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+
+    // Wait until the DOM has been updated before scrolling
+    this.$nextTick(() => {
+      this.scrollToNearestClinic();
+    });
+  },
+
+  scrollToNearestClinic() {
+    const firstClinic = document.querySelector('.cards li'); // Select the first clinic in the sorted list
+    if (firstClinic) {
+      firstClinic.scrollIntoView({ behavior: 'smooth', block: 'start' }); // Smooth scroll to the nearest clinic
     }
-  });
-
-  // Sort clinics by distance numerically in ascending order
-  this.clinics.sort((a, b) => {
-    return parseFloat(a.distance) - parseFloat(b.distance);
-  });
-  this.clinics = [...this.clinics.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance))];
-
-},
+  },
 
     calculateDistance(lat1, lon1, lat2, lon2) {
       const R = 6371000; // Earth radius in meters
@@ -890,6 +899,12 @@ h1 {
 .buttons {
   display: flex;
   justify-content: space-around;
+}
+
+li img{
+  border-radius: 50%;
+  width: 30%;
+  list-style-type: none;
 }
 
 button,
