@@ -40,11 +40,19 @@
       </div>
       <div class="modal-body">
         <!-- Render pet details -->
-        <ul>
-          <li v-for="(pet, index) in petDetailsArray" :key="index">
-            {{ pet[0] }} - {{ pet[1] }} - {{ pet[2] }} - {{ pet[3] }} - {{ pet[4] }}
-          </li>
-        </ul>
+      <ul>
+        <li v-for="(pet, index) in petDetailsArray" :key="index">
+          <img class rc="pet[6]" alt="Pet image">
+          <strong>{{ pet[0] }}</strong> <!-- Pet Name -->
+          <ul>
+            <li>Type: {{ pet[1] }} </li> <!-- Pet Type -->
+            <li>Size: {{ pet[2] }} </li> <!-- Pet Size -->
+            <li>Breed: {{ pet[3] }} </li> <!-- Pet Breed -->
+            <li v-if="pet[4] !== ''">{{ pet[4] }} </li> <!-- Pet Dietary Restrictions -->
+            <li v-if="pet[5] !== ''">{{ pet[5] }} </li> 
+          </ul>
+        </li>
+      </ul>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn " @click="showModal = false" data-bs-dismiss="modal">Close</button>
@@ -741,11 +749,11 @@ async fetchPetDetails() {
     const petDetailsArray = []; 
     console.log('Fetched Pet Details:', this.petDetails[0]); // Check if details are being fetched
     for (const pet of this.petDetails){
-      petDetailsArray.push([pet.pet_name, pet.type, pet.size, pet.breed, pet.dietary_restrictions])
+      petDetailsArray.push([pet.pet_name, pet.pet_type, pet.size, pet.breed, pet.dietary_restrictions, pet.medical_conditions, pet.picture_link])
     }
+    console.log(petDetailsArray)
     this.showModal = true;
     this.petDetailsArray = petDetailsArray
-    console.log('Show Modal:', this.showModal); // Confirm modal state change
   } catch (error) {
     console.log('Error fetching pet details:', error);
   }
