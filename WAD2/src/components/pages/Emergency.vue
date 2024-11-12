@@ -42,6 +42,7 @@
         <!-- Render pet details -->
       <ul>
         <li v-for="(pet, index) in petDetailsArray" :key="index">
+
           <img class :src="pet[6]"  alt="Pet image"><br>
           <strong>{{ pet[0] }}</strong> <!-- Pet Name -->
           <ul>
