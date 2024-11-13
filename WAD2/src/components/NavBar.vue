@@ -75,7 +75,7 @@ export default {
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">        
+            <img src="../assets/cat_icon_2.png" width="50" height="50" class="d-inline-block align-top" alt="">        
             <span class="ms-2" style="color:#ecdfcc">
                 <RouterLink to="/" class="nav-link">PawPal</RouterLink>
             </span>
@@ -114,46 +114,6 @@ export default {
                 </li>
                 </ul>
             </div>
-        <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="../assets/cat_icon_2.png" width="50" height="50" class="d-inline-block align-top" alt="">        
-        <span class="ms-2" style="color:#ecdfcc">
-            <RouterLink to="/" class="nav-link">PawPal</RouterLink>
-        </span>
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav ms-auto">
-            <li class="nav-item">
-                <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/services" class="nav-link">Services</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/map" class="nav-link">Map</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
-            </li>
-            <li class="nav-item">
-                <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
-            </li>
-            <li class="nav-item">
-                <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          
-            </li>
-            </ul>
-        </div>
         </div>
         <hr>
     </nav>
@@ -198,7 +158,7 @@ nav{
   color: #545454; /* Pale text color for the brand name */
 }
 .nav-item{
-    border-radius: 15%
+    border-radius: 15%;
 }
 .navbar {
   border-width: calc(2px + .1vw);
@@ -213,23 +173,21 @@ li{
 nav .navbar-nav li a{
   color: #ecdfcc !important;
 }
-  color: #545454 !important;
-  }
 
 .nav-link{
     color: #545454 !important;
 }  
 
-@media (max-width: 768px) {
-  .burger-menu {
-    display: flex; /* Show the burger menu icon on small screens */
-  }
-  .nav-links {
-    display: none; /* Hide the normal navbar links */
-    color: #ecdfcc !important;
-  }
-  .nav-links.open {
-    display: flex; /* Display links as a dropdown when the menu is open */
+/* @media (max-width: 768px) {
+  .burger-menu { */
+    /* display: flex; Show the burger menu icon on small screens */
+  /* } */
+  /* .nav-links { */
+    /* display: none; Hide the normal navbar links */
+    /* color: #ecdfcc !important; */
+  /* } */
+  /* .nav-links.open {
+    display: flex; Display links as a dropdown when the menu is open
     flex-direction: column;
     position: absolute;
     top: 60px;
@@ -237,7 +195,7 @@ nav .navbar-nav li a{
     background-color: #333;
     padding: 1rem;
     border-radius: 8px;
-  }
-}
+  } */
+/* } */
 
 </style>
