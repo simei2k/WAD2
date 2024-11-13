@@ -14,7 +14,6 @@ export default {
             currentPage: 'Find Services',
             iscurrentPage: [true,false,false,true,false,false],
             showButton: false,
-            reqServiceType: false,
             currServicePage: 'mainServicesPage',
             currJobPage: 'MainJobsPage',
             confirmPopup: false,
@@ -60,7 +59,23 @@ export default {
             selectedEvent: null,
             showOngoingListing: false,
             searchQuery: '',
-            filteredServices: [],
+            searchQueryS: '',
+            mostRecentP: false,
+            mostRecentS: false,
+            reqServiceTypeP: false,
+            reqServiceTypeS: false,
+            selectedServiceTypesP: [],
+            selectedServiceTypesS: [],
+            selectedTimingsP: [],
+            newTimeP: {
+                start:'',
+                end:'',
+            },
+            selectedTimingsS: [],
+            newTimeS: {
+                start:'',
+                end:'',
+            },
             }
     },
     props: {
@@ -71,6 +86,19 @@ export default {
         this.getallservices();
         this.getIndivEvents();
         this.getIndivEventsService();
+
+    },
+    watch: {
+        reqServiceTypeP(newValue) {
+            if (!newValue) {
+                this.selectedServiceTypesP = [];
+            }
+        },
+        reqServiceTypeS(newValue) {
+            if(!newValue) {
+                this.selectedServiceTypesS = [];
+            }
+        }
     },
     methods: {
         toggle() {
@@ -105,14 +133,6 @@ export default {
         showbutton() {
             if (!this.showButton) {
                 this.showButton=true;
-            }
-        },
-        showServiceTypes() {
-            if (!this.reqServiceType) {
-                this.reqServiceType=true;
-            }
-            else {
-                this.reqServiceType=false;
             }
         },
         showconfirmPopup() {
@@ -640,36 +660,114 @@ export default {
                 console.error("Error fetching events:", error);
             }
         },
-        async searchServices() { //currently not working
-            try {
-                this.filteredServices = [];
-                if(this.searchQuery.trim()==='') {
-                    await this.getallservices();
-                } else {
-                    const ServiceRef=collection(db,'services');
-                    const q = query(
-                        ServiceRef,
-                        where('title','>=', this.searchQuery),
-                        where('title','<=',this.searchQuery + '\uf8ff')
-                    );
-                    const querySnapshot = await getDocs(q);
-                    console.log("Query Results:", querySnapshot.docs);
-                    this.filteredServices = querySnapshot.docs.map(doc => {
-                        const data = doc.data();
-                        return {
-                            ...data,
-                        };
-                    });
-                console.log(this.filteredServices)
-                }
-            } catch (error) {
-                console.error("Error fetching services:", error);
+        updateTimeP() {
+            if (this.newTimeP.start && this.newTimeP.end) {
+                const event = {
+                    start:this.newTimeP.start.replace('T', ' '),
+                    end: this.newTimeP.end.replace('T', ' '),
+                };
+                this.selectedTimingsP = [event];
+            }
+        },
+        updateTimeS() {
+            if (this.newTimeS.start && this.newTimeS.end) {
+                const event = {
+                    start:this.newTimeS.start.replace('T', ' '),
+                    end: this.newTimeS.end.replace('T', ' '),
+                };
+                this.selectedTimingsS = [event];
             }
         }
     },
 
        
     computed: {
+        searchServices() {
+            let filteredServices = [...this.allservices] || [];
+            if (this.searchQuery.trim()!=='') {
+                filteredServices = filteredServices.filter(service =>
+                service.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                service.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+            }
+            
+            if (this.mostRecentP) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                filteredServices=filteredServices.sort((a,b) => {
+                    const dateA = new Date(a.start);
+                    const dateB = new Date(b.start);
+                    const diffA = Math.abs(today-dateA);
+                    const diffB = Math.abs(today-dateB)
+                    return diffA - diffB;
+                });
+            }
+
+            if (this.selectedServiceTypesP.length > 0) {
+                filteredServices = filteredServices.filter(service =>
+                    service.serviceTypeReq.some(type=> this.selectedServiceTypesP.includes(type))
+                );
+            }
+            return filteredServices;
+        },
+        searchJobs() {
+            let filteredJobs = [...this.alljobs] || [];
+            if (this.searchQueryS.trim()!=='') {
+                filteredJobs = filteredJobs.filter(job =>
+                job.title.toLowerCase().includes(this.searchQueryS.toLowerCase()) ||
+                job.name.toLowerCase().includes(this.searchQueryS.toLowerCase())
+            );
+            }
+            
+            if (this.mostRecentS) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                filteredJobs=filteredJobs.sort((a,b) => {
+                    const dateA = new Date(a.start);
+                    const dateB = new Date(b.start);
+                    const diffA = Math.abs(today-dateA);
+                    const diffB = Math.abs(today-dateB)
+                    return diffA - diffB;
+                })
+            }
+
+            if (this.selectedServiceTypesS.length > 0) {
+                filteredJobs = filteredJobs.filter(job =>
+                    job.serviceTypeReq.some(type=> this.selectedServiceTypesS.includes(type))
+                );
+            }
+            return filteredJobs;
+        },
+        recommendServices() {
+            const blockStart = new Date(this.newTimeP.start);
+            const blockEnd = new Date(this.newTimeP.end);
+
+            return this.allservices.filter(service => {
+                const serviceStart = new Date(service.start);
+                const serviceEnd = new Date(service.end);
+
+                return (
+                    (serviceStart >= blockStart && serviceStart <= blockEnd) || 
+                    (serviceEnd >= blockStart && serviceEnd <= blockEnd) ||     
+                    (serviceStart <= blockStart && serviceEnd >= blockEnd)      
+                );
+            });
+        },
+        recommendJobs() {
+            const blockStart = new Date(this.newTimeS.start);
+            const blockEnd = new Date(this.newTimeS.end);
+
+            return this.alljobs.filter(job => {
+                const jobStart = new Date(job.start);
+                const jobEnd = new Date(job.end);
+
+                return (
+                    (jobStart >= blockStart && jobStart <= blockEnd) || 
+                    (jobEnd >= blockStart && jobEnd <= blockEnd) ||     
+                    (jobStart <= blockStart && jobEnd >= blockEnd)      
+                );
+            });
+        }
     },
     components: {
     VueCal,
@@ -684,7 +782,9 @@ export default {
         color: #ECDFCC;
         padding-left: 15px;
         background-color: inherit;
-        
+        border-top: 3px solid #f29040;
+        margin-left:5px;
+        margin-right:5px;
     }
     .PetOwner {
         display:inline-block;
@@ -693,9 +793,9 @@ export default {
         padding: 8px;
         z-index: 1;
         position:relative;
-        right: 58px;
-        bottom: 6px;
-        border:3px solid 7c321b;
+        right: 60px;
+        bottom: 5px;
+        border:3px solid #f29040;
     }
     .ServiceProvider {
         display:inline-block;
@@ -705,7 +805,7 @@ export default {
         z-index: 1;
         position:relative;
         right:23px;
-        bottom:6px;
+        bottom:5px;
         border: 3px solid #f29040;
     }
     .buttonBackground { 
@@ -716,6 +816,10 @@ export default {
         color:#fae1ae;
         border-radius:9999px;
         text-align:left;
+        border: 1px solid #f2bc5c;
+    }
+    .NotCurrent {
+        color: #888585;
     }
     p {
         display:inline-block;
@@ -736,20 +840,18 @@ export default {
         background-color: inherit;
     }
     .curPage {
-        display:inline-block;
         border-top: 3px solid #f29040;
         border-left: 3px solid #f29040;
         border-right: 3px solid #f29040;
         border-bottom: 3px solid #f29040;
         background-color: #f2bc5c;
         position:relative;
-        height:50px;
-        top: 5px;
-        padding-top:5px;
+        height:47px;
         transition:  border-color 0.5s ease;
     }
     .calendar-container {
         margin-top: 20px; 
+        overflow: visible;
     }
     .addIcon {
         border-color: #f29040;
@@ -862,7 +964,7 @@ export default {
         z-index: 9999; 
     }
     .listing-content {
-        background-color: #697565;
+        background-color: #ECDFCC;
         padding: 20px;
         width: 80%;
         height: 80%;
@@ -870,7 +972,9 @@ export default {
         border-radius: 10px;
         text-align: center;
         position: relative;
+        border: 5px solid #7c321b
     }
+
 
 </style>
 <template>
@@ -879,26 +983,28 @@ export default {
     <NavBar></NavBar>
     <div class="ServicePage">
     <div class="ServiceNavBar"> <!-- Nav Bar for service page-->
-    <span>
-        <p :class="{CurrentlyOwner:isPetOwner}">Pet Owner </p>
+    <div class="row">
+    <div class="col-md-12 col-12 col-lg-3" style="margin-top:12.5px !important;">
+        <p :class="{CurrentlyOwner:isPetOwner,NotCurrent:!isPetOwner}"><strong>Pet Owner</strong></p>
             <div class="buttonBackground">#</div>
             <button @click="toggle(); showalert()" :class="{PetOwner:isPetOwner, ServiceProvider:!isPetOwner}"></button>
-        <p :class="{CurrentlyOwner:!isPetOwner}">Service Provider </p>
-    </span>
-        <div v-if="isPetOwner" style="display:inline">
+        <p :class="{CurrentlyOwner:!isPetOwner,NotCurrent:isPetOwner}"><strong>Service Provider</strong></p>
+    </div>
+        <div v-if="isPetOwner" class="col-md-8 flex-wrap">
             <span>
-                <button @click="currentPage = 'Find Services';checkpage(0)" :class="{curPage:iscurrentPage[0]}" style="display:inline-block">Find Services</button>
-                <button @click="currentPage = 'Post Jobs';checkpage(1)" :class="{curPage:iscurrentPage[1]}" style="display:inline-block">Post Jobs</button>
-                <button @click="currentPage = 'Current Services';checkpage(2)" :class="{curPage:iscurrentPage[2]}" style="display:inline-block">My listings</button>
+                <button @click="currentPage = 'Find Services';checkpage(0)" :class="{curPage:iscurrentPage[0]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Services</strong></button>
+                <button @click="currentPage = 'Post Jobs';checkpage(1)" :class="{curPage:iscurrentPage[1]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Jobs</strong></button>
+                <button @click="currentPage = 'Current Services';checkpage(2)" :class="{curPage:iscurrentPage[2]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
-        <div v-else-if="!isPetOwner" style="display:inline">
+        <div v-else-if="!isPetOwner" class="col-md-8 flex-wrap">
             <span>
-                <button @click="currentPage = 'Find Jobs';checkpage(3)" :class="{curPage:iscurrentPage[3]}" style="display:inline-block">Find Jobs</button>
-                <button @click="currentPage = 'Post Services';checkpage(4)" :class="{curPage:iscurrentPage[4]}" style="display:inline-block">Post Services</button>
-                <button @click="currentPage = 'Current Jobs';checkpage(5)" :class="{curPage:iscurrentPage[5]}" style="display:inline-block">My listings</button>
+                <button @click="currentPage = 'Find Jobs';checkpage(3)" :class="{curPage:iscurrentPage[3]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Jobs</strong></button>
+                <button @click="currentPage = 'Post Services';checkpage(4)" :class="{curPage:iscurrentPage[4]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Services</strong></button>
+                <button @click="currentPage = 'Current Jobs';checkpage(5)" :class="{curPage:iscurrentPage[5]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
+    </div>
     </div>
     <div class="mainbody"> <!-- main page body-->
         <div v-if="currentPage === 'Find Services'"> <!--Pet Owner: Find Services-->
@@ -911,13 +1017,13 @@ export default {
                 </div>
                 <div class="filterbar">
                     Filter by:
-                    <label><input type="checkbox" name="filterBys" class="filteroption"> Most Recent</label>
-                    <label><input type="checkbox" name="filterBys" class="filteroption" @click="showServiceTypes()"> Service Types</label>
-                    <div v-if="reqServiceType" class="extrafilteroptions">
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Sitter</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Walker</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Groomer</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Trainer</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="mostRecentP"> Most Recent</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="reqServiceTypeP"> Service Types</label>
+                    <div v-if="reqServiceTypeP" class="extrafilteroptions">
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Sitter" v-model="selectedServiceTypesP"> Pet Sitter</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Walker" v-model="selectedServiceTypesP"> Pet Walker</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Groomer" v-model="selectedServiceTypesP"> Pet Groomer</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesP"> Pet Trainer</label>
                     </div>
                 </div>
                 <div class="getRecommendations">
@@ -929,58 +1035,68 @@ export default {
                 <div>
                     <button @click="currServicePage = 'mainServicesPage'" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
                 </div>
-                <div class="calendar-container" style="display:inline-block;width:50%">
-                <iframe
-                :src="calendarSrc"
-                style="border: 3px solid #697565"
-                width="100%"
-                height="800px"
-                frameborder="0"
-                scrolling="no"
-                ></iframe>
+                <div class="row">
+                <div class="calendar-container col-6">
+                    <vue-cal class="calendar" style="height:750px"  
+                    hide-title-bar
+                    :events="selectedTimingsP"
+                    :disable-views="['years']"
+                    >
+                    
+                </vue-cal>
                 </div>
-                <div style="display:inline-block; vertical-align: top;width:48%; text-align:center;">This is for user to select dates and time and the database gives back those which matches </div>
+                <div class="col-6" style="text-align:center">
+                    Filtered services available based on selection <br>
+                    Start date & time:<input type="datetime-local" name="Datetime" v-model="newTimeP.start" @input="updateTimeP()"><br>
+                    End date & time:<input type="datetime-local" name="Datetime" v-model="newTimeP.end" @input="updateTimeP()"> <br>
+                    Recommended Services:
+                    <div class="row">
+                    <div v-for="service in recommendServices" :key="service.documentId" class="col-6">
+                    <div class="card card-fixed w-100">
+                    <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                        <h3> {{ service.title }}</h3>
+                        <h5> {{ service.name }}</h5>
+                        <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
+                        <p class="card-text">Services Provided: <br> {{ service.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ service.address }}</p>
+                        <p class="card-text">Contact Number: {{ service.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ service.payment }} / hour</p>
+                        <p class="card-text">Skills & Experiences: <br> {{ service.skillsExp }}</p>
+                        <button @click="ongoingService(service.documentId)">Accept Service</button>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                </div>
             </div> 
             <div v-if="currServicePage==='mainServicesPage'"> <!--Find Services (Service listings using cards)-->
-                <div>
+                <div v-if="searchServices.length > 0">
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="(event,index) in allservices" :key="index" class="col-3">
+                <div v-for="service in searchServices" :key="service.documentId" class="col-3">
                     <div class="card card-fixed w-100">
-                    <img :src="event.image" class="card-image" style="width:100%;height:70%"/>
+                    <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
-                        <h3>{{ event.title }}</h3>
-                        <h5>{{ event.name }}</h5>
-                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
-                        <p class="card-text">Services Provided: <br>{{ event.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ event.address }}</p>
-                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text">Skills & Experiences: <br>{{ event.skillsExp }}</p>
-                        <button @click="ongoingService(event.documentId)">Accept Service</button>
+                        <h3> {{ service.title }}</h3>
+                        <h5> {{ service.name }}</h5>
+                        <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
+                        <p class="card-text">Services Provided: <br> {{ service.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ service.address }}</p>
+                        <p class="card-text">Contact Number: {{ service.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ service.payment }} / hour</p>
+                        <p class="card-text">Skills & Experiences: <br> {{ service.skillsExp }}</p>
+                        <button @click="ongoingService(service.documentId)">Accept Service</button>
                     </div>
                     </div>
                 </div>
                 </div>
                 </div>
-                <div v-if="filteredServices.length">
-                    <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                    <div v-for="(event, index) in filteredJobs" :key="index" class="col-3">
-                        <div class="card card-fixed w-100">
-                        <img :src="event.image" class="card-image" style="width:100%;height:70%"/>
-                        <div class="card-body">
-                        <h3>{{ event.title }}</h3>
-                        <h5>{{ event.name }}</h5>
-                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
-                        <p class="card-text">Services Provided: <br>{{ event.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ event.address }}</p>
-                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text">Skills & Experiences: <br>{{ event.skillsExp }}</p>
-                        <button @click="ongoingService(event.documentId)">Accept Service</button>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
+                <div v-else-if="searchQuery.trim()!==''">
+                    No matching search found.
+                </div>
+                <div v-else-if="selectedServiceTypesP.length > 0 && searchServices.length === 0">
+                    No jobs available for the selected job type.
                 </div>
             </div>
         </div>
@@ -1098,20 +1214,44 @@ export default {
             </div>
             <div v-if="showOngoingListing" class="listing-overlay"> <!--Full screen of selected ongoing listing-->
                 <div class="listing-content">
-                    <h3>{{ selectedEvent.title }}</h3>
-                    <img :src="selectedEvent.image" class="full-image" />
-                    <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
-                    <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
-                    <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
-                    <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
-                    <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
-                    <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
-                    <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
-                    <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
-                    <button>This button links to My Profile (Job Provider)</button>
-                    <button>This button links to the Service Provider Profile</button>
-                    <button>This button links to the chat between us</button>
-                    <button @click="closeListing()" class="close-btn">Close</button>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <h3><strong>{{ selectedEvent.title }}</strong></h3>
+                            </div>
+                        </div> <br>
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <img :src="selectedEvent.image" style="max-width:300px;height:auto;" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8" style="font-size:x-large">
+                                <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
+                                <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
+                                <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
+                                <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
+                                <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
+                                <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
+                                <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
+                                <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
+                                <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
+                                <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
+                                <div class="text-center">
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.name }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>
+                                    <br>
+                                    <button style="border:2px solid red;border-radius:8px;" class="m-2"><strong>Cancel</strong></button>
+                                    
+                                    <button style="border:2px solid green;border-radius:8px;" class="m-2"><strong>Complete</strong></button>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button @click="closeListing()" class="close-btn" style="border:1px solid #f29040;border-radius:8px;"><strong>Close</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1121,18 +1261,18 @@ export default {
             <div class="FindJobsSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
                     <button @click="getalljobs(),getmyongoingservices()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
-                    <input type="text" placeholder="Search" id="search" style="border-radius:8px;">
+                    <input type="text" v-model="searchQueryS" @input="searchJobs()" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
                 <div class="filterbar">
                     Filter by:
-                    <label><input type="checkbox" name="filterBys" class="filteroption"> Most Recent</label>
-                    <label><input type="checkbox" name="filterBys" class="filteroption" @click="showServiceTypes()"> Job Types</label>
-                    <div v-if="reqServiceType" class="extrafilteroptions">
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Sitter</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Walker</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Groomer</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Trainer</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="mostRecentS"> Most Recent</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="reqServiceTypeS"> Job Types</label>
+                    <div v-if="reqServiceTypeS" class="extrafilteroptions">
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Sitter" v-model="selectedServiceTypesS"> Pet Sitter</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Walker" v-model="selectedServiceTypesS"> Pet Walker</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Groomer" v-model="selectedServiceTypesS"> Pet Groomer</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesS"> Pet Trainer</label>
                     </div>
                 </div>
                 <div class="getRecommendations">
@@ -1144,36 +1284,68 @@ export default {
                 <div>
                     <button @click="currJobPage = 'MainJobsPage'" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
                 </div>
-                <div class="calendar-container" style="display:inline-block;width:50%">
-                <iframe
-                :src="calendarSrc"
-                style="border: 3px solid #697565"
-                width="100%"
-                height="800px"
-                frameborder="0"
-                scrolling="no"
-                ></iframe>
+                <div class="row">
+                <div class="calendar-container col-6">
+                    <vue-cal class="calendar" style="height:750px"  
+                    hide-title-bar
+                    :events="selectedTimingsS"
+                    :disable-views="['years']"
+                    >
+                    
+                </vue-cal>
                 </div>
-                <div style="display:inline-block; vertical-align: top;width:48%; text-align:center;">This is for user to select dates and time and the database gives back those which matches </div>
+                <div class="col-6" style="text-align:center">
+                    Filtered services available based on selection <br>
+                    Start date & time:<input type="datetime-local" name="Datetime" v-model="newTimeS.start" @input="updateTimeS()"><br>
+                    End date & time:<input type="datetime-local" name="Datetime" v-model="newTimeS.end" @input="updateTimeS()"> <br>
+                    Recommended Services:
+                    <div class="row">
+                    <div v-for="job in recommendJobs" :key="job.documentId" class="col-6">
+                    <div class="card card-fixed w-100">
+                    <img :src="job.image" class="card-image" style="width:100%;height:70%"/>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                        <h3> {{ job.title }}</h3>
+                        <h5> {{ job.name }}</h5>
+                        <p class="card-text">Period of service: <br> {{ job.start }} - {{ job.end }}</p>
+                        <p class="card-text">Services needed: <br> {{ job.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ job.address }}</p>
+                        <p class="card-text">Contact Number: {{ job.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ job.payment }} / hour</p>
+                        <p class="card-text">Special Requirements: <br> {{ job.specialReq }}</p>
+                        <button @click="ongoingJob(job.documentId)">Accept Job</button>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                </div>
             </div> 
             <div v-if="currJobPage==='MainJobsPage'"> <!--Find Jobs (Service listings using cards)-->
+                <div v-if="searchJobs.length > 0">
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="(event,index) in alljobs" :key="index" class="col-3">
+                <div v-for="job in searchJobs" :key="job.documentId" class="col-3">
                     <div class="card card-fixed w-100">
-                    <img :src="event.image" class="card-image" />
+                    <img :src="job.image" class="card-image" />
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
-                        <h3>{{ event.title }}</h3>
-                        <h5>{{ event.name }}</h5>
-                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
-                        <p class="card-text">Services Required: <br>{{ event.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ event.address }}</p>
-                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text"> Special Requirements: <br>{{ event.specialReq }}</p>
-                        <button @click="ongoingJob(event.documentId)">Accept Job</button>
+                        <h3>{{ job.title }}</h3>
+                        <h5>{{ job.name }}</h5>
+                        <p class="card-text">Period of service: <br>{{ job.start }} - {{ job.end }}</p>
+                        <p class="card-text">Services Required: <br>{{ job.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ job.address }}</p>
+                        <p class="card-text">Contact Number: {{ job.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ job.payment }} / hour</p>
+                        <p class="card-text"> Special Requirements: <br>{{ job.specialReq }}</p>
+                        <button @click="ongoingJob(job.documentId)">Accept Job</button>
                     </div>
                     </div>
                 </div>
+                </div>
+                </div>
+                <div v-else-if="searchQueryS.trim()!==''">
+                    No matching search found.
+                </div>
+                <div v-else-if="selectedServiceTypesS.length > 0 && searchJobs.length === 0">
+                    No jobs available for the selected job type.
                 </div>
             </div>
         </div>
@@ -1293,21 +1465,44 @@ export default {
 
             <div v-if="showOngoingListing" class="listing-overlay"> <!--Full screen of selected ongoing listing-->
                 <div class="listing-content">
-                    <h3>{{ selectedEvent.title }}</h3>
-                    <img :src="selectedEvent.image" class="full-image" />
-                    <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
-                    <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
-                    <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
-                    <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
-                    <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
-                    <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
-                    <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
-                    <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
-                    <button>This button links to My Profile (Service Provider)</button>
-                    <button>This button links to the Pet Owner Profile(Job Provider)</button>
-                    <button>This button links to the chat between us</button>
-                    <button @click="closeListing()" class="close-btn">Close</button>
-                    
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <h3><strong>{{ selectedEvent.title }}</strong></h3>
+                            </div>
+                        </div> <br>
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <img :src="selectedEvent.image" style="max-width:300px;height:auto;" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8" style="font-size:x-large">
+                                <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
+                                <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
+                                <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
+                                <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
+                                <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
+                                <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
+                                <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
+                                <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
+                                <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
+                                <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
+                                <div class="text-center">
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.name }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>
+                                    <br>
+                                    <button style="border:2px solid red;border-radius:8px;" class="m-2"><strong>Cancel</strong></button>
+                                    
+                                    <button style="border:2px solid green;border-radius:8px;" class="m-2"><strong>Complete</strong></button>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button @click="closeListing()" class="close-btn" style="border:1px solid #f29040;border-radius:8px;"><strong>Close</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
