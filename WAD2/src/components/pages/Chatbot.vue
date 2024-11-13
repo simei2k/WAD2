@@ -1,134 +1,194 @@
 <template>
-    <div class="chatbot">
-      <div class="chat-window">
-        <div v-for="(message, index) in messages" :key="index" :class="{'user': message.user, 'bot': !message.user}">
-          {{ message.text }}
-        </div>
+  <div class="chatbot">
+    <div class="chat-window">
+      <div
+        v-for="(message, index) in messages"
+        :key="index"
+        :class="message.user ? 'user' : 'bot'"
+      >
+        {{ message.text }}
       </div>
-      <div class="input-box">
-        <input type="text" v-model="userMessage" @keyup.enter="sendMessage" placeholder="Type a message..." />
-        <button @click="sendMessage">Send</button>
+      <div v-if="isLoading" class="bot loading-indicator">
+        typing...
       </div>
     </div>
-  </template>
-  
-  <script>
-  import NavBar from '../NavBar.vue'
-  import axios from 'axios';
-  import OpenAI from "openai";
-  
-  const openai = new OpenAI({
-    organization: "org-re6Hli8fSTwShdYvKvYj6Egs",
-    project: "$proj_fwYr1xqeNiTBwmFXYzgMvvCP",
-    apiKey: "Bearer API_KEY",
-    dangerouslyAllowBrowser: true
-  });
+    <div class="input-box">
+      <input
+        type="text"
+        v-model="userMessage"
+        @keyup.enter="sendMessage"
+        placeholder="Type a message..."
+        :disabled="isLoading"
+      />
+      <button @click="sendMessage" :disabled="isLoading">
+        Send
+      </button>
+    </div>
+  </div>
+</template>
 
+<script>
+import OpenAI from 'openai';
 
-  export default {
-    data() {
-      return {
-        userMessage: "",
-        messages: []
-      };
-    },
-    methods: {
+const openai = new OpenAI({
+  apiKey: '', // Replace with your actual API key
+  dangerouslyAllowBrowser: true,
+});
+
+export default {
+  data() {
+    return {
+      userMessage: "",
+      messages: [],
+      conversation: [],
+      isLoading: false,
+    };
+  },
+  methods: {
     async sendMessage() {
-      if (this.userMessage.trim() !== "") {
-        this.messages.push({ text: this.userMessage, user: true });
-        let response = await this.getBotResponse(this.userMessage);
-        this.messages.push({ text: response, user: false });
-        this.userMessage = "";
-      }
-    },
-    async getBotResponse(userMessage) {
+      if (this.userMessage.trim() === "" || this.isLoading) return;
+
+      const userMessageText = this.userMessage.trim();
+      this.userMessage = "";
+
+      this.messages.push({
+        text: userMessageText,
+        user: true
+      });
+
+      this.conversation.push({
+        role: "user",
+        content: userMessageText
+      });
+
+      this.isLoading = true;
+
       try {
-        let response = await axios.post("https://api.openai.com/v1/chat/completions", {
-          model: "gpt-3.5",
-          messages: [{ role: "user", content: userMessage }]
-        }, {
-          // headers: {
-          //   "Authorization": `API_KEY`
-          // }
+        this.messages.push({
+          text: "",
+          user: false
         });
-        return response.data.choices[0].message.content;
+
+        const stream = await openai.chat.completions.create({
+          model: "gpt-3.5-turbo",
+          messages: this.conversation,
+          stream: true,
+        });
+
+        let accumulatedResponse = "";
+
+        for await (const chunk of stream) {
+          const content = chunk.choices[0]?.delta?.content || "";
+          accumulatedResponse += content;
+          
+          this.messages[this.messages.length - 1] = {
+            text: accumulatedResponse,
+            user: false
+          };
+        }
+
+        this.conversation.push({
+          role: "assistant",
+          content: accumulatedResponse
+        });
+
       } catch (error) {
-          console.error("Error getting response:", error);
-        return "Sorry, I am having trouble responding.";
+        console.error("Error calling OpenAI:", error);
+        this.messages.push({
+          text: "Sorry, an error occurred. Please try again.",
+          user: false
+        });
+      } finally {
+        this.isLoading = false;
       }
-    },
-    autoResize(event) {
-        const textarea = event.target;
-        textarea.style.height = 'auto'; // Reset height to calculate the new height
-        textarea.style.height = `${textarea.scrollHeight}px`; // Adjust height based on content
     }
-    }
-  };
-  </script>
-  
-  <style scoped>
-  .chatbot {
-    display: flex;
-    flex-direction: column;
-    height: 90vh;
-    justify-content: space-between;
-    background-color: #181c14;
   }
-  .chat-window {
-    flex-grow: 1;
-    background-color: #181c14;
-    color: white;
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    }
-    .user {
-    align-self: flex-end;
-    background-color: #ecdfcc;
-    color: #3c3d37;
-    border-radius: 10px 10px 0px 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    max-width: 70%; /* Max width of 70% of the screen */
-    word-wrap: break-word; /* Wrap text to the next line if it's too long */
-    word-break: break-word; /* Break long words */
-    }
-/* Bot messages aligned to the left */
-    .bot {
-    align-self: flex-start;
-    background-color: #ecdfcc;
-    color: #3c3d37;
-    border-radius: 10px 10px 10px 0px;
-    padding: 10px;
-    margin-bottom: 10px;
-    max-width: 70%; /* Max width of 70% of the screen */
-    word-wrap: break-word; /* Wrap text */
-    word-break: break-word; /* Break long words */
-    }
-  .input-box {
-    display: flex;
-    padding: 20px;
-    background-color: #181c14;
-  }
-  input[type="text"] {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ecdfcc;
-    border-radius: 5px;
-  }
-  button {
-    margin-left: 10px;
-    padding: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    background-color: #ecdfcc;
-    color: #3c3d37;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  </style>
-  
- 
+};
+</script>
+
+<style scoped>
+.chatbot {
+  display: flex;
+  flex-direction: column;
+  height: 90vh;
+  justify-content: space-between;
+  background-color: inherit;
+  border-radius: 10px;
+}
+
+.chat-window {
+  flex-grow: 1;
+  background-color: inherit;
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.user {
+  align-self: flex-end;
+  background-color: #fae1ae;
+  color: #7c321b;
+  border-radius: 10px 10px 0px 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.bot {
+  align-self: flex-start;
+  background-color: #ffcf72;
+  color: #7c321b;
+  border-radius: 10px 10px 10px 0px;
+  padding: 10px;
+  margin-bottom: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.input-box {
+  display: flex;
+  padding: 20px;
+  background-color: #ffcf72;
+}
+
+input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ecdfcc;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #545454;
+}
+
+input[type="text"]::placeholder {
+  color: #545454;
+  opacity: 0.7;
+}
+
+button {
+  margin-left: 10px;
+  padding: 10px 20px;
+  background-color: #ecdfcc;
+  color: #3c3d37;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.loading-indicator {
+  font-style: italic;
+  opacity: 0.8;
+}
+</style>
   

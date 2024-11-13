@@ -1,7 +1,7 @@
 
 <template>
     <div class="firebaseui-auth-container login">
-    <img class="cat-icon" src="../../assets/cat_icon.png">
+    <img class="cat-icon" src="../../assets/cat_icon_2.png">
     <h1>Log In</h1>
     <form @submit.prevent="login">
     <div class="form-group ">

@@ -114,6 +114,46 @@ export default {
                 </li>
                 </ul>
             </div>
+        <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="../assets/cat_icon_2.png" width="50" height="50" class="d-inline-block align-top" alt="">        
+        <span class="ms-2" style="color:#ecdfcc">
+            <RouterLink to="/" class="nav-link">PawPal</RouterLink>
+        </span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+                <RouterLink to="/profile" class="nav-link">Profile</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/services" class="nav-link">Services</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/map" class="nav-link">Map</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/messaging" class="nav-link">Messaging</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <RouterLink to="/emergency" class="nav-link">Emergency</RouterLink>            
+            </li>
+            <li class="nav-item">
+                <div class="button"><RouterLink to="/login" class="nav-link">Log In</RouterLink> </div>          
+            </li>
+            <li class="nav-item">
+                <div class="button"><RouterLink to="/register" class="nav-link">Register</RouterLink> </div>          
+            </li>
+            </ul>
+        </div>
         </div>
         <hr>
     </nav>
@@ -149,19 +189,23 @@ export default {
 <style>
 nav{
     margin: 5px;
-    border-bottom: solid #697565;
     border-width: calc(2px + .1vw);
     background-color: black;
 }
 
 .navbar-brand {
   font-weight: bold;
-  color: #ecdfcc; /* Pale text color for the brand name */
+  color: #545454; /* Pale text color for the brand name */
+}
+.nav-item{
+    border-radius: 15%
 }
 .navbar {
-  border-bottom: solid #697565;
   border-width: calc(2px + .1vw);
-  background-color: black;
+  background-color: #f2ebdd;
+}
+.nav-item:hover{
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
 }
 li{
     margin: 10px;
@@ -169,9 +213,11 @@ li{
 nav .navbar-nav li a{
   color: #ecdfcc !important;
 }
+  color: #545454 !important;
+  }
 
 .nav-link{
-    color: #ecdfcc !important;
+    color: #545454 !important;
 }  
 
 @media (max-width: 768px) {
