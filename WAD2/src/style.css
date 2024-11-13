@@ -68,9 +68,8 @@ button:focus-visible {
   padding: 2em;
   display: flex;
   float: none;
-  height: fit-content !important;
+  height: inherit !important;
   flex: 0 0 40%;
-  width: 80%;
   background-color: white !important;
   word-wrap: break-word;
   overflow-wrap: break-word; /* Ensures long words break to fit the container */

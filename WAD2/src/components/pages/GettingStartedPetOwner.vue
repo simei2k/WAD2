@@ -46,7 +46,7 @@
 
 <style>
 label{
-    color:  #ecdfcc;
+    color:  #545454;
 }
 option{
     margin-left: 10%;
@@ -56,12 +56,12 @@ option{
     align-items: center;
     width: 60%;
     margin: 0 auto;
-    color:#ecdfcc;
+    color:#545454;
 }
 .form-group{
     margin-top: 5%;
     text-align: left;
-    background-color: #697565;
+    background-color: #fae1ae;
     padding: 2%;
     border-radius: 10px;
     margin-bottom: 10%;
@@ -89,8 +89,8 @@ option{
     text-align: center;
 }
 .submit-button{
-    color: #ecdfcc;
-    background-color: #3C3D37 !important;
+    color: #545454;
+    background-color: #fae1ae !important;
     width: 20%;
     height: 20%;
 }
