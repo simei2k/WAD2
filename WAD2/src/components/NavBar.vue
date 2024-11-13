@@ -171,7 +171,7 @@ li{
     margin: 10px;
 }
 nav .navbar-nav li a{
-  color: #ecdfcc !important;
+  color: #545454 !important;
 }
 
 .nav-link{
