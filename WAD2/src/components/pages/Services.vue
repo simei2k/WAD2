@@ -14,7 +14,6 @@ export default {
             currentPage: 'Find Services',
             iscurrentPage: [true,false,false,true,false,false],
             showButton: false,
-            reqServiceType: false,
             currServicePage: 'mainServicesPage',
             currJobPage: 'MainJobsPage',
             confirmPopup: false,
@@ -60,7 +59,23 @@ export default {
             selectedEvent: null,
             showOngoingListing: false,
             searchQuery: '',
-            filteredServices: [],
+            searchQueryS: '',
+            mostRecentP: false,
+            mostRecentS: false,
+            reqServiceTypeP: false,
+            reqServiceTypeS: false,
+            selectedServiceTypesP: [],
+            selectedServiceTypesS: [],
+            selectedTimingsP: [],
+            newTimeP: {
+                start:'',
+                end:'',
+            },
+            selectedTimingsS: [],
+            newTimeS: {
+                start:'',
+                end:'',
+            },
             }
     },
     props: {
@@ -71,6 +86,19 @@ export default {
         this.getallservices();
         this.getIndivEvents();
         this.getIndivEventsService();
+
+    },
+    watch: {
+        reqServiceTypeP(newValue) {
+            if (!newValue) {
+                this.selectedServiceTypesP = [];
+            }
+        },
+        reqServiceTypeS(newValue) {
+            if(!newValue) {
+                this.selectedServiceTypesS = [];
+            }
+        }
     },
     methods: {
         toggle() {
@@ -105,14 +133,6 @@ export default {
         showbutton() {
             if (!this.showButton) {
                 this.showButton=true;
-            }
-        },
-        showServiceTypes() {
-            if (!this.reqServiceType) {
-                this.reqServiceType=true;
-            }
-            else {
-                this.reqServiceType=false;
             }
         },
         showconfirmPopup() {
@@ -640,36 +660,114 @@ export default {
                 console.error("Error fetching events:", error);
             }
         },
-        async searchServices() { //currently not working
-            try {
-                this.filteredServices = [];
-                if(this.searchQuery.trim()==='') {
-                    await this.getallservices();
-                } else {
-                    const ServiceRef=collection(db,'services');
-                    const q = query(
-                        ServiceRef,
-                        where('title','>=', this.searchQuery),
-                        where('title','<=',this.searchQuery + '\uf8ff')
-                    );
-                    const querySnapshot = await getDocs(q);
-                    console.log("Query Results:", querySnapshot.docs);
-                    this.filteredServices = querySnapshot.docs.map(doc => {
-                        const data = doc.data();
-                        return {
-                            ...data,
-                        };
-                    });
-                console.log(this.filteredServices)
-                }
-            } catch (error) {
-                console.error("Error fetching services:", error);
+        updateTimeP() {
+            if (this.newTimeP.start && this.newTimeP.end) {
+                const event = {
+                    start:this.newTimeP.start.replace('T', ' '),
+                    end: this.newTimeP.end.replace('T', ' '),
+                };
+                this.selectedTimingsP = [event];
+            }
+        },
+        updateTimeS() {
+            if (this.newTimeS.start && this.newTimeS.end) {
+                const event = {
+                    start:this.newTimeS.start.replace('T', ' '),
+                    end: this.newTimeS.end.replace('T', ' '),
+                };
+                this.selectedTimingsS = [event];
             }
         }
     },
 
        
     computed: {
+        searchServices() {
+            let filteredServices = [...this.allservices] || [];
+            if (this.searchQuery.trim()!=='') {
+                filteredServices = filteredServices.filter(service =>
+                service.title.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                service.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+            }
+            
+            if (this.mostRecentP) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                filteredServices=filteredServices.sort((a,b) => {
+                    const dateA = new Date(a.start);
+                    const dateB = new Date(b.start);
+                    const diffA = Math.abs(today-dateA);
+                    const diffB = Math.abs(today-dateB)
+                    return diffA - diffB;
+                });
+            }
+
+            if (this.selectedServiceTypesP.length > 0) {
+                filteredServices = filteredServices.filter(service =>
+                    service.serviceTypeReq.some(type=> this.selectedServiceTypesP.includes(type))
+                );
+            }
+            return filteredServices;
+        },
+        searchJobs() {
+            let filteredJobs = [...this.alljobs] || [];
+            if (this.searchQueryS.trim()!=='') {
+                filteredJobs = filteredJobs.filter(job =>
+                job.title.toLowerCase().includes(this.searchQueryS.toLowerCase()) ||
+                job.name.toLowerCase().includes(this.searchQueryS.toLowerCase())
+            );
+            }
+            
+            if (this.mostRecentS) {
+                const today = new Date();
+                today.setHours(0,0,0,0);
+                filteredJobs=filteredJobs.sort((a,b) => {
+                    const dateA = new Date(a.start);
+                    const dateB = new Date(b.start);
+                    const diffA = Math.abs(today-dateA);
+                    const diffB = Math.abs(today-dateB)
+                    return diffA - diffB;
+                })
+            }
+
+            if (this.selectedServiceTypesS.length > 0) {
+                filteredJobs = filteredJobs.filter(job =>
+                    job.serviceTypeReq.some(type=> this.selectedServiceTypesS.includes(type))
+                );
+            }
+            return filteredJobs;
+        },
+        recommendServices() {
+            const blockStart = new Date(this.newTimeP.start);
+            const blockEnd = new Date(this.newTimeP.end);
+
+            return this.allservices.filter(service => {
+                const serviceStart = new Date(service.start);
+                const serviceEnd = new Date(service.end);
+
+                return (
+                    (serviceStart >= blockStart && serviceStart <= blockEnd) || 
+                    (serviceEnd >= blockStart && serviceEnd <= blockEnd) ||     
+                    (serviceStart <= blockStart && serviceEnd >= blockEnd)      
+                );
+            });
+        },
+        recommendJobs() {
+            const blockStart = new Date(this.newTimeS.start);
+            const blockEnd = new Date(this.newTimeS.end);
+
+            return this.alljobs.filter(job => {
+                const jobStart = new Date(job.start);
+                const jobEnd = new Date(job.end);
+
+                return (
+                    (jobStart >= blockStart && jobStart <= blockEnd) || 
+                    (jobEnd >= blockStart && jobEnd <= blockEnd) ||     
+                    (jobStart <= blockStart && jobEnd >= blockEnd)      
+                );
+            });
+        }
     },
     components: {
     VueCal,
@@ -750,6 +848,7 @@ export default {
     }
     .calendar-container {
         margin-top: 20px; 
+        overflow: visible;
     }
     .addIcon {
         border-color: #697565;
@@ -906,18 +1005,18 @@ export default {
             <div class="FindServicesSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
                     <button @click="getallservices(),getmyongoingjobs()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
-                    <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="search" style="border-radius:8px;">
+                    <input type="text" v-model="searchQuery" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
                 <div class="filterbar">
                     Filter by:
-                    <label><input type="checkbox" name="filterBys" class="filteroption"> Most Recent</label>
-                    <label><input type="checkbox" name="filterBys" class="filteroption" @click="showServiceTypes()"> Service Types</label>
-                    <div v-if="reqServiceType" class="extrafilteroptions">
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Sitter</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Walker</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Groomer</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Trainer</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="mostRecentP"> Most Recent</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="reqServiceTypeP"> Service Types</label>
+                    <div v-if="reqServiceTypeP" class="extrafilteroptions">
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Sitter" v-model="selectedServiceTypesP"> Pet Sitter</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Walker" v-model="selectedServiceTypesP"> Pet Walker</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Groomer" v-model="selectedServiceTypesP"> Pet Groomer</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesP"> Pet Trainer</label>
                     </div>
                 </div>
                 <div class="getRecommendations">
@@ -929,58 +1028,68 @@ export default {
                 <div>
                     <button @click="currServicePage = 'mainServicesPage'" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
                 </div>
-                <div class="calendar-container" style="display:inline-block;width:50%">
-                <iframe
-                :src="calendarSrc"
-                style="border: 3px solid #697565"
-                width="100%"
-                height="800px"
-                frameborder="0"
-                scrolling="no"
-                ></iframe>
+                <div class="row">
+                <div class="calendar-container col-6">
+                    <vue-cal class="calendar" style="height:750px"  
+                    hide-title-bar
+                    :events="selectedTimingsP"
+                    :disable-views="['years']"
+                    >
+                    
+                </vue-cal>
                 </div>
-                <div style="display:inline-block; vertical-align: top;width:48%; text-align:center;">This is for user to select dates and time and the database gives back those which matches </div>
+                <div class="col-6" style="text-align:center">
+                    Filtered services available based on selection <br>
+                    Start date & time:<input type="datetime-local" name="Datetime" v-model="newTimeP.start" @input="updateTimeP()"><br>
+                    End date & time:<input type="datetime-local" name="Datetime" v-model="newTimeP.end" @input="updateTimeP()"> <br>
+                    Recommended Services:
+                    <div class="row">
+                    <div v-for="service in recommendServices" :key="service.documentId" class="col-6">
+                    <div class="card card-fixed w-100">
+                    <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                        <h3> {{ service.title }}</h3>
+                        <h5> {{ service.name }}</h5>
+                        <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
+                        <p class="card-text">Services Provided: <br> {{ service.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ service.address }}</p>
+                        <p class="card-text">Contact Number: {{ service.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ service.payment }} / hour</p>
+                        <p class="card-text">Skills & Experiences: <br> {{ service.skillsExp }}</p>
+                        <button @click="ongoingService(service.documentId)">Accept Service</button>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                </div>
             </div> 
             <div v-if="currServicePage==='mainServicesPage'"> <!--Find Services (Service listings using cards)-->
-                <div>
+                <div v-if="searchServices.length > 0">
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="(event,index) in allservices" :key="index" class="col-3">
+                <div v-for="service in searchServices" :key="service.documentId" class="col-3">
                     <div class="card card-fixed w-100">
-                    <img :src="event.image" class="card-image" style="width:100%;height:70%"/>
+                    <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
-                        <h3>{{ event.title }}</h3>
-                        <h5>{{ event.name }}</h5>
-                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
-                        <p class="card-text">Services Provided: <br>{{ event.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ event.address }}</p>
-                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text">Skills & Experiences: <br>{{ event.skillsExp }}</p>
-                        <button @click="ongoingService(event.documentId)">Accept Service</button>
+                        <h3> {{ service.title }}</h3>
+                        <h5> {{ service.name }}</h5>
+                        <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
+                        <p class="card-text">Services Provided: <br> {{ service.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ service.address }}</p>
+                        <p class="card-text">Contact Number: {{ service.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ service.payment }} / hour</p>
+                        <p class="card-text">Skills & Experiences: <br> {{ service.skillsExp }}</p>
+                        <button @click="ongoingService(service.documentId)">Accept Service</button>
                     </div>
                     </div>
                 </div>
                 </div>
                 </div>
-                <div v-if="filteredServices.length">
-                    <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                    <div v-for="(event, index) in filteredJobs" :key="index" class="col-3">
-                        <div class="card card-fixed w-100">
-                        <img :src="event.image" class="card-image" style="width:100%;height:70%"/>
-                        <div class="card-body">
-                        <h3>{{ event.title }}</h3>
-                        <h5>{{ event.name }}</h5>
-                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
-                        <p class="card-text">Services Provided: <br>{{ event.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ event.address }}</p>
-                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text">Skills & Experiences: <br>{{ event.skillsExp }}</p>
-                        <button @click="ongoingService(event.documentId)">Accept Service</button>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
+                <div v-else-if="searchQuery.trim()!==''">
+                    No matching search found.
+                </div>
+                <div v-else-if="selectedServiceTypesP.length > 0 && searchServices.length === 0">
+                    No jobs available for the selected job type.
                 </div>
             </div>
         </div>
@@ -1121,18 +1230,18 @@ export default {
             <div class="FindJobsSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
                     <button @click="getalljobs(),getmyongoingservices()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
-                    <input type="text" placeholder="Search" id="search" style="border-radius:8px;">
+                    <input type="text" v-model="searchQueryS" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
                 <div class="filterbar">
                     Filter by:
-                    <label><input type="checkbox" name="filterBys" class="filteroption"> Most Recent</label>
-                    <label><input type="checkbox" name="filterBys" class="filteroption" @click="showServiceTypes()"> Job Types</label>
-                    <div v-if="reqServiceType" class="extrafilteroptions">
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Sitter</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Walker</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Groomer</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption"> Pet Trainer</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="mostRecentS"> Most Recent</label>
+                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="reqServiceTypeS"> Job Types</label>
+                    <div v-if="reqServiceTypeS" class="extrafilteroptions">
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Sitter" v-model="selectedServiceTypesS"> Pet Sitter</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Walker" v-model="selectedServiceTypesS"> Pet Walker</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Groomer" v-model="selectedServiceTypesS"> Pet Groomer</label>
+                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesS"> Pet Trainer</label>
                     </div>
                 </div>
                 <div class="getRecommendations">
@@ -1144,36 +1253,68 @@ export default {
                 <div>
                     <button @click="currJobPage = 'MainJobsPage'" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
                 </div>
-                <div class="calendar-container" style="display:inline-block;width:50%">
-                <iframe
-                :src="calendarSrc"
-                style="border: 3px solid #697565"
-                width="100%"
-                height="800px"
-                frameborder="0"
-                scrolling="no"
-                ></iframe>
+                <div class="row">
+                <div class="calendar-container col-6">
+                    <vue-cal class="calendar" style="height:750px"  
+                    hide-title-bar
+                    :events="selectedTimingsS"
+                    :disable-views="['years']"
+                    >
+                    
+                </vue-cal>
                 </div>
-                <div style="display:inline-block; vertical-align: top;width:48%; text-align:center;">This is for user to select dates and time and the database gives back those which matches </div>
+                <div class="col-6" style="text-align:center">
+                    Filtered services available based on selection <br>
+                    Start date & time:<input type="datetime-local" name="Datetime" v-model="newTimeS.start" @input="updateTimeS()"><br>
+                    End date & time:<input type="datetime-local" name="Datetime" v-model="newTimeS.end" @input="updateTimeS()"> <br>
+                    Recommended Services:
+                    <div class="row">
+                    <div v-for="job in recommendJobs" :key="job.documentId" class="col-6">
+                    <div class="card card-fixed w-100">
+                    <img :src="job.image" class="card-image" style="width:100%;height:70%"/>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                        <h3> {{ job.title }}</h3>
+                        <h5> {{ job.name }}</h5>
+                        <p class="card-text">Period of service: <br> {{ job.start }} - {{ job.end }}</p>
+                        <p class="card-text">Services needed: <br> {{ job.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ job.address }}</p>
+                        <p class="card-text">Contact Number: {{ job.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ job.payment }} / hour</p>
+                        <p class="card-text">Special Requirements: <br> {{ job.specialReq }}</p>
+                        <button @click="ongoingJob(job.documentId)">Accept Job</button>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                </div>
             </div> 
             <div v-if="currJobPage==='MainJobsPage'"> <!--Find Jobs (Service listings using cards)-->
+                <div v-if="searchJobs.length > 0">
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="(event,index) in alljobs" :key="index" class="col-3">
+                <div v-for="job in searchJobs" :key="job.documentId" class="col-3">
                     <div class="card card-fixed w-100">
-                    <img :src="event.image" class="card-image" />
+                    <img :src="job.image" class="card-image" />
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
-                        <h3>{{ event.title }}</h3>
-                        <h5>{{ event.name }}</h5>
-                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
-                        <p class="card-text">Services Required: <br>{{ event.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ event.address }}</p>
-                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text"> Special Requirements: <br>{{ event.specialReq }}</p>
-                        <button @click="ongoingJob(event.documentId)">Accept Job</button>
+                        <h3>{{ job.title }}</h3>
+                        <h5>{{ job.name }}</h5>
+                        <p class="card-text">Period of service: <br>{{ job.start }} - {{ job.end }}</p>
+                        <p class="card-text">Services Required: <br>{{ job.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ job.address }}</p>
+                        <p class="card-text">Contact Number: {{ job.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ job.payment }} / hour</p>
+                        <p class="card-text"> Special Requirements: <br>{{ job.specialReq }}</p>
+                        <button @click="ongoingJob(job.documentId)">Accept Job</button>
                     </div>
                     </div>
                 </div>
+                </div>
+                </div>
+                <div v-else-if="searchQueryS.trim()!==''">
+                    No matching search found.
+                </div>
+                <div v-else-if="selectedServiceTypesS.length > 0 && searchJobs.length === 0">
+                    No jobs available for the selected job type.
                 </div>
             </div>
         </div>
