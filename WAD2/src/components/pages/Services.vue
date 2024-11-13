@@ -782,7 +782,9 @@ export default {
         color: #ECDFCC;
         padding-left: 15px;
         background-color: inherit;
-        
+        border-top: 3px solid #f29040;
+        margin-left:5px;
+        margin-right:5px;
     }
     .PetOwner {
         display:inline-block;
@@ -791,9 +793,9 @@ export default {
         padding: 8px;
         z-index: 1;
         position:relative;
-        right: 58px;
-        bottom: 6px;
-        border:3px solid 7c321b;
+        right: 60px;
+        bottom: 5px;
+        border:3px solid #f29040;
     }
     .ServiceProvider {
         display:inline-block;
@@ -803,7 +805,7 @@ export default {
         z-index: 1;
         position:relative;
         right:23px;
-        bottom:6px;
+        bottom:5px;
         border: 3px solid #f29040;
     }
     .buttonBackground { 
@@ -814,6 +816,10 @@ export default {
         color:#fae1ae;
         border-radius:9999px;
         text-align:left;
+        border: 1px solid #f2bc5c;
+    }
+    .NotCurrent {
+        color: #888585;
     }
     p {
         display:inline-block;
@@ -834,16 +840,13 @@ export default {
         background-color: inherit;
     }
     .curPage {
-        display:inline-block;
         border-top: 3px solid #f29040;
         border-left: 3px solid #f29040;
         border-right: 3px solid #f29040;
         border-bottom: 3px solid #f29040;
         background-color: #f2bc5c;
         position:relative;
-        height:50px;
-        top: 5px;
-        padding-top:5px;
+        height:47px;
         transition:  border-color 0.5s ease;
     }
     .calendar-container {
@@ -961,7 +964,7 @@ export default {
         z-index: 9999; 
     }
     .listing-content {
-        background-color: #697565;
+        background-color: #ECDFCC;
         padding: 20px;
         width: 80%;
         height: 80%;
@@ -969,7 +972,9 @@ export default {
         border-radius: 10px;
         text-align: center;
         position: relative;
+        border: 5px solid #7c321b
     }
+
 
 </style>
 <template>
@@ -978,26 +983,28 @@ export default {
     <NavBar></NavBar>
     <div class="ServicePage">
     <div class="ServiceNavBar"> <!-- Nav Bar for service page-->
-    <span>
-        <p :class="{CurrentlyOwner:isPetOwner}">Pet Owner </p>
+    <div class="row">
+    <div class="col-md-12 col-12 col-lg-3" style="margin-top:12.5px !important;">
+        <p :class="{CurrentlyOwner:isPetOwner,NotCurrent:!isPetOwner}"><strong>Pet Owner</strong></p>
             <div class="buttonBackground">#</div>
             <button @click="toggle(); showalert()" :class="{PetOwner:isPetOwner, ServiceProvider:!isPetOwner}"></button>
-        <p :class="{CurrentlyOwner:!isPetOwner}">Service Provider </p>
-    </span>
-        <div v-if="isPetOwner" style="display:inline">
+        <p :class="{CurrentlyOwner:!isPetOwner,NotCurrent:isPetOwner}"><strong>Service Provider</strong></p>
+    </div>
+        <div v-if="isPetOwner" class="col-md-8 flex-wrap">
             <span>
-                <button @click="currentPage = 'Find Services';checkpage(0)" :class="{curPage:iscurrentPage[0]}" style="display:inline-block">Find Services</button>
-                <button @click="currentPage = 'Post Jobs';checkpage(1)" :class="{curPage:iscurrentPage[1]}" style="display:inline-block">Post Jobs</button>
-                <button @click="currentPage = 'Current Services';checkpage(2)" :class="{curPage:iscurrentPage[2]}" style="display:inline-block">My listings</button>
+                <button @click="currentPage = 'Find Services';checkpage(0)" :class="{curPage:iscurrentPage[0]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Services</strong></button>
+                <button @click="currentPage = 'Post Jobs';checkpage(1)" :class="{curPage:iscurrentPage[1]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Jobs</strong></button>
+                <button @click="currentPage = 'Current Services';checkpage(2)" :class="{curPage:iscurrentPage[2]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
-        <div v-else-if="!isPetOwner" style="display:inline">
+        <div v-else-if="!isPetOwner" class="col-md-8 flex-wrap">
             <span>
-                <button @click="currentPage = 'Find Jobs';checkpage(3)" :class="{curPage:iscurrentPage[3]}" style="display:inline-block">Find Jobs</button>
-                <button @click="currentPage = 'Post Services';checkpage(4)" :class="{curPage:iscurrentPage[4]}" style="display:inline-block">Post Services</button>
-                <button @click="currentPage = 'Current Jobs';checkpage(5)" :class="{curPage:iscurrentPage[5]}" style="display:inline-block">My listings</button>
+                <button @click="currentPage = 'Find Jobs';checkpage(3)" :class="{curPage:iscurrentPage[3]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Jobs</strong></button>
+                <button @click="currentPage = 'Post Services';checkpage(4)" :class="{curPage:iscurrentPage[4]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Services</strong></button>
+                <button @click="currentPage = 'Current Jobs';checkpage(5)" :class="{curPage:iscurrentPage[5]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
+    </div>
     </div>
     <div class="mainbody"> <!-- main page body-->
         <div v-if="currentPage === 'Find Services'"> <!--Pet Owner: Find Services-->
@@ -1207,20 +1214,44 @@ export default {
             </div>
             <div v-if="showOngoingListing" class="listing-overlay"> <!--Full screen of selected ongoing listing-->
                 <div class="listing-content">
-                    <h3>{{ selectedEvent.title }}</h3>
-                    <img :src="selectedEvent.image" class="full-image" />
-                    <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
-                    <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
-                    <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
-                    <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
-                    <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
-                    <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
-                    <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
-                    <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
-                    <button>This button links to My Profile (Job Provider)</button>
-                    <button>This button links to the Service Provider Profile</button>
-                    <button>This button links to the chat between us</button>
-                    <button @click="closeListing()" class="close-btn">Close</button>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <h3><strong>{{ selectedEvent.title }}</strong></h3>
+                            </div>
+                        </div> <br>
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <img :src="selectedEvent.image" style="max-width:300px;height:auto;" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8" style="font-size:x-large">
+                                <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
+                                <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
+                                <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
+                                <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
+                                <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
+                                <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
+                                <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
+                                <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
+                                <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
+                                <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
+                                <div class="text-center">
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.name }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>
+                                    <br>
+                                    <button style="border:2px solid red;border-radius:8px;" class="m-2"><strong>Cancel</strong></button>
+                                    
+                                    <button style="border:2px solid green;border-radius:8px;" class="m-2"><strong>Complete</strong></button>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button @click="closeListing()" class="close-btn" style="border:1px solid #f29040;border-radius:8px;"><strong>Close</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1230,7 +1261,7 @@ export default {
             <div class="FindJobsSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
                     <button @click="getalljobs(),getmyongoingservices()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
-                    <input type="text" v-model="searchQueryS" placeholder="Search" id="search" style="border-radius:8px;">
+                    <input type="text" v-model="searchQueryS" @input="searchJobs()" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
                 <div class="filterbar">
@@ -1434,21 +1465,44 @@ export default {
 
             <div v-if="showOngoingListing" class="listing-overlay"> <!--Full screen of selected ongoing listing-->
                 <div class="listing-content">
-                    <h3>{{ selectedEvent.title }}</h3>
-                    <img :src="selectedEvent.image" class="full-image" />
-                    <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
-                    <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
-                    <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
-                    <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
-                    <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
-                    <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
-                    <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
-                    <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
-                    <button>This button links to My Profile (Service Provider)</button>
-                    <button>This button links to the Pet Owner Profile(Job Provider)</button>
-                    <button>This button links to the chat between us</button>
-                    <button @click="closeListing()" class="close-btn">Close</button>
-                    
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <h3><strong>{{ selectedEvent.title }}</strong></h3>
+                            </div>
+                        </div> <br>
+                        <div class="row justify-content-center">
+                            <div class="col-12 text-center">
+                                <img :src="selectedEvent.image" style="max-width:300px;height:auto;" />
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-12 col-md-8" style="font-size:x-large">
+                                <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
+                                <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
+                                <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
+                                <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
+                                <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
+                                <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
+                                <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
+                                <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
+                                <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
+                                <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
+                                <div class="text-center">
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.name }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
+                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>
+                                    <br>
+                                    <button style="border:2px solid red;border-radius:8px;" class="m-2"><strong>Cancel</strong></button>
+                                    
+                                    <button style="border:2px solid green;border-radius:8px;" class="m-2"><strong>Complete</strong></button>
+                                </div>
+                                <div class="text-center mt-3">
+                                    <button @click="closeListing()" class="close-btn" style="border:1px solid #f29040;border-radius:8px;"><strong>Close</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
