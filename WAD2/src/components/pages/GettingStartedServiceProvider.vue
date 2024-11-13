@@ -1,7 +1,7 @@
 
 <template>
     <div class="registration">
-    <img class="cat-icon" src="../../assets/cat_icon.png">
+    <img class="cat-icon" src="../../assets/cat_icon_2.png">
     <h1>Getting Started</h1>
     <div class="form-group">
         <label for=" years-of-experience" >Years of Experience:</label>
@@ -43,7 +43,7 @@
 
 <style>
 label{
-    color:  #ecdfcc;
+    color:  #545454;
 }
 .begin{
     text-align: center;
@@ -54,12 +54,12 @@ label{
     align-items: center;
     width: 60%;
     margin: 0 auto !important;
-    color:#ecdfcc;
+    color:#545454;
 }
 .form-group{
     margin-top: 5%;
     text-align: left;
-    background-color: #697565;
+    background-color: #fae1ae;
     padding: 2%;
     border-radius: 10px;
     margin-bottom: 10%;
