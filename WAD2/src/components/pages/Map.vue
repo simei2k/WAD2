@@ -31,23 +31,21 @@
         <!-- Aesthetic List for Recommended Dog Runs -->
         <section class="ui segment">
           <h2 class="ui header">Top 5 Recommended Dog Runs</h2>
-          <h5 style="color: #697565;">Based on your location and weather forecast, here are the top 5 recommended Dog Runs</h5>
+          <h5 style="color: #697565;">
+            Based on your location and weather forecast, here are the top 5 recommended Dog Runs
+          </h5>
           <div class="recommended-list">
             <div
               class="recommended-item"
               v-for="(dogRun, index) in topDogRuns"
               :key="index"
             >
-              <!-- <div class="recommended-image">
-                <img
-                  :src="`../../assets/dogrun_${index + 1}.png`"
-                  alt="Dog Run"
-                  class="ui small image"
-                />
-              </div> -->
               <div class="recommended-details">
                 <h5>{{ dogRun.name }}</h5>
                 <p>{{ dogRun.weather }}</p>
+                <button class="ui button primary" @click="getDirections(dogRun.lat, dogRun.lng)">
+                  Get Directions
+                </button>
               </div>
             </div>
           </div>
@@ -69,6 +67,7 @@ export default {
       spinner: false,
       userLocation: null,
       map: null,
+      userMarker: null, // Holds the user's marker
       topDogRuns: [],
       dogRuns: [
         { name: "West Coast Park Dog Run", lat: 1.302750, lng: 103.763250 },
@@ -92,14 +91,19 @@ export default {
     initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
         zoom: 12,
-        center: { lat: 1.3521, lng: 103.8198 },
+        center: { lat: 1.3521, lng: 103.8198 }, // Default Singapore center
         mapTypeId: "roadmap",
       });
     },
     initAutocomplete() {
-      const autocomplete = new google.maps.places.Autocomplete(
-        this.$refs.autocomplete
-      );
+      const autocomplete = new google.maps.places.Autocomplete(this.$refs.autocomplete, {
+        bounds: new google.maps.LatLngBounds(
+          new google.maps.LatLng(1.130475, 103.692035), // Southwest corner of Singapore
+          new google.maps.LatLng(1.450475, 104.092035)  // Northeast corner of Singapore
+        ),
+        componentRestrictions: { country: "SG" }, // Restrict to Singapore
+      });
+
       autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
         if (place.geometry) {
@@ -111,51 +115,24 @@ export default {
         }
       });
     },
-    locatorButtonPressed() {
-      if (navigator.geolocation) {
-        this.spinner = true;
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            this.userLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            this.map.setCenter(this.userLocation);
-            this.spinner = false;
-          },
-          (error) => {
-            this.error =
-              "Unable to determine your location. Please type it manually.";
-            this.spinner = false;
-          }
-        );
-      } else {
-        this.error = "Geolocation is not supported by this browser.";
-      }
-    },
-    calculateDistance(lat1, lng1, lat2, lng2) {
-      const toRad = (value) => (value * Math.PI) / 180;
-      const R = 6371;
-      const dLat = toRad(lat2 - lat1);
-      const dLng = toRad(lng2 - lng1);
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) *
-          Math.cos(toRad(lat2)) *
-          Math.sin(dLng / 2) *
-          Math.sin(dLng / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    },
     async findBestDogRuns() {
       if (!this.userLocation) {
-        this.error = "Please provide your location.";
+        this.error = "Please provide your location using the search bar.";
         return;
       }
 
-      this.spinner = true;
-      const weatherUrl = "https://api.open-meteo.com/v1/forecast";
+      // Add or update marker at the searched location
+      if (this.userMarker) {
+        this.userMarker.setPosition(this.userLocation); // Update marker
+      } else {
+        this.userMarker = new google.maps.Marker({
+          position: this.userLocation,
+          map: this.map,
+          title: "Your Location",
+        });
+      }
 
+      const weatherUrl = "https://api.open-meteo.com/v1/forecast";
       const dogRunData = await Promise.all(
         this.dogRuns.map(async (dogRun) => {
           const weatherResponse = await axios.get(weatherUrl, {
@@ -200,19 +177,85 @@ export default {
       );
 
       this.topDogRuns = dogRunData.sort((a, b) => b.score - a.score).slice(0, 5);
-      this.spinner = false;
+    },
+    calculateDistance(lat1, lng1, lat2, lng2) {
+      const toRad = (value) => (value * Math.PI) / 180;
+      const R = 6371; // Earth's radius in km
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) *
+          Math.cos(toRad(lat2)) *
+          Math.sin(dLng / 2) *
+          Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c; // Distance in km
     },
     getWeatherDescription(code) {
-      const descriptions = {
-        0: "Clear",
-        1: "Partly Cloudy",
-        2: "Cloudy",
-        61: "Rainy",
+    const descriptions = {
+      0: "Clear sky",
+      1: "Mainly clear",
+      2: "Partly cloudy",
+      3: "Overcast",
+      45: "Fog",
+      48: "Depositing rime fog",
+      51: "Light drizzle",
+      53: "Moderate drizzle",
+      55: "Dense drizzle",
+      56: "Freezing light drizzle",
+      57: "Freezing dense drizzle",
+      61: "Slight rain",
+      63: "Moderate rain",
+      65: "Heavy rain",
+      66: "Freezing light rain",
+      67: "Freezing heavy rain",
+      71: "Slight snow fall",
+      73: "Moderate snow fall",
+      75: "Heavy snow fall",
+      77: "Snow grains",
+      80: "Slight rain showers",
+      81: "Moderate rain showers",
+      82: "Violent rain showers",
+      85: "Slight snow showers",
+      86: "Heavy snow showers",
+      95: "Thunderstorm",
+      96: "Thunderstorm with slight hail",
+      99: "Thunderstorm with heavy hail",
       };
-      return descriptions[code] || "Unknown";
+      return descriptions[code] || "Unknown weather condition";
     },
+    getDirections(destinationLat, destinationLng) {
+      if (!this.userLocation) {
+        this.error = "Please provide your location.";
+        return;
+      }
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+
+      // Attach the directionsRenderer to the map
+      directionsRenderer.setMap(this.map);
+
+      // Define the route
+      const request = {
+        origin: this.userLocation,
+        destination: { lat: destinationLat, lng: destinationLng },
+        travelMode: google.maps.TravelMode.DRIVING, // Change to WALKING or BICYCLING if necessary
+      };
+
+      // Fetch and display the route
+      directionsService.route(request, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(result);
+        } else {
+          this.error = "Unable to fetch directions. Please try again.";
+        }
+      });
+    }
   },
 };
+
 </script>
 
 <style scoped>
