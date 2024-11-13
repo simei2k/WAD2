@@ -31,23 +31,21 @@
         <!-- Aesthetic List for Recommended Dog Runs -->
         <section class="ui segment">
           <h2 class="ui header">Top 5 Recommended Dog Runs</h2>
-          <h5 style="color: #697565;">Based on your location and weather forecast, here are the top 5 recommended Dog Runs</h5>
+          <h5 style="color: #697565;">
+            Based on your location and weather forecast, here are the top 5 recommended Dog Runs
+          </h5>
           <div class="recommended-list">
             <div
               class="recommended-item"
               v-for="(dogRun, index) in topDogRuns"
               :key="index"
             >
-              <!-- <div class="recommended-image">
-                <img
-                  :src="`../../assets/dogrun_${index + 1}.png`"
-                  alt="Dog Run"
-                  class="ui small image"
-                />
-              </div> -->
               <div class="recommended-details">
                 <h5>{{ dogRun.name }}</h5>
                 <p>{{ dogRun.weather }}</p>
+                <button class="ui button primary" @click="getDirections(dogRun.lat, dogRun.lng)">
+                  Get Directions
+                </button>
               </div>
             </div>
           </div>
@@ -98,9 +96,14 @@ export default {
       });
     },
     initAutocomplete() {
-      const autocomplete = new google.maps.places.Autocomplete(
-        this.$refs.autocomplete
-      );
+      const autocomplete = new google.maps.places.Autocomplete(this.$refs.autocomplete, {
+        bounds: new google.maps.LatLngBounds(
+          new google.maps.LatLng(1.130475, 103.692035), // Southwest corner of Singapore
+          new google.maps.LatLng(1.450475, 104.092035)  // Northeast corner of Singapore
+        ),
+        componentRestrictions: { country: "SG" }, // Restrict to Singapore
+      });
+
       autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
         if (place.geometry) {
@@ -108,7 +111,7 @@ export default {
             lat: place.geometry.location.lat(),
             lng: place.geometry.location.lng(),
           };
-          this.map.setCenter(this.userLocation); // Center the map
+          this.map.setCenter(this.userLocation);
         }
       });
     },
@@ -219,9 +222,37 @@ export default {
       95: "Thunderstorm",
       96: "Thunderstorm with slight hail",
       99: "Thunderstorm with heavy hail",
-    };
-    return descriptions[code] || "Unknown weather condition";
-  }
+      };
+      return descriptions[code] || "Unknown weather condition";
+    },
+    getDirections(destinationLat, destinationLng) {
+      if (!this.userLocation) {
+        this.error = "Please provide your location.";
+        return;
+      }
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+
+      // Attach the directionsRenderer to the map
+      directionsRenderer.setMap(this.map);
+
+      // Define the route
+      const request = {
+        origin: this.userLocation,
+        destination: { lat: destinationLat, lng: destinationLng },
+        travelMode: google.maps.TravelMode.DRIVING, // Change to WALKING or BICYCLING if necessary
+      };
+
+      // Fetch and display the route
+      directionsService.route(request, (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          directionsRenderer.setDirections(result);
+        } else {
+          this.error = "Unable to fetch directions. Please try again.";
+        }
+      });
+    }
   },
 };
 
