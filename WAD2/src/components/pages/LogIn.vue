@@ -20,7 +20,7 @@
 
 <style>
 label{
-    color:  #ecdfcc;
+    color:  #545454;
 }
 .errorMessage{
     color:red
@@ -30,12 +30,12 @@ label{
     align-items: center;
     width: 60%;
     margin: 0 auto;
-    color:#ecdfcc;
+    color:#545454;
 }
 .form-group{
     margin-top: 5%;
     text-align: left;
-    background-color: #697565;
+    background-color: #fae1ae;
     padding: 2%;
     border-radius: 10px;
     margin-bottom: 10%;

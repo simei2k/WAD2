@@ -14,12 +14,12 @@
           <h4 class="card-text">{{ clinic.TYPE }}</h4>          
         </div>
         <div class="card-body">
-          <div class="buttons">
-            <button class="call">Call</button>
+          <div class="buttons" >
+            <button class="call" style="border-radius:15px">Call</button>
             <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
               Directions
             </a>
-            <button type="button" class="send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
+            <button type="button" style="border-radius:15px" class="send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
           </div>
         </div>
         <!-- Clinic Card End -->
