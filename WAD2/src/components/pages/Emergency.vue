@@ -6,7 +6,7 @@
     <div class="clinics">
   <div class="card-container">
     <ul class="cards">
-      <li id="clinic-list" v-for="clinic in clinics" :key="clinic.NAME" class="card">
+      <li id="clinic-list" v-for="clinic in clinics" :key="clinic.NAME" class="card" >
         <!-- Clinic Card Start -->
         <div class="card-body">
           <h3 class="card-title"><b>{{ clinic.NAME }}</b></h3>
@@ -861,20 +861,14 @@ h1 {
   flex-wrap: wrap;
   justify-content: center;
 }
-
 .cards {
   list-style-type: none;
   padding: 0;
-}
-
-.card {
-  background-color: #3C3D37; /* Darker background for contrast */
-  border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  margin: 1rem;
-  padding: 1rem;
-  width: 300px;
-  transition: transform 0.3s ease-in-out;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .card:hover {
@@ -892,7 +886,7 @@ h1 {
 
 .card-text {
   font-size: 1rem;
-  color: #ecdfcc; /* Your original font color */
+  color: #7c321b; /* Your original font color */
   margin: 0.5rem 0;
 }
 
@@ -909,11 +903,11 @@ li img{
 
 button,
 a.directions-link {
-  background-color: #5C5D5A; /* Slightly lighter for contrast */
+  background-color: #fae1ae; /* Slightly lighter for contrast */
   margin: 5px;
   padding: 10px 20px;
-  border-radius: 20px;
-  color: #ecdfcc; /* Your original font color */
+  border-radius:15px;
+  color: #545454; /* Your original font color */
   text-align: center;
   text-decoration: none;
   border: none;
@@ -923,7 +917,7 @@ a.directions-link {
 
 button:hover,
 a.directions-link:hover {
-  background-color: #787974; /* Hover color for buttons */
+  background-color: #f29040; /* Hover color for buttons */
 }
 
 .modal {

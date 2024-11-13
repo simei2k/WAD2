@@ -1,7 +1,9 @@
 <template>
   <div class="chat-view">
     <div class="chat-header">
-      <h3>{{ selectedChat.name }}</h3>
+      <h3 class="person_name">{{ selectedChat.name }}</h3>
+      <img src="https://avatar.iran.liara.run/public/25" alt="Avatar" class="chat-avatar" />
+
     </div>
     <div class="chat-messages">
       <div
@@ -86,29 +88,56 @@ export default {
   
   
   <style scoped>
+
+.chat-view {
+  width: 100%;
+  box-sizing: border-box;
+  height: 87vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden; /* Ensure no scrollbar here */
+}
+.chat-header {
+  background-color: #ff9f48;
+  color: #545454;
+  width: 100%;
+  padding: 10px;
+  text-align: center;
+  border-radius: 5%;
+  flex-shrink: 0;
+  z-index: 2; /* Ensure header stays on top */
+
+}
+
+.chat-messages {
+  padding: 10px;
+  width: 100%;
+  overflow-y: scroll; /* Changed from auto to scroll */
+  flex: 1;
+  /* Style the scrollbar for chat-messages */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ffcf72 #fae1ae; /* For Firefox */
+  margin-bottom: 60px;
+}
+
+
 body, html {
   overflow-x: hidden; /* Prevent horizontal scroll */
   margin: 0; /* Ensure no margin causes overflow */
   padding: 0; /* Remove any padding causing overflow */
 }
 
-/* Optionally add this for specific containers */
-.chat-view {
-  width: 100%; /* Ensure the container does not exceed the width */
-  box-sizing: border-box; /* Include padding and border in width calculations */
-}
-.chat-header {
-  background-color: #697565;
-  color: #ECDFCC;
-  padding: 10px;
-  text-align: center;
+
+.chat-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
 }
 
-.chat-messages {
-  overflow-y: auto;
-  padding: 10px;
-  width: 100%;
-}
+
+
 
 .message {
   width: 100%; /* Allow the message box to take full available width */
@@ -124,15 +153,15 @@ body, html {
 }
 
 .incoming {
-  background-color: #3C3D37;
-  color: #ECDFCC;
+  background-color: #ffcf72;
+  color: #545454;
   margin-right: auto;
   border-top-left-radius: 0;
 }
 
 .outgoing {
-  background-color: #ECDFCC;
-  color: #3C3D37;
+  background-color: #fae1ae;
+  color: #545454;
   margin-left: auto;
   border-top-right-radius: 0;
 }
@@ -157,6 +186,17 @@ body, html {
   display: flex;
   padding: 10px;
   border-top: 1px solid #ccc;
+  height: auto;
+  flex-shrink: 0;
+  background: #ffcf72;
+  position: absolute; /* Add this */
+  bottom: 0; /* Add this */
+  left: 0; /* Add this */
+  right: 0; /* Add this */
+  width: 100%;
+  box-sizing: border-box;
+  flex-shrink: 0; /* Prevent shrinking */
+  z-index: 2; /* Ensure input stays on top */
 }
 
 .chat-input input {
@@ -167,6 +207,22 @@ body, html {
 
 .chat-input button {
   padding: 5px 10px;
+}
+.chat-messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: #fae1ae;
+  border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #ffcf72;
+  border-radius: 4px;
+}
+.person_name{
+  color: #7c321b !important;
 }
 
   </style>

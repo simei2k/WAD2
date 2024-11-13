@@ -8,7 +8,7 @@
     >
       <img :src="chat.avatar" alt="Profile" class="avatar" />
       <div class="chat-info">
-        <h4>{{ chat.name }}</h4>
+        <h4 class="chat-name">{{ chat.name }}</h4>
         <p class="last-message">{{ chat.lastMessage }}</p>
       </div>
       <span class="chat-time">{{ formatTime(chat.lastMessageTime) }}</span>
@@ -62,7 +62,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 10px;
-  border-bottom: 1px solid #ECDFCC;
+  border-bottom: 1px solid #7c321b;
   cursor: pointer;
   width: 100%; /* Make sure the chat-item takes full available width */
 }
@@ -81,9 +81,12 @@ export default {
   max-width: calc(100% - 60px); /* Ensure space for the avatar */
   overflow: hidden;
 }
+.chat-name{
+  color: #545454;
+}
 
 .last-message {
-  color: #aaa;
+  color: #545454;
   font-size: 0.9rem;
   word-wrap: break-word; /* Ensure the text wraps when needed */
   overflow-wrap: break-word; /* Same as word-wrap */

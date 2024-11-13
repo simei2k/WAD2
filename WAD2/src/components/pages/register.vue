@@ -1,6 +1,6 @@
 <template>
     <div class="registration">
-      <img class="cat-icon" src="../../assets/cat_icon.png" />
+      <img class="cat-icon" src="../../assets/cat_icon_2.png" />
       <div id="firebaseui-auth-container"></div>
       <h1>Getting Started</h1>
       <form @submit.prevent="handleSubmit">
@@ -54,7 +54,6 @@
   import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
   import { setDoc, doc } from 'firebase/firestore';
   import db from '../../../database.js';
-  import { useRouter } from 'vue-router';
   import { ref } from 'vue';
   
   export default {
@@ -73,7 +72,6 @@
       };
     },
     setup() {
-      const router = useRouter();
       const email = ref('');
       const password = ref('');
       const errorMessage = ref('');
