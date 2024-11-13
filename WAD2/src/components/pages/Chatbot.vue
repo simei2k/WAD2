@@ -112,12 +112,13 @@ export default {
   flex-direction: column;
   height: 90vh;
   justify-content: space-between;
-  background-color: #181c14;
+  background-color: inherit;
+  border-radius: 10px;
 }
 
 .chat-window {
   flex-grow: 1;
-  background-color: #181c14;
+  background-color: inherit;
   color: white;
   padding: 20px;
   overflow-y: auto;
@@ -127,8 +128,8 @@ export default {
 
 .user {
   align-self: flex-end;
-  background-color: #ecdfcc;
-  color: #3c3d37;
+  background-color: #fae1ae;
+  color: #7c321b;
   border-radius: 10px 10px 0px 10px;
   padding: 10px;
   margin-bottom: 10px;
@@ -139,8 +140,8 @@ export default {
 
 .bot {
   align-self: flex-start;
-  background-color: #ecdfcc;
-  color: #3c3d37;
+  background-color: #ffcf72;
+  color: #7c321b;
   border-radius: 10px 10px 10px 0px;
   padding: 10px;
   margin-bottom: 10px;
@@ -152,7 +153,7 @@ export default {
 .input-box {
   display: flex;
   padding: 20px;
-  background-color: #181c14;
+  background-color: #ffcf72;
 }
 
 input[type="text"] {
@@ -161,11 +162,11 @@ input[type="text"] {
   border: 1px solid #ecdfcc;
   border-radius: 5px;
   background-color: transparent;
-  color: #ecdfcc;
+  color: #545454;
 }
 
 input[type="text"]::placeholder {
-  color: #ecdfcc;
+  color: #545454;
   opacity: 0.7;
 }
 

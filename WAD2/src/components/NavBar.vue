@@ -48,7 +48,7 @@ export default {
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
         <a class="navbar-brand d-flex align-items-center" href="#">
-        <img src="../assets/cat_icon.png" width="50" height="50" class="d-inline-block align-top" alt="">        
+        <img src="../assets/cat_icon_2.png" width="50" height="50" class="d-inline-block align-top" alt="">        
         <span class="ms-2" style="color:#ecdfcc">
             <RouterLink to="/" class="nav-link">PawPal</RouterLink>
         </span>
@@ -99,29 +99,32 @@ export default {
 <style>
 nav{
     margin: 5px;
-    border-bottom: solid #697565;
     border-width: calc(2px + .1vw);
-    background-color: black;
-    }
+}
 
 .navbar-brand {
   font-weight: bold;
-  color: #ecdfcc; /* Pale text color for the brand name */
+  color: #545454; /* Pale text color for the brand name */
+}
+.nav-item{
+    border-radius: 15%
 }
 .navbar {
-  border-bottom: solid #697565;
   border-width: calc(2px + .1vw);
-  background-color: black;
+  background-color: #f2ebdd;
+}
+.nav-item:hover{
+    box-shadow: 0 0 11px rgba(33,33,33,.2); 
 }
 li{
     margin: 10px;
 }
 nav .navbar-nav li a{
-  color: #ecdfcc !important;
+  color: #545454 !important;
   }
 
 .nav-link{
-    color: #ecdfcc !important;
+    color: #545454 !important;
 }  
 
 

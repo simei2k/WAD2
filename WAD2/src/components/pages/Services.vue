@@ -781,7 +781,7 @@ export default {
     .ServiceNavBar {
         color: #ECDFCC;
         padding-left: 15px;
-        background-color: #1a1a1a;
+        background-color: inherit;
         
     }
     .PetOwner {
@@ -793,7 +793,7 @@ export default {
         position:relative;
         right: 58px;
         bottom: 6px;
-        border:3px solid darkgreen;
+        border:3px solid 7c321b;
     }
     .ServiceProvider {
         display:inline-block;
@@ -804,42 +804,42 @@ export default {
         position:relative;
         right:23px;
         bottom:6px;
-        border: 3px solid darkgreen;
+        border: 3px solid #f29040;
     }
     .buttonBackground { 
-        background-color:#697565;
+        background-color:#fae1ae;
         display: inline-flex;
         z-index: 0;
         width: 60px;
-        color:#697565;
+        color:#fae1ae;
         border-radius:9999px;
         text-align:left;
     }
     p {
         display:inline-block;
         padding-right: 20px;
-        color: grey;
+        color: #7c321b;
         
     }
     .CurrentlyOwner {
-        color: #ECDFCC;
+        color: #7c321b;
     }
     .mainbody {
-        border-top: 3px solid #697565;
-        color: #ECDFCC;
+        border-top: 3px solid #f29040;
+        color: #7c321b;
         width:99.5%;
         margin:auto;
     }
     .ServicePage {
-        background-color: #242424;
+        background-color: inherit;
     }
     .curPage {
         display:inline-block;
-        border-top: 3px solid #697565;
-        border-left: 3px solid #697565;
-        border-right: 3px solid #697565;
-        border-bottom: 3px solid #242424;
-        background-color: #242424;
+        border-top: 3px solid #f29040;
+        border-left: 3px solid #f29040;
+        border-right: 3px solid #f29040;
+        border-bottom: 3px solid #f29040;
+        background-color: #f2bc5c;
         position:relative;
         height:50px;
         top: 5px;
@@ -851,14 +851,14 @@ export default {
         overflow: visible;
     }
     .addIcon {
-        border-color: #697565;
+        border-color: #f29040;
         background-color:#242424;
         color: #242424;
         border-radius: 50%;
         margin-right: 10px;
     }
     .jobButton {
-        border: 3px solid #697565;
+        border: 3px solid #f29040;
         border-radius: 15px;  
         justify-content: center;
         display:flex;
@@ -891,16 +891,16 @@ export default {
     }
     .extrafilteroptions {
         display:inline-block;
-        border: 2px solid #697565;
+        border: 2px solid #f29040;
         margin-left:10px;
         padding-right: 20px;
         border-radius:8px;
     }
     .FindServicesSearchBar{
-        border-bottom: 3px solid #464545;
+        border-bottom: 3px solid #f29040;
     }
     .FindJobsSearchBar{
-        border-bottom: 3px solid #464545;
+        border-bottom: 3px solid #f29040;
     }
     .cfmPopup {
         position: fixed;
@@ -915,7 +915,7 @@ export default {
         padding: 20px;
         border-radius: 8px;
         text-align:center;
-        border: 3px solid #697565;
+        border: 3px solid #f29040;
         margin:auto;
         width:20%;
         
@@ -937,7 +937,7 @@ export default {
     }
     .reloadButton {
         border-radius: 8px;
-        border:solid 3px #697565;
+        border:solid 3px ;
         position: absolute;
         top:150px;
     }
@@ -1004,8 +1004,8 @@ export default {
             <div class="MainServicesPage" v-if="currServicePage==='mainServicesPage'">
             <div class="FindServicesSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
-                    <button @click="getallservices(),getmyongoingjobs()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
-                    <input type="text" v-model="searchQuery" placeholder="Search" id="search" style="border-radius:8px;">
+                    <button @click="getallservices(),getmyongoingjobs()" style="display:inline; margin-right:5px;border:3px solid #f29040;border-radius:8px;">Reload</button>
+                    <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
                 <div class="filterbar">
@@ -1020,7 +1020,7 @@ export default {
                     </div>
                 </div>
                 <div class="getRecommendations">
-                    <button style="font-size:medium;border-radius:8px; border: 2px solid #697565" @click="currServicePage = 'Recommendations Page'">Get Recommendations</button>
+                    <button style="font-size:medium;border-radius:8px; border: 2px solid #f29040" @click="currServicePage = 'Recommendations Page'">Get Recommendations</button>
                 </div>
             </div>   
             </div>
