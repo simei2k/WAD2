@@ -5,7 +5,7 @@
     <div class="container-fluid box">
         <div class="row">
             <div class="col-3 profile-bar">
-                <img class="profile-pic" src="../../assets/service_provider_avatar.png">
+                <img class="profile_pic" src="../../assets/service_provider_avatar.png">
                 <strong><h1 class="profile-name">CatWoman</h1></strong>
                 <h2 class="profile-tagline">I love cats</h2>
                 <div class="profile-location">
@@ -40,6 +40,7 @@
                     <h3>Average: 5/5 &#127775; ratings</h3>
                     <div class="card-container ">
                         <ul class="cards">
+                          <div class="cardforscroll">
                                  <li class="review-card card" v-for="(review, index) in reviews" :key="index">
                                         <div class="card-div">
                                         <div class="card-body">
@@ -59,6 +60,7 @@
                                             </div>
                                             </div>
                                             </li>
+                                          </div>
                                             </ul>
                                     </div>  
                                 </div>        
@@ -100,31 +102,31 @@ export default {
             reviews: [
         {
           reviewerName: "DogLover",
-          reviewerImage: "../../assets/reviewer1_pic.png",
+          reviewerImage: "https://avatar.iran.liara.run/public/33",
           stars: 4,
           text: "I got CatWoman to dogsit my puppy for 2 weeks. My pup was very well taken care of. 10/10 service provided.",
-          photo: "../../assets/dog_sitting.jpg"
+          photo: "https://images.unsplash.com/photo-1730991336267-0c3672605f42?q=80&w=1886&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
         {
           reviewerName: "DogLover",
-          reviewerImage: "../../assets/reviewer1_pic.png",
-          stars: 4,
-          text: "I got CatWoman to dogsit my puppy for 2 weeks. My pup was very well taken care of. 10/10 service provided.",
-          photo: "../../assets/dog_sitting.jpg"
+          reviewerImage: "https://avatar.iran.liara.run/public/12",
+          stars: 1,
+          text: "CatWoman ate my dog",
+          photo: "https://images.unsplash.com/photo-1727466443374-06d2bf46f721?q=80&w=2020&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
         {
-          reviewerName: "DogLover",
-          reviewerImage: "../../assets/reviewer1_pic.png",
+          reviewerName: "IamVerySad",
+          reviewerImage: "https://avatar.iran.liara.run/public/89",
           stars: 4,
-          text: "I got CatWoman to dogsit my puppy for 2 weeks. My pup was very well taken care of. 10/10 service provided.",
-          photo: "../../assets/dog_sitting.jpg"
+          text: "CatWoman gave my dog the best treats and now shes loves her more than me. I donated my pet to catwoman",
+          photo: "https://images.unsplash.com/photo-1701445175220-1f485a27fb41?q=80&w=1935&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
         {
-          reviewerName: "DogLover",
-          reviewerImage: "../../assets/reviewer1_pic.png",
+          reviewerName: "IloveWAD2",
+          reviewerImage: "https://avatar.iran.liara.run/public/92",
           stars: 4,
-          text: "I got CatWoman to dogsit my puppy for 2 weeks. My pup was very well taken care of. 10/10 service provided.",
-          photo: "../../assets/dog_sitting.jpg"
+          text: "Catwoman stole my cats. Now they are fatter than me",
+          photo: "https://images.unsplash.com/photo-1671468158308-e0ea743c46de?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         }
 
         ],
@@ -183,7 +185,12 @@ export default {
 
 <style>
 
-
+.cardforscroll{
+  width:100%;
+  flex: 0 0 auto;
+  display: flex;
+  padding:10px;
+}
   
   .reviewer-name {
     margin-right: auto;
@@ -227,8 +234,8 @@ h1,h2,h3, h6{
     white-space: normal; /* Ensures text wraps normally */
 }
 
-.profile-pic{
-    width: 60%;
+.profile_pic{
+    width: 70%;
     height: auto;
 }
 .profile-name{
@@ -265,13 +272,17 @@ svg{
 
 .card-container {
     width: 100%;
-    display: flex;
-    height: fit-content;
     white-space: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
+    display: flex;
+    height: 40%;
+    white-space: nowrap;
+    overflow-x: hidden;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch; 
     flex-direction: row;
+    flex-wrap:nowrap;
+    overflow:auto;
+    padding:10px;
   }
 
 .cards {
@@ -302,6 +313,7 @@ svg{
 }
 .review-photo{
     width: 30%;
+    border-radius: 2px;
 }
 /* for the stars */
 .stars{
