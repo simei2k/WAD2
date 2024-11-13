@@ -97,7 +97,7 @@
   }
 
   .card-description {
-    color:#ECDFCC;
+    color:#7c321b;
     font-size: medium;
   }
 
