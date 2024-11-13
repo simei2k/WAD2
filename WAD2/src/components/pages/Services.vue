@@ -57,11 +57,21 @@ export default {
             },
             PetOwnerName: "PetOwnerF", //need to connect to login so every calendar and my listings page are to the person
             ServiceProviderName: "ServiceProviderF", //need to connect to login so every calendar and my listings page are to the person
+            selectedEvent: null,
+            showOngoingListing: false,
+            searchQuery: '',
+            filteredServices: [],
             }
     },
     props: {
     
   },
+    mounted() {
+        this.getalljobs();
+        this.getallservices();
+        this.getIndivEvents();
+        this.getIndivEventsService();
+    },
     methods: {
         toggle() {
             if (this.isPetOwner) {
@@ -108,6 +118,14 @@ export default {
         showconfirmPopup() {
             this.confirmPopup = true;
         },
+        viewMore(event) {
+            this.selectedEvent = event;
+            this.showOngoingListing = true;
+        },
+        closeListing() {
+            this.showOngoingListing = false;
+            this.selectedEvent = null;
+        },
         async addJob() {
             try {
                 const eventRef = await addDoc(collection(db,'jobs'), {
@@ -123,6 +141,7 @@ export default {
                     payment: this.newEvent.payment,
                     status: '',
                     documentId: '',
+                    linkedPerson:'',
                 });
                 await updateDoc(eventRef, {
                     documentId: eventRef.id,
@@ -141,6 +160,7 @@ export default {
                 payment: '',
                 status: '',
                 documentId: '',
+                linkedPerson:'',
                 };
             } catch (e) {
                 console.error("Error adding document: ",e);
@@ -161,6 +181,7 @@ export default {
                     payment: this.newEventService.payment,
                     status: '',
                     documentId: '',
+                    linkedPerson: '',
                 });
                 await updateDoc(eventRef, {
                     documentId: eventRef.id,
@@ -179,6 +200,7 @@ export default {
                     payment: '',
                     status: '',
                     documentId: '',
+                    linkedPerson:'',
                 };
             } catch (e) {
                 console.error("Error adding document: ",e);
@@ -222,6 +244,68 @@ export default {
             console.error("Error fetching events: ", error);
             }
         },
+        async getmyongoingjobs() {
+            try {
+                const getdatabyname = query(collection(db,'ongoing'), where('name','==',this.PetOwnerName));
+                const getdatabylinkedPerson = query(collection(db,'ongoing'),where('linkedPerson','==',this.PetOwnerName));
+                const [nameSnapshot, linkedPersonSnapshot] = await Promise.all([
+                    getDocs(getdatabyname),
+                    getDocs(getdatabylinkedPerson)
+                ]);
+                let ongoingjobs=[];
+                nameSnapshot.docs.forEach(doc => {
+                    ongoingjobs.push({
+                        ...doc.data(),
+                        start: doc.data().start.replace('T', ' '),
+                        end: doc.data().end.replace('T', ' '),
+                    });
+                });
+                linkedPersonSnapshot.docs.forEach(doc => {
+                    const data =doc.data();
+                    if (!ongoingjobs.some(job=>job.documentId === data.documentId)) {
+                        ongoingjobs.push({
+                            ...data,
+                            start: data.start.replace('T', ' '),
+                            end: data.end.replace('T', ' ')
+                        });
+                    }
+                });
+                this.myongoingjobs = ongoingjobs;
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        },
+        async getmyongoingservices() {
+            try {
+                const getdatabyname = query(collection(db,'ongoing'), where('name','==',this.ServiceProviderName));
+                const getdatabylinkedPerson = query(collection(db,'ongoing'),where('linkedPerson','==',this.ServiceProviderName));
+                const [nameSnapshot, linkedPersonSnapshot] = await Promise.all([
+                    getDocs(getdatabyname),
+                    getDocs(getdatabylinkedPerson)
+                ]);
+                let ongoingservices=[];
+                nameSnapshot.docs.forEach(doc => {
+                    ongoingservices.push({
+                        ...doc.data(),
+                        start: doc.data().start.replace('T', ' '),
+                        end: doc.data().end.replace('T', ' '),
+                    });
+                });
+                linkedPersonSnapshot.docs.forEach(doc => {
+                    const data =doc.data();
+                    if (!ongoingservices.some(job=>job.documentId === data.documentId)) {
+                        ongoingservices.push({
+                            ...data,
+                            start: data.start.replace('T', ' '),
+                            end: data.end.replace('T', ' ')
+                        });
+                    }
+                });
+                this.myongoingservices = ongoingservices;
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        },
         async getmyjobs() {
             try {
                 const getdatabyname = query(collection(db,'jobs'), where ('name','==', this.PetOwnerName))
@@ -243,6 +327,7 @@ export default {
                     payment: data.payment,
                     status: data.status,
                     documentId: data.documentId,
+                    linkedPerson: data.linkedPerson,
                     };
                 });
             } catch (error) {
@@ -270,6 +355,7 @@ export default {
                     payment: data.payment,
                     status: data.status,
                     documentId: data.documentId,
+                    linkedPerson: data.linkedPerson,
                     };
                 });
             } catch (error) {
@@ -297,6 +383,7 @@ export default {
                     payment: data.payment,
                     status: data.status,
                     documentId: data.documentId,
+                    linkedPerson: data.linkedPerson,
                     };
                 });
             } catch (error) {
@@ -324,6 +411,7 @@ export default {
                     payment: data.payment,
                     status: data.status,
                     documentId: data.documentId,
+                    linkedPerson: data.linkedPerson,
                     };
                 });
             } catch (error) {
@@ -444,7 +532,140 @@ export default {
                 console.error('Error transferring service:', error);
             }
         },
+        async ongoingJob(id) {
+            try {
+                
+                const fromCollectionRef = doc(db, 'jobs', id);
+                const docSnap = await getDoc(fromCollectionRef);
 
+                if (docSnap.exists()) {
+                    await updateDoc(fromCollectionRef, {
+                        status: 'ongoing',
+                        linkedPerson: this.ServiceProviderName,
+                    });
+                    console.log('Status updated to "ongoing".');
+
+                    const updatedDocSnap = await getDoc(fromCollectionRef);
+                    console.log('Updated document:', updatedDocSnap.data());
+
+                    const toCollectionRef = doc(db, 'ongoing', id);
+                    await setDoc(toCollectionRef, updatedDocSnap.data());
+                    await deleteDoc(fromCollectionRef);
+                    
+                } else {
+                    console.log("No such document");
+                }
+            } catch (error) {
+                console.error('Error transferring service:', error);
+            }
+        },
+        async ongoingService(id) {
+            try {
+                
+                const fromCollectionRef = doc(db, 'services', id);
+                const docSnap = await getDoc(fromCollectionRef);
+
+                if (docSnap.exists()) {
+                    await updateDoc(fromCollectionRef, {
+                        status: 'ongoing',
+                        linkedPerson: this.PetOwnerName,
+                    });
+                    console.log('Status updated to "ongoing".');
+
+                    const updatedDocSnap = await getDoc(fromCollectionRef);
+                    console.log('Updated document:', updatedDocSnap.data());
+
+                    const toCollectionRef = doc(db, 'ongoing', id);
+                    await setDoc(toCollectionRef, updatedDocSnap.data());
+                    await deleteDoc(fromCollectionRef);
+                    
+                } else {
+                    console.log("No such document");
+                }
+            } catch (error) {
+                console.error('Error transferring service:', error);
+            }
+        },
+        async getalljobs() {
+            try {
+                const Snapshot = await getDocs(collection(db,'jobs'));
+                this.alljobs = Snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const start = data.start.replace('T', ' ');
+                    const end = data.end.replace('T', ' ');
+                    return {
+                    title: data.title,
+                    start: start,
+                    end: end,
+                    name: data.name,
+                    image: data.image,
+                    serviceTypeReq: data.serviceTypeReq,
+                    specialReq:data.specialReq,
+                    address: data.address,
+                    contactNum: data.contactNum,
+                    payment: data.payment,
+                    status: data.status,
+                    documentId: data.documentId,
+                    linkedPerson: data.linkedPerson,
+                    };
+                });
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        },
+        async getallservices() {
+            try {
+                const Snapshot = await getDocs(collection(db,'services'));
+                this.allservices = Snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    const start = data.start.replace('T', ' ');
+                    const end = data.end.replace('T', ' ');
+                    return {
+                    title: data.title,
+                    start: start,
+                    end: end,
+                    name: data.name,
+                    image: data.image,
+                    serviceTypeReq: data.serviceTypeReq,
+                    skillsExp:data.skillsExp,
+                    address: data.address,
+                    contactNum: data.contactNum,
+                    payment: data.payment,
+                    status: data.status,
+                    documentId: data.documentId,
+                    linkedPerson: data.linkedPerson,
+                    };
+                });
+            } catch (error) {
+                console.error("Error fetching events:", error);
+            }
+        },
+        async searchServices() { //currently not working
+            try {
+                this.filteredServices = [];
+                if(this.searchQuery.trim()==='') {
+                    await this.getallservices();
+                } else {
+                    const ServiceRef=collection(db,'services');
+                    const q = query(
+                        ServiceRef,
+                        where('title','>=', this.searchQuery),
+                        where('title','<=',this.searchQuery + '\uf8ff')
+                    );
+                    const querySnapshot = await getDocs(q);
+                    console.log("Query Results:", querySnapshot.docs);
+                    this.filteredServices = querySnapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return {
+                            ...data,
+                        };
+                    });
+                console.log(this.filteredServices)
+                }
+            } catch (error) {
+                console.error("Error fetching services:", error);
+            }
+        }
     },
 
        
@@ -604,17 +825,51 @@ export default {
         color: #ECDFCC;
         width: 100%;
     }
-    .card {
+    .card-fixed {
+        border-radius: 15px !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        height:600px !important;
+        width:400px !important;
+        padding:15px;
+    }
+    .card-body {
+        max-height: calc(100% - 50px);
         overflow-y:auto;
-        padding:16px;
-        border-radius:8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
     .reloadButton {
         border-radius: 8px;
         border:solid 3px #697565;
         position: absolute;
         top:150px;
+    }
+    .card-image {
+        width:100%;
+        height:200px;
+        object-fit:cover;
+        border-radius:8px;
+        border: 2px solid #1a1a1a;
+    }
+    .listing-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; 
+    }
+    .listing-content {
+        background-color: #697565;
+        padding: 20px;
+        width: 80%;
+        height: 80%;
+        overflow-y: auto;
+        border-radius: 10px;
+        text-align: center;
+        position: relative;
     }
 
 </style>
@@ -650,7 +905,8 @@ export default {
             <div class="MainServicesPage" v-if="currServicePage==='mainServicesPage'">
             <div class="FindServicesSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
-                    <input type="text" placeholder="Search" id="search" style="border-radius:8px;">
+                    <button @click="getallservices(),getmyongoingjobs()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
+                    <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
                 <div class="filterbar">
@@ -686,21 +942,44 @@ export default {
                 <div style="display:inline-block; vertical-align: top;width:48%; text-align:center;">This is for user to select dates and time and the database gives back those which matches </div>
             </div> 
             <div v-if="currServicePage==='mainServicesPage'"> <!--Find Services (Service listings using cards)-->
-                <div class="card col-3" style="width: 20rem;height: 33rem; background-color: #464545; border: 3px solid #697565; color: white; border-radius: 15px; margin-top: 10px;"> <!--One card-->
-                    <img src="../../../public/img/AYWg3iu-dog-pictures-wallpaper.jpg" class="card-img-top" alt="Card Image" style="border: 3px solid #697565"/>
-                    <div class="card-body">
-                    <h5 class="card-title">Pet Sitter needed</h5>
-                    <p class="card-text">
-                        <div>Type of service needed: 
-                            <ul>
-                                <li>Pet Sitter</li>
-                                <li>Pet Walker</li>
-                            </ul>
+                <div>
+                <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
+                <div v-for="(event,index) in allservices" :key="index" class="col-3">
+                    <div class="card card-fixed w-100">
+                    <img :src="event.image" class="card-image" style="width:100%;height:70%"/>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                        <h3>{{ event.title }}</h3>
+                        <h5>{{ event.name }}</h5>
+                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
+                        <p class="card-text">Services Provided: <br>{{ event.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ event.address }}</p>
+                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
+                        <p class="card-text">Skills & Experiences: <br>{{ event.skillsExp }}</p>
+                        <button @click="ongoingService(event.documentId)">Accept Service</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                </div>
+                <div v-if="filteredServices.length">
+                    <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
+                    <div v-for="(event, index) in filteredJobs" :key="index" class="col-3">
+                        <div class="card card-fixed w-100">
+                        <img :src="event.image" class="card-image" style="width:100%;height:70%"/>
+                        <div class="card-body">
+                        <h3>{{ event.title }}</h3>
+                        <h5>{{ event.name }}</h5>
+                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
+                        <p class="card-text">Services Provided: <br>{{ event.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ event.address }}</p>
+                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
+                        <p class="card-text">Skills & Experiences: <br>{{ event.skillsExp }}</p>
+                        <button @click="ongoingService(event.documentId)">Accept Service</button>
                         </div>
-                        <div>Address: 123homeroad </div>
-                        <div>Contact details: 12345678</div>
-                    </p>
-                    <a href="#" class="btn btn-primary" @click.prevent="handleClick" style="border:3px solid #697565; background-color: #242424;">Learn More</a>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -763,23 +1042,29 @@ export default {
 
         <div v-else-if="currentPage === 'Current Services'"> <!--Pet Owner: Current Services-->
             <div style="border-bottom: 3px solid #464545; padding-bottom: 10px;"> <!--All ongoing services-->
-                <h1 style="margin-top: 10px;margin-left:5px;">Ongoing services</h1>
-                <div class="card col-3" style="width: 20rem;height: 27rem; background-color: #464545; border: 3px solid #697565; color: white; border-radius: 15px; margin-top: 10px;"> <!--One card-->
-                    <img src="../../../public/img/AYWg3iu-dog-pictures-wallpaper.jpg" class="card-img-top" alt="Card Image" style="border: 3px solid #697565"/>
+                <h1 style="margin-top: 10px;margin-left:5px;">Ongoing listings</h1>
+                <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
+                <div v-for="(event,index) in myongoingjobs" :key="index" class="col-3">
+                    <div class="card card-fixed w-100">
+                    <img :src="event.image" class="card-image" />
                     <div class="card-body">
-                        <h5 class="card-title">Pet Sitter needed</h5>
-                        <p class="card-text">
-                            Start Date: 17/10/2024 <br>
-                            End Date: 17/10/2024 <br>
-                            Duration: 5hrs
-                            <button style="border-radius:8px; border: 3px solid #697565;margin-top:10px;margin-bottom:10px;">Cancel listing</button> <!--deletes this job listing from database-->
-                        </p>
+                        <h3>{{ event.title }}</h3>
+                        <p class="card-text">Listing by: {{ event.name }} <br> Listing For: {{ event.linkedPerson }}</p> 
+                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
+                        <p class="card-text">Services Required: <br>{{ event.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ event.address }}</p>
+                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
+                        <p class="card-text"> Special Requirements: <br>{{ event.specialReq }}</p>
+                        <button @click="viewMore(event)">View More</button>
                     </div>
+                    </div>
+                </div>
                 </div>
             </div>
             <div style="border-bottom: 3px solid #464545; padding-bottom: 10px;"> <!--All created, non expired job listings-->
                 <h1 style="margin-top: 10px;margin-left:5px;">My listings</h1>
-                <div v-for="(event,index) in myjobs" :key="index" class="card col-3" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
+                <div v-for="(event,index) in myjobs" :key="index" class="card col-3 card-fixed" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
                     <img :src="event.image" class="card-image" />
                     <div class="card-body">
                         <h3>{{ event.title }}</h3>
@@ -788,7 +1073,7 @@ export default {
                         <p class="card-text">Address: {{ event.address }}</p>
                         <p class="card-text">Contact Number: {{ event.contactNum }}</p>
                         <p class="card-text">Payment: ${{ event.payment }} / hour</p>
-                        <p class="card-text"> Special Requirements: <br>{{ event.specialReq }}</p>
+                        <p class="card-text">Special Requirements: <br>{{ event.specialReq }}</p>
                         <button @click="cancelJob(event.documentId)">Cancel Listing</button>
                     </div>
                 </div>
@@ -796,7 +1081,7 @@ export default {
 
             <div> <!--Completed / Cancelled / Expired listings-->
                 <h1 style="margin-top: 10px;margin-left:5px;">Past listings</h1>
-                <div v-for="(event,index) in mypastjobs" :key="index" class="card col-3" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
+                <div v-for="(event,index) in mypastjobs" :key="index" class="card col-3 card-fixed" style="display:inline-flex; margin-left:5px; border: solid 3px #000000;">
                     <img :src="event.image" class="card-image" />
                     <div class="card-body">
                         <h3>{{ event.title }}</h3>
@@ -811,13 +1096,31 @@ export default {
                 </div>
                 
             </div>
-            
+            <div v-if="showOngoingListing" class="listing-overlay"> <!--Full screen of selected ongoing listing-->
+                <div class="listing-content">
+                    <h3>{{ selectedEvent.title }}</h3>
+                    <img :src="selectedEvent.image" class="full-image" />
+                    <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
+                    <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
+                    <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
+                    <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
+                    <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
+                    <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
+                    <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
+                    <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
+                    <button>This button links to My Profile (Job Provider)</button>
+                    <button>This button links to the Service Provider Profile</button>
+                    <button>This button links to the chat between us</button>
+                    <button @click="closeListing()" class="close-btn">Close</button>
+                </div>
+            </div>
         </div>
 
         <div v-else-if="currentPage === 'Find Jobs'"> <!--Service Provider: Find Jobs-->
             <div class="MainJobsPage" v-if="currJobPage==='MainJobsPage'">
             <div class="FindJobsSearchBar"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar">
+                    <button @click="getalljobs(),getmyongoingservices()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
                     <input type="text" placeholder="Search" id="search" style="border-radius:8px;">
                     <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
                 </div>
@@ -853,23 +1156,24 @@ export default {
                 </div>
                 <div style="display:inline-block; vertical-align: top;width:48%; text-align:center;">This is for user to select dates and time and the database gives back those which matches </div>
             </div> 
-            <div v-if="currJobPage==='MainJobsPage'"> <!--Find Services (Service listings using cards)-->
-                <div class="card col-3" style="width: 20rem;height: 33rem; background-color: #464545; border: 3px solid #697565; color: white; border-radius: 15px; margin-top: 10px;"> <!--One card-->
-                    <img src="../../../public/img/AYWg3iu-dog-pictures-wallpaper.jpg" class="card-img-top" alt="Card Image" style="border: 3px solid #697565"/>
-                    <div class="card-body">
-                    <h5 class="card-title">Pet Sitter needed</h5>
-                    <p class="card-text">
-                        <div>Type of service needed: 
-                            <ul>
-                                <li>Pet Sitter</li>
-                                <li>Pet Walker</li>
-                            </ul>
-                        </div>
-                        <div>Address: 123homeroad </div>
-                        <div>Contact details: 12345678</div>
-                    </p>
-                    <a href="#" class="btn btn-primary" @click.prevent="handleClick" style="border:3px solid #697565; background-color: #242424;">Learn More</a>
+            <div v-if="currJobPage==='MainJobsPage'"> <!--Find Jobs (Service listings using cards)-->
+                <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
+                <div v-for="(event,index) in alljobs" :key="index" class="col-3">
+                    <div class="card card-fixed w-100">
+                    <img :src="event.image" class="card-image" />
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                        <h3>{{ event.title }}</h3>
+                        <h5>{{ event.name }}</h5>
+                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
+                        <p class="card-text">Services Required: <br>{{ event.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ event.address }}</p>
+                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
+                        <p class="card-text"> Special Requirements: <br>{{ event.specialReq }}</p>
+                        <button @click="ongoingJob(event.documentId)">Accept Job</button>
                     </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -932,23 +1236,29 @@ export default {
 
         <div v-else-if="currentPage === 'Current Jobs'"> <!--Service Provider: Current Jobs-->
             <div style="border-bottom: 3px solid #464545; padding-bottom: 10px;"> <!--All ongoing services-->
-                <h1 style="margin-top: 10px;margin-left:5px;">Ongoing services</h1>
-                <div class="card col-3" style="width: 20rem;height: 27rem; background-color: #464545; border: 3px solid #697565; color: white; border-radius: 15px; margin-top: 10px;"> <!--One card-->
-                    <img src="../../../public/img/AYWg3iu-dog-pictures-wallpaper.jpg" class="card-img-top" alt="Card Image" style="border: 3px solid #697565"/>
+                <h1 style="margin-top: 10px;margin-left:5px;">Ongoing listings</h1>
+                <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
+                <div v-for="(event,index) in myongoingservices" :key="index" class="col-3">
+                    <div class="card card-fixed w-100">
+                    <img :src="event.image" class="card-image" />
                     <div class="card-body">
-                        <h5 class="card-title">Pet Sitter needed</h5>
-                        <p class="card-text">
-                            Start Date: 17/10/2024 <br>
-                            End Date: 17/10/2024 <br>
-                            Duration: 5hrs
-                            <button style="border-radius:8px; border: 3px solid #697565;margin-top:10px;margin-bottom:10px;">Cancel listing</button> <!--deletes this job listing from database-->
-                        </p>
+                        <h3>{{ event.title }}</h3>
+                        <p class="card-text">Listing by: {{ event.name }} <br> Listing For: {{ event.linkedPerson }}</p> 
+                        <p class="card-text">Period of service: <br>{{ event.start }} - {{ event.end }}</p>
+                        <p class="card-text">Services Required: <br>{{ event.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text">Address: {{ event.address }}</p>
+                        <p class="card-text">Contact Number: {{ event.contactNum }}</p>
+                        <p class="card-text">Payment: ${{ event.payment }} / hour</p>
+                        <p class="card-text"> Special Requirements: <br>{{ event.specialReq }}</p>
+                        <button @click="viewMore(event)">View More</button>
                     </div>
+                    </div>
+                </div>
                 </div>
             </div>
             <div style="border-bottom: 3px solid #464545; padding-bottom: 10px;"> <!--All created, non expired job listings-->
                 <h1 style="margin-top: 10px;margin-left:5px;">My listings</h1>
-                <div v-for="(event,index) in myservices" :key="index" class="card col-3" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
+                <div v-for="(event,index) in myservices" :key="index" class="card col-3 card-fixed" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
                     <img :src="event.image" class="card-image" />
                     <div class="card-body">
                         <h3>{{ event.title }}</h3>
@@ -965,7 +1275,7 @@ export default {
 
             <div> <!--Completed / Cancelled / Expired listings-->
                 <h1 style="margin-top: 10px;margin-left:5px;">Past listings</h1>
-                <div v-for="(event,index) in mypastservices" :key="index" class="card col-3" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
+                <div v-for="(event,index) in mypastservices" :key="index" class="card col-3 card-fixed" style="display:inline-flex; margin-left:5px; border: solid 3px #000000">
                     <img :src="event.image" class="card-image" />
                     <div class="card-body">
                         <h3>{{ event.title }}</h3>
@@ -979,6 +1289,26 @@ export default {
                     </div>
                 </div>
                 
+            </div>
+
+            <div v-if="showOngoingListing" class="listing-overlay"> <!--Full screen of selected ongoing listing-->
+                <div class="listing-content">
+                    <h3>{{ selectedEvent.title }}</h3>
+                    <img :src="selectedEvent.image" class="full-image" />
+                    <p><strong>Listing by:</strong> {{ selectedEvent.name }}</p>
+                    <p><strong>Listing For:</strong> {{ selectedEvent.linkedPerson }}</p>
+                    <p><strong>Period of service:</strong> {{ selectedEvent.start }} - {{ selectedEvent.end }}</p>
+                    <p><strong>Services Required:</strong> {{ selectedEvent.serviceTypeReq.join(', ') }}</p>
+                    <p><strong>Address:</strong> {{ selectedEvent.address }}</p>
+                    <p><strong>Contact Number:</strong> {{ selectedEvent.contactNum }}</p>
+                    <p><strong>Payment:</strong> ${{ selectedEvent.payment }} / hour</p>
+                    <p><strong>Special Requirements:</strong> {{ selectedEvent.specialReq }}</p>
+                    <button>This button links to My Profile (Service Provider)</button>
+                    <button>This button links to the Pet Owner Profile(Job Provider)</button>
+                    <button>This button links to the chat between us</button>
+                    <button @click="closeListing()" class="close-btn">Close</button>
+                    
+                </div>
             </div>
         </div>
     
