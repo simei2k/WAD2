@@ -133,4 +133,9 @@ p {
   margin: 10px;
   flex: 1 0 auto;
 }
+
+span {
+    font-weight: bold;
+}
+
 </style>
