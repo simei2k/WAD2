@@ -1,6 +1,6 @@
 <template>
   
-  <div>
+  <div style="margin-top: 5%">
     <h1>Emergency Clinics Nearby</h1>
   
     <div class="clinics">
