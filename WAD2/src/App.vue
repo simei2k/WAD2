@@ -1,9 +1,11 @@
 <script>
 import NavBar from './components/NavBar.vue';
+import appFooter from './components/AppFooter.vue';
 
 export default {
   components: {
     NavBar,
+    appFooter
   }
 }
 </script>
@@ -11,7 +13,7 @@ export default {
 <template>
   <NavBar />
   <router-view></router-view> 
-  
+  <appFooter/>
 </template>
 
 <style scoped>

@@ -148,7 +148,6 @@ export default {
 
 <style>
 nav{
-    margin: 5px;
     border-width: calc(2px + .1vw);
     background-color: black;
 }
