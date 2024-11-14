@@ -35,7 +35,7 @@ export default {
             newEvent: {
                 name: '',
                 title: '',
-                image: '../../../public/img/dCRkonw-cute-dog-wallpaper.jpg',
+                image: '../../../public/img/petjobicon.png',
                 serviceTypeReq: [],
                 specialReq:'',
                 address: '',
@@ -188,7 +188,7 @@ export default {
                 const eventRef = await addDoc(collection(db,'jobs'), {
                     name: this.newEvent.name,
                     title: this.newEvent.title,
-                    image: '../../../public/img/dCRkonw-cute-dog-wallpaper.jpg',
+                    image: '../../../public/img/petjobicon.png',
                     serviceTypeReq: this.newEvent.serviceTypeReq,
                     specialReq: this.newEvent.specialReq,
                     address: this.newEvent.address,
@@ -207,7 +207,7 @@ export default {
                 this.newEvent = {
                     name: '',
                 title: '',
-                image: '../../../public/img/dCRkonw-cute-dog-wallpaper.jpg',
+                image: '../../../public/img/petjobicon.png',
                 serviceTypeReq: [],
                 specialReq:'',
                 address: '',
@@ -1084,8 +1084,10 @@ export default {
         border-bottom: 3px solid #f29040;
         background-color: #f2bc5c;
         position:relative;
-        height:50px;
+        height:51px;
         transition:  border-color 0.5s ease;
+        color: white;
+        
     }
     .calendar-container {
         margin-top: 20px; 
@@ -1170,7 +1172,7 @@ export default {
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
         height:600px !important;
         width:400px !important;
-        padding:15px;
+        padding:0px;
     }
     .card-body {
         max-height: calc(100% - 50px);
@@ -1187,7 +1189,9 @@ export default {
         height:200px;
         object-fit:cover;
         border-radius:8px;
-        border: 2px solid #1a1a1a;
+        border: 2px solid #7c321b;
+        margin: 0 auto;
+        overflow:hidden;
     }
     .listing-overlay {
         position: fixed;
@@ -1237,7 +1241,16 @@ export default {
     max-width: 10%;
     height: auto;
     }
+    .custom-toggle:checked {
+        background-color: #7c321b !important;
+        border-color: #f29040 !important;
+    }
 
+    .custom-toggle-2:checked {
+        background-color: #fae1ae !important;
+        border-color: #f29040 !important;
+    }
+    
 </style>
 <template>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3/dist/css/bootstrap.min.css" rel="stylesheet"> 
@@ -1294,32 +1307,32 @@ export default {
 
                 <!-- Most Recent Filter -->
                 <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" v-model="mostRecentP" id="filterMostRecent"/>
+                    <input type="checkbox" class="form-check-input custom-toggle" v-model="mostRecentP" id="filterMostRecent"/>
                     <label class="form-check-label" for="filterMostRecent">Most Recent</label>
                 </div>
 
                 <!-- Service Types Filter -->
                 <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-3" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" v-model="reqServiceTypeP" id="filterServiceTypes"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" v-model="reqServiceTypeP" id="filterServiceTypes"/>
                     <label class="form-check-label" for="filterServiceTypes">Service Types</label>
                 </div>
 
                 <!-- Service Type Filters (Conditional) -->
                 <div v-if="reqServiceTypeP" class="d-flex flex-wrap">
                     <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Sitter" v-model="selectedServiceTypesP" id="petSitter"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Sitter" v-model="selectedServiceTypesP" id="petSitter"/>
                     <label class="form-check-label" for="petSitter">Pet Sitter</label>
                     </div>
                     <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Walker" v-model="selectedServiceTypesP" id="petWalker"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Walker" v-model="selectedServiceTypesP" id="petWalker"/>
                     <label class="form-check-label" for="petWalker">Pet Walker</label>
                     </div>
                     <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Groomer" v-model="selectedServiceTypesP" id="petGroomer"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Groomer" v-model="selectedServiceTypesP" id="petGroomer"/>
                     <label class="form-check-label" for="petGroomer">Pet Groomer</label>
                     </div>
                     <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Trainer" v-model="selectedServiceTypesP" id="petTrainer"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Trainer" v-model="selectedServiceTypesP" id="petTrainer"/>
                     <label class="form-check-label" for="petTrainer">Pet Trainer</label>
                     </div>
                 </div>
@@ -1331,7 +1344,7 @@ export default {
                     <button @click="currServicePage = 'mainServicesPage',getallservices()" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
                 </div>
                 <div class="row">
-                <div class="calendar-container col-6">
+                <div class="calendar-container col-12 col-sm-12 col-md-12 col-lg-6">
                     <vue-cal class="calendar" style="height:750px"  
                     hide-title-bar
                     :events="selectedTimingsP"
@@ -1340,16 +1353,16 @@ export default {
                     
                 </vue-cal>
                 </div>
-                <div class="col-6" style="text-align:center">
-                    Filtered services available based on selection <br>
-                    Start date & time:<input type="datetime-local" name="Datetime" v-model="newTimeP.start" @input="updateTimeP()"><br>
-                    End date & time:<input type="datetime-local" name="Datetime" v-model="newTimeP.end" @input="updateTimeP()"> <br>
-                    Recommended Services:
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6" style="text-align:center">
+                    <strong style="font-size:x-large">Input the time block u wish to search for services</strong><br>
+                    <strong style="font-size:large">Start date & time:</strong><input type="datetime-local" name="Datetime" v-model="newTimeP.start" @input="updateTimeP()"><br>
+                    <strong style="font-size:large">End date & time:</strong><input type="datetime-local" name="Datetime" v-model="newTimeP.end" @input="updateTimeP()"> <br>
+                    <strong style="font-size:large">Recommended Services:</strong>
                     <div class="row">
-                    <div v-for="service in recommendServices" :key="service.documentId" class="col-6">
+                    <div v-for="service in recommendServices" :key="service.documentId" class="col-6 col-sm-6 col-md-6 col-lg-6">
                     <div class="card card-fixed w-100">
-                    <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
-                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
+                    <img :src="service.image" class="card-image"/>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #7c321b">
                         <h3> {{ service.title }}</h3>
                         <h5> {{ service.name }}</h5>
                         <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
@@ -1624,32 +1637,32 @@ export default {
 
                 <!-- Most Recent Filter -->
                 <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" v-model="mostRecentS" id="filterMostRecentS"/>
+                    <input type="checkbox" class="form-check-input custom-toggle" v-model="mostRecentS" id="filterMostRecentS"/>
                     <label class="form-check-label" for="filterMostRecentS">Most Recent</label>
                 </div>
 
                 <!-- Service Types Filter -->
                 <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-3" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" v-model="reqServiceTypeS" id="filterServiceTypesS"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" v-model="reqServiceTypeS" id="filterServiceTypesS"/>
                     <label class="form-check-label" for="filterServiceTypesS">Service Types</label>
                 </div>
 
                 <!-- Service Type Filters (Conditional) -->
                 <div v-if="reqServiceTypeS" class="d-flex flex-wrap">
                     <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Sitter" v-model="selectedServiceTypesS" id="petSitterS"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Sitter" v-model="selectedServiceTypesS" id="petSitterS"/>
                     <label class="form-check-label" for="petSitterS">Pet Sitter</label>
                     </div>
                     <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Walker" v-model="selectedServiceTypesS" id="petWalkerS"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Walker" v-model="selectedServiceTypesS" id="petWalkerS"/>
                     <label class="form-check-label" for="petWalkerS">Pet Walker</label>
                     </div>
                     <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Groomer" v-model="selectedServiceTypesS" id="petGroomerS"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Groomer" v-model="selectedServiceTypesS" id="petGroomerS"/>
                     <label class="form-check-label" for="petGroomerS">Pet Groomer</label>
                     </div>
                     <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
-                    <input type="checkbox" class="form-check-input" value="Pet Trainer" v-model="selectedServiceTypesS" id="petTrainerS"/>
+                    <input type="checkbox" class="form-check-input custom-toggle-2" value="Pet Trainer" v-model="selectedServiceTypesS" id="petTrainerS"/>
                     <label class="form-check-label" for="petTrainerS">Pet Trainer</label>
                     </div>
                 </div> 
@@ -1659,10 +1672,10 @@ export default {
             </div>
             <div class="RecommendationsPage" v-else-if="currJobPage==='Recommendations Page'" > <!--when button 'Get Recommendations' is clicked-->
                 <div>
-                    <button @click="currJobPage = 'MainJobsPage'" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
+                    <button @click="currJobPage = 'MainJobsPage'"><img src="../../../public/img/arrow-121-16.png"> &nbsp;Go back</button>
                 </div>
                 <div class="row">
-                <div class="calendar-container col-6">
+                <div class="calendar-container col-12 col-sm-12 col-md-6 col-lg-6">
                     <vue-cal class="calendar" style="height:750px"  
                     hide-title-bar
                     :events="selectedTimingsS"
@@ -1671,13 +1684,13 @@ export default {
                     
                 </vue-cal>
                 </div>
-                <div class="col-6" style="text-align:center">
-                    Filtered services available based on selection <br>
-                    Start date & time:<input type="datetime-local" name="Datetime" v-model="newTimeS.start" @input="updateTimeS()"><br>
-                    End date & time:<input type="datetime-local" name="Datetime" v-model="newTimeS.end" @input="updateTimeS()"> <br>
-                    Recommended Services:
+                <div class="col-12 col-sm-12 col-md-6 col-lg-6" style="text-align:center">
+                    <strong style="font-size:x-large">Input the time block u wish to search for jobs</strong><br>
+                    <strong style="font-size:large">Start date & time:</strong><input type="datetime-local" name="Datetime" v-model="newTimeS.start" @input="updateTimeS()"><br>
+                    <strong style="font-size:large">End date & time:</strong><input type="datetime-local" name="Datetime" v-model="newTimeS.end" @input="updateTimeS()"> <br>
+                    <strong style="font-size:large">Recommended Services:</strong>
                     <div class="row">
-                    <div v-for="job in recommendJobs" :key="job.documentId" class="col-6">
+                    <div v-for="job in recommendJobs" :key="job.documentId" class="col-12 col-lg-6">
                     <div class="card card-fixed w-100">
                     <img :src="job.image" class="card-image" style="width:100%;height:70%"/>
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
