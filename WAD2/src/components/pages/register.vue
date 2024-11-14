@@ -1,5 +1,5 @@
 <template>
-    <div class="registration">
+    <div class="registration" style="margin-top: 5%">
       <img class="cat-icon" src="../../assets/cat_icon_2.png" />
       <div id="firebaseui-auth-container"></div>
       <h1>Getting Started</h1>

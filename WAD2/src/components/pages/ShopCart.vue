@@ -12,8 +12,8 @@
     <div v-if="Object.keys(shopcartCart).length === 0" class="row justify-content-center my-3">No items in cart</div>
 
     <div class='row mb-2' v-for="(info, id) in shopcartCart">
-      <div class="col-2"></div>
-      <div class="col-8">
+      <div class="col-1"></div>
+      <div class="col-10">
         <!-- Item Card -->
         <div class="card">
           <div class='container-fluid'>
@@ -29,18 +29,20 @@
               </div>
               <div class='col my-auto'>
                 Quantity:
-                <button type="button" class="shop-item-quantity-button d-inline" @click="minusQuantity">-</button>
-                <input id="shop-cart-quantity-input" type="number" min="1"
+                <button :id="id" type="button" class="shop-item-quantity-button d-inline" @click="changeQuantityInput(id, -1)">-</button>
+
+                <input :id="'input '+id" type="number" min="1"
                   class="form-control w-25 d-inline shop-item-quantity-input" :value="info.quantity">
-                <button type="button" class="shop-item-quantity-button d-inline"
-                  @click="this.$emit('addQuantity')">+</button>
+                
+                  <button :id="id" type="button" class="shop-item-quantity-button d-inline"
+                  @click="changeQuantityInput(id, 1)">+</button>
               </div>
               <div class='col-1'></div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-2"></div>
+      <div class="col-1"></div>
     </div>
 
     <div class="row" v-if="Object.keys(shopcartCart).length !== 0">
@@ -72,8 +74,9 @@ export default {
       this.$emit('toggleShop', 'checkout')
       this.$emit('checkout')
     },
-    changeQuantityInput(amount) {
-      let quantityInputEle = document.getElementById('shop-cart-quantity-input')
+    changeQuantityInput(id, amount) {
+      // console.log(id, amount)
+      let quantityInputEle = document.getElementById('input '+id)
       quantityInputEle.value = Number(quantityInputEle.value) + amount
       if (Number(quantityInputEle.value) < 1) {
         quantityInputEle.value = 1
