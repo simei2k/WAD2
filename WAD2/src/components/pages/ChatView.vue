@@ -187,10 +187,10 @@ body, html {
 .chat-input {
   display: flex;
   padding: 10px;
-  border-top: 1px solid #ccc;
+  /* border-top: 1px solid #ccc; */
   height: auto;
   flex-shrink: 0;
-  background: #ffcf72;
+  /* background: #ffcf72; */
   position: absolute; /* Add this */
   bottom: 0; /* Add this */
   left: 0; /* Add this */
