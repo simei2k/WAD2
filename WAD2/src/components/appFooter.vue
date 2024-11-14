@@ -1,8 +1,8 @@
 <template>
     <div class="page-container">
-        <!-- Page content goes here -->
-        <div class="content" style="margin-top: 20px">
-            <!-- Your main content, navbar, etc. goes here -->
+        <!-- Main content container -->
+        <div class="content">
+            <!-- Your main content goes here -->
         </div>
 
         <!-- Footer -->
@@ -62,18 +62,27 @@ export default {
 </script>
 
 <style scoped>
-/* General Footer Styling */
+/* Footer stay near to bottom no matter what */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+}
+
+.content {
+    flex: 1;
+}
+
+/* Footer Styling */
 .footer {
     background-color: #1d1d1d;
     color: rgb(139, 5, 5);
     text-align: center;
     padding: 20px 0;
     width: 100%;
-
-    /* shadow */
     box-shadow: inset 0 -2em 4em rgb(0, 0, 0),
-        /* Inner green shadow */ 0 0 5px 3px rgba(255, 255, 255, 0.1),
-        /* Outer soft white outline */ 0 4px 40px rgb(68, 68, 72); /* Red glow underneath */
+        0 0 5px 3px rgba(255, 255, 255, 0.1),
+        0 4px 40px rgb(68, 68, 72);
 }
 
 .container {
@@ -84,25 +93,18 @@ export default {
 .social-links-container {
     display: flex;
     align-items: center;
-    /* Center items vertically within the container */
     justify-content: center;
     margin: 20px 0;
-    /* Space around the social links and lines */
 }
 
-/* Horizontal lines on either side of social icons */
 .line {
     flex: 1;
     height: 1px;
     background-color: #ddd;
-    /* Adjust color as needed */
     margin: 0 15px;
-    /* Space between line and social icons */
     align-self: center;
-    /* Centers the line vertically with the icons */
 }
 
-/* Social Links */
 .social-links {
     list-style-type: none;
     padding: 0;
@@ -110,7 +112,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* Ensures the icons are vertically centered */
 }
 
 .social-links li {
@@ -118,33 +119,10 @@ export default {
 }
 
 .social-links img {
-    width: 35px; /* Set your desired size */
-    height: auto; /* Maintain aspect ratio */
+    width: 35px;
+    height: auto;
 }
 
-/* Footer Links */
-.footer-links {
-    list-style-type: none;
-    padding: 0;
-    margin: 20px 0 10px;
-    /* Space between social links and footer links */
-}
-
-.footer-links li {
-    display: inline;
-    margin: 0 10px;
-}
-
-.footer-links a {
-    color: rgb(176, 176, 179);
-    text-decoration: underline;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-}
-
-/* Additional styling for copyright */
 .footer p {
     font-size: 0.9rem;
     color: #888;
