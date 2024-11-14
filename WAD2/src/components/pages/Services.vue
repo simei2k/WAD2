@@ -1413,36 +1413,78 @@ export default {
                 >
                     
                 </vue-cal>
-                <div v-if="!showButton" class="col-6" style="justify-content: center; display:flex; align-items:flex-start"><button v-if="!showButton" @click="showbutton()" class="jobButton"><span class="addIcon">## </span><span style="position:relative; right:27px; bottom:2px;">+</span>Create a new Job</button></div>
-                <div class="col-6" style="justify-content: center; display:flex; align-items:flex-start"> 
-                <div v-if="showButton" class="createJobForm" style="width:80%" > <!--Create a new job listing-->
-                <form @submit.prevent="showconfirmPopup">
-                    <h1 style="text-align:center;">New Job Listing</h1>
-                    <div style="border: 1.5px solid #697565; margin-bottom:5px;"></div>
-                    <label for="Name" class="col-6">Name:</label> <!--going to make this fixed-->
-                    <label for="Title" class="col-6">Title:</label>
-                    <input type="text" id="Name" name="Name" style="width:45%" v-model="newEvent.name">
-                    <input type="text" id="Title" name="Title" style="width:50%; margin-left: 30px;" v-model="newEvent.title">
-                    <div style="padding-top: 5px;">Type of service needed:<br></div>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Sitter"> Pet Sitter</label>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Walker"> Pet Walker</label>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Groomer"> Pet Groomer</label>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Trainer"> Pet Trainer</label>
-                    <div style="padding-top: 5px;">Special requirements:<br></div>
-                    <textarea id="SpecialRequirements" name="SpecialRequirements" class="col-12" rows="5" v-model="newEvent.specialReq"></textarea>
-                    <label for="Address" class="col-6">Address:</label>
-                    <label for="Contact" class="col-6">Contact number:</label>
-                    <input type="text" id="Address" name="Address" style="width:45%" v-model="newEvent.address">
-                    <input type="text" id="Contact" name="Contact" style="width:50%; margin-left: 30px;" v-model="newEvent.contactNum">
-                    <label for="StartDate" class="col-6" style="padding-top:5px;">Start Date & Time:</label>
-                    <label for="EndDate" class="col-6" style="padding-top:5px;">End Date & Time:</label>
-                    <input type="datetime-local" id="StartDate" name="StartDate" style="width:45%" v-model="newEvent.startDateTime">
-                    <input type="datetime-local" id="EndDate" name="EndDate" style="width:50%; margin-left: 30px;" v-model="newEvent.endDateTime">
-                    <div style="margin-top: 5px; width: 45%">Payment(/hr):<input type="text" id="Payment" name="Payment" style="width:100%" v-model="newEvent.payment"></div>
-                    
-                    <button type="submit" style="margin-top:8px; border: 3px solid #697565; border-radius: 8px;">Create</button>
-                </form>
+                <div v-if="!showButton" class="col-6" style="display: flex; justify-content: center; align-items: center;">
+                    <button v-if="!showButton" @click="showbutton()" class="jobButton">
+                        <span class="addIcon">## </span><span style="position: relative; right: 27px; bottom: 2px;">+</span>Create a new Job
+                    </button>
                 </div>
+
+                <div class="col-6" style="display: flex; justify-content: center; align-items: flex-start;">
+                    <div v-if="showButton" class="createJobForm" style="width: 80%; padding: 20px; background-color: #f5f5f5; border-radius: 10px;">
+                        <!-- Create a new job listing -->
+                        <form @submit.prevent="showconfirmPopup">
+                            <h1 style="text-align:center; color: #697565;">New Job Listing</h1>
+                            <div style="border: 1.5px solid #697565; margin-bottom: 10px;"></div>
+
+                            <div class="input-group">
+                                <label for="Name">Name:</label>
+                                <input type="text" id="Name" name="Name" v-model="newEvent.name" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Title">Title:</label>
+                                <input type="text" id="Title" name="Title" v-model="newEvent.title" class="input-field">
+                            </div>
+
+                            <div style="padding-top: 15px;">
+                                <label>Type of service needed:</label><br>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Sitter"> Pet Sitter
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Walker"> Pet Walker
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Groomer"> Pet Groomer
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Trainer"> Pet Trainer
+                                </label>
+                            </div>
+
+                            <div style="padding-top: 15px;">
+                                <label for="SpecialRequirements">Special Requirements:</label><br>
+                                <textarea id="SpecialRequirements" name="SpecialRequirements" class="input-field" rows="5" v-model="newEvent.specialReq"></textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Address">Address:</label>
+                                <input type="text" id="Address" name="Address" v-model="newEvent.address" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Contact">Contact number:</label>
+                                <input type="text" id="Contact" name="Contact" v-model="newEvent.contactNum" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="StartDate">Start Date & Time:</label>
+                                <input type="datetime-local" id="StartDate" name="StartDate" v-model="newEvent.startDateTime" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="EndDate">End Date & Time:</label>
+                                <input type="datetime-local" id="EndDate" name="EndDate" v-model="newEvent.endDateTime" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Payment">Payment (/hr):</label>
+                                <input type="text" id="Payment" name="Payment" v-model="newEvent.payment" class="input-field">
+                            </div>
+
+                            <button type="submit" class="submit-button">Create</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             </div>
@@ -1703,36 +1745,78 @@ export default {
                 >
                     
                 </vue-cal>
-                <div v-if="!showButton" class="col-6" style="justify-content: center; display:flex; align-items:flex-start"><button v-if="!showButton" @click="showbutton()" class="jobButton"><span class="addIcon">## </span><span style="position:relative; right:27px; bottom:2px;">+</span>Create a new Service</button></div>
-                <div class="col-6" style="justify-content: center; display:flex; align-items:flex-start"> 
-                <div v-if="showButton" class="createJobForm" style="width:80%" > <!--Create a new job listing-->
-                <form @submit.prevent="showconfirmPopup">
-                    <h1 style="text-align:center;">New Service Listing</h1>
-                    <div style="border: 1.5px solid #697565; margin-bottom:5px;"></div>
-                    <label for="Name" class="col-6">Name:</label> <!--going to make this fixed-->
-                    <label for="Title" class="col-6">Title:</label>
-                    <input type="text" id="Name" name="Name" style="width:45%" v-model="newEventService.name">
-                    <input type="text" id="Title" name="Title" style="width:50%; margin-left: 30px;" v-model="newEventService.title">
-                    <div style="padding-top: 5px;">Type of service you provide:<br></div>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Sitter"> Pet Sitter</label>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Walker"> Pet Walker</label>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Groomer"> Pet Groomer</label>
-                    <label class="col-3"><input type="checkbox"  name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Trainer"> Pet Trainer</label>
-                    <div style="padding-top: 5px;">Skills & past experiences:<br></div>
-                    <textarea id="SkillsExp" name="SkillsExp" class="col-12" rows="5" v-model="newEventService.skillsExp"></textarea>
-                    <label for="Address" class="col-6">Address:</label>
-                    <label for="Contact" class="col-6">Contact number:</label>
-                    <input type="text" id="Address" name="Address" style="width:45%" v-model="newEventService.address">
-                    <input type="text" id="Contact" name="Contact" style="width:50%; margin-left: 30px;" v-model="newEventService.contactNum">
-                    <label for="StartDateS" class="col-6" style="padding-top:5px;">Availability (start):</label>
-                    <label for="EndDateS" class="col-6" style="padding-top:5px;">Availability (end):</label>
-                    <input type="datetime-local" id="StartDate" name="StartDate" style="width:45%" v-model="newEventService.startDateTime">
-                    <input type="datetime-local" id="EndDate" name="EndDate" style="width:50%; margin-left: 30px;" v-model="newEventService.endDateTime">
-                    <div style="margin-top: 5px; width: 45%">Rate (/hr):<input type="text" id="Payment" name="Payment" style="width:100%" v-model="newEventService.payment"></div>
-                    
-                    <button type="submit" style="margin-top:8px; border: 3px solid #697565; border-radius: 8px;">Create</button>
-                </form>
+                <div v-if="!showButton" class="col-6" style="display: flex; justify-content: center; align-items: center;">
+                    <button v-if="!showButton" @click="showbutton()" class="jobButton">
+                        <span class="addIcon">## </span><span style="position: relative; right: 27px; bottom: 2px;">+</span>Create a new Service
+                    </button>
                 </div>
+
+                <div class="col-6" style="display: flex; justify-content: center; align-items: flex-start;">
+                    <div v-if="showButton" class="createJobForm" style="width: 80%; padding: 20px; background-color: #f5f5f5; border-radius: 10px;">
+                        <!-- Create a new job listing -->
+                        <form @submit.prevent="showconfirmPopup">
+                            <h1 style="text-align:center; color: #697565;">New Service Listing</h1>
+                            <div style="border: 1.5px solid #697565; margin-bottom: 10px;"></div>
+
+                            <div class="input-group">
+                                <label for="Name">Name:</label>
+                                <input type="text" id="Name" name="Name" v-model="newEventService.name" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Title">Title:</label>
+                                <input type="text" id="Title" name="Title" v-model="newEventService.title" class="input-field">
+                            </div>
+
+                            <div style="padding-top: 15px;">
+                                <label>Type of service you provide:</label><br>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Sitter"> Pet Sitter
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Walker"> Pet Walker
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Groomer"> Pet Groomer
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="ServiceCheckBox" v-model="newEventService.serviceTypeReq" value="Pet Trainer"> Pet Trainer
+                                </label>
+                            </div>
+
+                            <div style="padding-top: 15px;">
+                                <label for="SkillsExp">Skills & Past Experiences:</label><br>
+                                <textarea id="SkillsExp" name="SkillsExp" class="input-field" rows="5" v-model="newEventService.skillsExp"></textarea>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Address">Address:</label>
+                                <input type="text" id="Address" name="Address" v-model="newEventService.address" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Contact">Contact number:</label>
+                                <input type="text" id="Contact" name="Contact" v-model="newEventService.contactNum" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="StartDate">Availability (start):</label>
+                                <input type="datetime-local" id="StartDate" name="StartDate" v-model="newEventService.startDateTime" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="EndDate">Availability (end):</label>
+                                <input type="datetime-local" id="EndDate" name="EndDate" v-model="newEventService.endDateTime" class="input-field">
+                            </div>
+
+                            <div class="input-group">
+                                <label for="Payment">Rate (/hr):</label>
+                                <input type="text" id="Payment" name="Payment" v-model="newEventService.payment" class="input-field">
+                            </div>
+
+                            <button type="submit" class="submit-button">Create</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             </div>
@@ -1856,3 +1940,89 @@ export default {
     </div>
     </div>
     </template>
+
+<style scoped>
+/* Form styling */
+.createJobForm {
+    background-color: #f5f5f5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Headings and Text */
+h1 {
+    font-family: 'Arial', sans-serif;
+    color: #697565;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+input[type="text"], input[type="datetime-local"], textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+/* Grouped input fields */
+.input-group {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    flex: 1;
+    font-size: 1rem;
+    color: #697565;
+}
+
+.input-group input {
+    flex: 2;
+    width: 70%;
+}
+
+/* Checkbox styling */
+.checkbox-label {
+    display: block;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+/* Button styling */
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #697565;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #5a6348;
+}
+
+.jobButton {
+    padding: 10px 20px;
+    background-color: #fae1ae;
+    color: #3c3d37;
+    border-radius: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.jobButton:hover {
+    background-color: #f29040;
+    color: white;
+}
+</style>
