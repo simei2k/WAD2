@@ -43,7 +43,8 @@
                             <label>Shipping</label>
                         </div>
                         <div class='col'>
-                            <label>{{ itemObject.shipping }}</label>
+                            <label><p>Free</p></label>
+                            <!-- <pre style="color:black;">{{ itemObject }}</pre> -->
                         </div>
                     </div>
                     <div class='row pb-2'>
