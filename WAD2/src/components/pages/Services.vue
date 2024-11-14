@@ -94,15 +94,15 @@ export default {
     },
     watch: {
         reqServiceTypeP(newValue) {
-            if (!newValue) {
-                this.selectedServiceTypesP = [];
-            }
-        },
-        reqServiceTypeS(newValue) {
-            if(!newValue) {
-                this.selectedServiceTypesS = [];
-            }
+        if (!newValue && this.selectedServiceTypesP.length > 0) {
+            this.selectedServiceTypesP = [];
         }
+    },
+        reqServiceTypeS(newValue) {
+        if (!newValue && this.selectedServiceTypesS.length > 0) {
+            this.selectedServiceTypesS = [];
+        }
+    }
     },
     methods: {
         toggle() {
@@ -860,11 +860,7 @@ export default {
                 };
                 this.selectedTimingsS = [event];
             }
-        }
-    },
-
-       
-    computed: {
+        },
         searchServices() {
             let filteredServices = [...this.allservices] || [];
             if (this.searchQuery.trim()!=='') {
@@ -921,6 +917,11 @@ export default {
             }
             return filteredJobs;
         },
+    },
+
+       
+    computed: {
+        
         recommendServices() {
             const blockStart = new Date(this.newTimeP.start);
             const blockEnd = new Date(this.newTimeP.end);
@@ -978,6 +979,7 @@ export default {
         right: 60px;
         bottom: 5px;
         border:3px solid #f29040;
+        height:50%;
     }
     .ServiceProvider {
         display:inline-block;
@@ -989,6 +991,7 @@ export default {
         right:23px;
         bottom:5px;
         border: 3px solid #f29040;
+        height:50%;
     }
     .buttonBackground { 
         background-color:#fae1ae;
@@ -1009,8 +1012,8 @@ export default {
         text-align: center;
         border-radius: 8px;
         padding: 16px;
-        position: fixed;
-        z-index: 1;
+        position: absolute;
+        z-index: 9999;
         left: 50%;
         top: 80px;
         font-size: 17px;
@@ -1021,6 +1024,7 @@ export default {
     .snackbar.show {
         visibility: visible;
         opacity: 1;
+        position:fixed;
     }
     .swipe-right-enter-active,
     .swipe-right-leave-active {
@@ -1209,9 +1213,30 @@ export default {
         border: 5px solid #7c321b
     }
     input {
-        color: #7c321b;
+        background-color: #f2bc5c;
+        border: 2px solid #7c321b;
     }
-
+    .noAvailability {
+    width: 100%;
+    height: 500px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    color: #888585;
+    text-align: center;
+    font-size:x-large
+    }
+    .no-availability-image,
+    .no-availability-text {
+    margin: 0; 
+    padding: 0; 
+    text-align: center;
+    }
+    .no-availability-image {
+    max-width: 10%;
+    height: auto;
+    }
 
 </style>
 <template>
@@ -1227,17 +1252,17 @@ export default {
             <button @click="toggle(); showalert()" :class="{PetOwner:isPetOwner, ServiceProvider:!isPetOwner}"></button>
         <p :class="{CurrentlyOwner:!isPetOwner,NotCurrent:isPetOwner}"><strong>Service Provider</strong></p>
     </div>
-        <div v-if="isPetOwner" class="col-md-12 col-lg-8 flex-wrap">
+        <div v-if="isPetOwner" class="col-md-12 col-lg-8 col-12">
             <span>
-                <button @click="currentPage = 'Find Services';checkpage(0);navigate('Find Services')" :class="{curPage:iscurrentPage[0]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Services</strong></button>
-                <button @click="currentPage = 'Post Jobs';checkpage(1);navigate('Post Jobs')" :class="{curPage:iscurrentPage[1]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Jobs</strong></button>
+                <button @click="currentPage = 'Find Services';checkpage(0);navigate('Find Services')" :class="{curPage:iscurrentPage[0]}" style="display:inline-block" class="col-5 col-md-4"><strong>Find Services</strong></button>
+                <button @click="currentPage = 'Post Jobs';checkpage(1);navigate('Post Jobs')" :class="{curPage:iscurrentPage[1]}" style="display:inline-block" class="col-3 col-md-4"><strong>Post Jobs</strong></button>
                 <button @click="currentPage = 'Current Services';checkpage(2);navigate('Current Services')" :class="{curPage:iscurrentPage[2]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
-        <div v-else-if="!isPetOwner" class="col-md-12 col-lg-8 flex-wrap">
+        <div v-else-if="!isPetOwner" class="col-md-12 col-lg-8 col-12">
             <span>
-                <button @click="currentPage = 'Find Jobs';checkpage(3);navigate('Find Jobs')" :class="{curPage:iscurrentPage[3]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Jobs</strong></button>
-                <button @click="currentPage = 'Post Services';checkpage(4);navigate('Post Services')" :class="{curPage:iscurrentPage[4]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Services</strong></button>
+                <button @click="currentPage = 'Find Jobs';checkpage(3);navigate('Find Jobs')" :class="{curPage:iscurrentPage[3]}" style="display:inline-block" class="col-3 col-md-4"><strong>Find Jobs</strong></button>
+                <button @click="currentPage = 'Post Services';checkpage(4);navigate('Post Services')" :class="{curPage:iscurrentPage[4]}" style="display:inline-block" class="col-5 col-md-4"><strong>Post Services</strong></button>
                 <button @click="currentPage = 'Current Jobs';checkpage(5);navigate('Current Jobs')" :class="{curPage:iscurrentPage[5]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
@@ -1257,9 +1282,9 @@ export default {
                     <button style="border-radius:8px; border: 3px solid #f29040" @click="currServicePage = 'Recommendations Page'"><strong>Get Recommendations</strong></button>
                     </div>
                     <div class="col-12 col-lg-7 col-md-12">
-                        <div class="input-group">
-                            <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="search" style="border-radius:8px;" class="col-11 col-md-11">
-                            <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
+                        <div class="input-group-search">
+                            <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="searchP" style="border-radius:8px;" class="col-11 col-md-11 searchBar">
+                            <label for="searchP"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
                         </div>
                     </div>
                     
@@ -1342,9 +1367,9 @@ export default {
                 </div>
             </div> 
             <div v-if="currServicePage==='mainServicesPage'"> <!--Find Services (Service listings using cards)-->
-                <div v-if="searchServices.length > 0">
+                <div v-if="searchServices().length > 0">
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="service in searchServices" :key="service.documentId" class="col-3">
+                <div v-for="service in searchServices()" :key="service.documentId" class="col-3">
                     <div class="card card-fixed w-100">
                     <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
@@ -1362,11 +1387,15 @@ export default {
                 </div>
                 </div>
                 </div>
-                <div v-else-if="searchQuery.trim()!==''">
+                <div v-else-if="searchQuery.trim()!==''" class="noAvailability">
                     No matching search found.
                 </div>
-                <div v-else-if="selectedServiceTypesP.length > 0 && searchServices.length === 0">
+                <div v-else-if="selectedServiceTypesP.length > 0 && searchServices.length === 0" class="noAvailability">
                     No jobs available for the selected job type.
+                </div>
+                <div v-if="allservices.length===0 && searchQuery.trim()==='' && selectedServiceTypesP.length===0" class="noAvailability">
+                    <img src="../../../public/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
+                    <p class="no-availabililty-text col-12" style="color:#888585">There are no services available now. Please come back another time!</p>
                 </div>
             </div>
         </div>
@@ -1577,7 +1606,7 @@ export default {
             <div class="MainJobsPage" v-if="currJobPage==='MainJobsPage'">
             <div class="FindJobsSearchBar container"> <!--Search button, filter button , get recommendation button-->
                 <div class="searchbar row align-items-center">
-                    <div class="auto">
+                    <div class="col-auto">
                     <button @click="getalljobs(),getmyongoingservices()" style="margin-right:5px;border:3px solid #f29040;border-radius:8px;"><strong>Reload</strong></button>
                     </div>
                     <div class="getRecommendations col-auto">
@@ -1585,21 +1614,45 @@ export default {
                     </div>
                     <div class="col-12 col-lg-7 col-md-12">
                         <div class="input-group">
-                        <input type="text" v-model="searchQueryS" @input="searchJobs()" placeholder="Search" id="search" style="border-radius:8px;">
-                        <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
+                            <input type="text" v-model="searchQueryS" @input="searchJobs()" placeholder="Search" id="search" style="border-radius:8px;" class="col-11 col-md-11">
+                            <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
                         </div>
                     </div>
                 </div>
-                <div class="filterbar">
-                    Filter by:
-                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="mostRecentS"> Most Recent</label>
-                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="reqServiceTypeS"> Job Types</label>
-                    <div v-if="reqServiceTypeS" class="extrafilteroptions">
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Sitter" v-model="selectedServiceTypesS"> Pet Sitter</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Walker" v-model="selectedServiceTypesS"> Pet Walker</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Groomer" v-model="selectedServiceTypesS"> Pet Groomer</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesS"> Pet Trainer</label>
+                <div class="filterbar mt-2 row">
+                <label class="form-label col-3 col-sm-3 col-md-2 col-lg-2" style="font-size:large;">Filter by:</label>
+
+                <!-- Most Recent Filter -->
+                <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" v-model="mostRecentS" id="filterMostRecentS"/>
+                    <label class="form-check-label" for="filterMostRecentS">Most Recent</label>
+                </div>
+
+                <!-- Service Types Filter -->
+                <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-3" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" v-model="reqServiceTypeS" id="filterServiceTypesS"/>
+                    <label class="form-check-label" for="filterServiceTypesS">Service Types</label>
+                </div>
+
+                <!-- Service Type Filters (Conditional) -->
+                <div v-if="reqServiceTypeS" class="d-flex flex-wrap">
+                    <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Sitter" v-model="selectedServiceTypesS" id="petSitterS"/>
+                    <label class="form-check-label" for="petSitterS">Pet Sitter</label>
                     </div>
+                    <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Walker" v-model="selectedServiceTypesS" id="petWalkerS"/>
+                    <label class="form-check-label" for="petWalkerS">Pet Walker</label>
+                    </div>
+                    <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Groomer" v-model="selectedServiceTypesS" id="petGroomerS"/>
+                    <label class="form-check-label" for="petGroomerS">Pet Groomer</label>
+                    </div>
+                    <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Trainer" v-model="selectedServiceTypesS" id="petTrainerS"/>
+                    <label class="form-check-label" for="petTrainerS">Pet Trainer</label>
+                    </div>
+                </div> 
                 </div>
                 
             </div>   
@@ -1645,9 +1698,9 @@ export default {
                 </div>
             </div> 
             <div v-if="currJobPage==='MainJobsPage'"> <!--Find Jobs (Service listings using cards)-->
-                <div v-if="searchJobs.length > 0">
+                <div v-if="searchJobs().length > 0">
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="job in searchJobs" :key="job.documentId" class="col-3">
+                <div v-for="job in searchJobs()" :key="job.documentId" class="col-3">
                     <div class="card card-fixed w-100">
                     <img :src="job.image" class="card-image" />
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
@@ -1665,11 +1718,15 @@ export default {
                 </div>
                 </div>
                 </div>
-                <div v-else-if="searchQueryS.trim()!==''">
+                <div v-else-if="searchQueryS.trim()!==''" class="noAvailability">
                     No matching search found.
                 </div>
-                <div v-else-if="selectedServiceTypesS.length > 0 && searchJobs.length === 0">
+                <div v-else-if="selectedServiceTypesS.length > 0 && searchJobs().length === 0" class="noAvailability">
                     No jobs available for the selected job type.
+                </div>
+                <div v-if="alljobs.length === 0 && searchQueryS.trim()==='' && selectedServiceTypesS.length ===0" class="noAvailability">
+                    <img src="../../../public/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
+                    <p class="no-availabililty-text col-12"style="color:#888585;">There are no jobs available now. Please come back another time!</p>
                 </div>
             </div>
         </div>
