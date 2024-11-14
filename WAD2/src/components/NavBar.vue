@@ -71,14 +71,14 @@
               </router-link>
             </li>
             <li class="nav-item my-2 my-lg-0 mx-2">
-                <div class="button">
+                <div class="auth-button">
                     <router-link class="nav-link d-flex align-items-center" to="/login">
                     Log In
                     </router-link>
                 </div>
             </li>
             <li class="nav-item my-2 my-lg-0 mx-2">
-                <div class="button">
+                <div class="auth-button">
                     <router-link class="nav-link d-flex align-items-center" to="/register">
                     Register
                     </router-link>
@@ -188,7 +188,7 @@ nav .navbar-nav li a{
     color: #545454 !important;
 }  
 
-.button {
+.auth-button {
     background-color: #e59551;
     padding-left: 5px;
     padding-right: 5px;
