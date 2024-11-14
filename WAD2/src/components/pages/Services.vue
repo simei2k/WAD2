@@ -1225,6 +1225,7 @@ export default {
     justify-content: center; 
     color: #888585;
     text-align: center;
+    font-size:x-large
     }
     .no-availability-image,
     .no-availability-text {
@@ -1235,9 +1236,6 @@ export default {
     .no-availability-image {
     max-width: 10%;
     height: auto;
-    }
-    .mainbody {
-        position:relative;
     }
 
 </style>
@@ -1284,8 +1282,8 @@ export default {
                     <button style="border-radius:8px; border: 3px solid #f29040" @click="currServicePage = 'Recommendations Page'"><strong>Get Recommendations</strong></button>
                     </div>
                     <div class="col-12 col-lg-7 col-md-12">
-                        <div class="input-group">
-                            <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="searchP" style="border-radius:8px;" class="col-11 col-md-11">
+                        <div class="input-group-search">
+                            <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="searchP" style="border-radius:8px;" class="col-11 col-md-11 searchBar">
                             <label for="searchP"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
                         </div>
                     </div>
@@ -1389,10 +1387,10 @@ export default {
                 </div>
                 </div>
                 </div>
-                <div v-else-if="searchQuery.trim()!==''">
+                <div v-else-if="searchQuery.trim()!==''" class="noAvailability">
                     No matching search found.
                 </div>
-                <div v-else-if="selectedServiceTypesP.length > 0 && searchServices.length === 0">
+                <div v-else-if="selectedServiceTypesP.length > 0 && searchServices.length === 0" class="noAvailability">
                     No jobs available for the selected job type.
                 </div>
                 <div v-if="allservices.length===0 && searchQuery.trim()==='' && selectedServiceTypesP.length===0" class="noAvailability">
@@ -1720,13 +1718,13 @@ export default {
                 </div>
                 </div>
                 </div>
-                <div v-else-if="searchQueryS.trim()!==''">
+                <div v-else-if="searchQueryS.trim()!==''" class="noAvailability">
                     No matching search found.
                 </div>
-                <div v-else-if="selectedServiceTypesS.length > 0 && searchJobs().length === 0">
+                <div v-else-if="selectedServiceTypesS.length > 0 && searchJobs().length === 0" class="noAvailability">
                     No jobs available for the selected job type.
                 </div>
-                <div v-if="alljobs.length === 0 && searchQueryS.trim()===''" class="noAvailability">
+                <div v-if="alljobs.length === 0 && searchQueryS.trim()==='' && selectedServiceTypesS.length ===0" class="noAvailability">
                     <img src="../../../public/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
                     <p class="no-availabililty-text col-12"style="color:#888585;">There are no jobs available now. Please come back another time!</p>
                 </div>
