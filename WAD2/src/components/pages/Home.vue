@@ -215,7 +215,7 @@ export default {
 
 .card-button {
   border-radius: 5px;
-  background: linear-gradient(90deg, rgb(160, 188, 232), rgb(111, 149, 209));
+  background: linear-gradient(90deg,  #ffce6d, #f29040);
   color: white;
   padding: 0.5rem 1rem;
   cursor: pointer;
