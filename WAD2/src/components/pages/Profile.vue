@@ -2,7 +2,7 @@
 <template>
     <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     </head>
-    <div class="container-fluid box">
+    <div class="container-fluid box" style="margin-top: 5%">
         <div class="row">
             <div class="col-3 profile-bar">
                 <img class="profile_pic" src="../../assets/service_provider_avatar.png">
