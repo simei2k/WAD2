@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-3 profile-bar">
                 <img class="profile_pic" src="../../assets/service_provider_avatar.png">
-                <strong><h1 class="profile-name">CatWoman</h1></strong>
+                <strong><h1 class="profile-name">{{ name }}</h1></strong>
                 <h2 class="profile-tagline">I love cats</h2>
                 <div class="profile-location">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" fill="#9e4632" class="bi bi-geo-alt" viewBox="0 0 16 16">
@@ -25,7 +25,7 @@
                 </div>
             <div class="col-9 profile-contents">
                 <!--the 3 information below should be populated dynamically-->
-                <h1>More About CatWoman</h1>
+                <h1>More About {{ name }}</h1>
                 <p>I am a big fan of cats. I have experience of up to 10 years with cats. Currently I have 4 cats at home, and this is my retirement job. yada yada yada yada </p>
                 <h2>Preferences</h2>
                 <p>&#128054; <b>Animals:</b> 10-20kg dogs, cats</p><br>
@@ -99,6 +99,7 @@ export default {
         return{
             petDetailsArray : [],
             petDetails: [],
+            name: '',
             reviews: [
         {
           reviewerName: "DogLover",
@@ -130,7 +131,6 @@ export default {
         }
 
         ],
-        userDetails: [],
     
     }
       
@@ -139,7 +139,7 @@ export default {
         async fetchPetDetails() {
     try {
     const ownerName = localStorage.getItem('name');
-
+    this.name = ownerName;
     const petsCollectionRef = collection(db, `petowners/${ownerName}/pets`);
     const querySnapshot = await getDocs(petsCollectionRef);
 
