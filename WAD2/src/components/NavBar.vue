@@ -85,7 +85,7 @@
                 </div>
             </li>
             <li v-if="uid" class="nav-item my-2 my-lg-0 mx-2">
-            <div class="button">
+            <div class="auth-button">
               <a class="nav-link d-flex align-items-center" @click.prevent="logout">Log Out</a>
             </div>
           </li>
