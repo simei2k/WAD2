@@ -1,8 +1,10 @@
 <template>
   <div class="chat-view">
-    <div class="chat-header">
-      <h3 class="person_name">{{ selectedChat.name }}</h3>
-      <img src="https://avatar.iran.liara.run/public/25" alt="Avatar" class="chat-avatar" />
+    <div class="chat-header" 
+    style="display: flex; justify-content: space-between; align-content: center;">
+        <button @click="$emit('back')" class="btn btn-dark px-4">Back</button>
+        <h3 class="person_name">{{ selectedChat.name }}</h3>
+        <img src="https://avatar.iran.liara.run/public/25" alt="Avatar" class="chat-avatar" />
 
     </div>
     <div class="chat-messages">
