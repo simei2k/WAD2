@@ -1,23 +1,22 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/pages/Home.vue'
 import Shop from '../components/pages/Shop.vue'
-import Chat from '../components/pages/Chat.vue'
+import Chat from '../components/pages/Chatbot.vue'
 import Profile from '../components/pages/Profile.vue'
 import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
+import Messaging from '../components/pages/Messaging.vue'
 import Map from '../components/pages/Map.vue'
 import login from '../components/pages/LogIn.vue'
-import register from '../components/pages/GettingStartedPg1.vue'
-import GettingStartedPg2 from '../components/pages/GettingStartedPg2.vue'
-import GettingStartedPetOwnerPg1 from '../components/pages/GettingStartedPetOwnerPg1.vue'
-import GettingStartedServiceProviderPg1 from '../components/pages/GettingStartedServiceProviderPg1.vue'
-import GettingStartedServiceProviderPg2 from '../components/pages/GettingStartedServiceProviderPg2.vue'
-import GettingStartedServiceProviderPg3 from '../components/pages/GettingStartedServiceProviderPg3.vue'
+import register from '../components/pages/register.vue'
+import GettingStartedPetOwner from '../components/pages/GettingStartedPetOwner.vue'
+import GettingStartedServiceProvider from '../components/pages/GettingStartedServiceProvider.vue'
+
 
 
 const routes =[
     {
-        path: '/home',
+        path: '/',
         name: 'home',
         component: Home
       },
@@ -61,34 +60,27 @@ const routes =[
         name: 'register',
         component: register
       },
+
       {
-        path: '/GettingStartedPg2',
-        name: 'GettingStartedPg2',
-        component: GettingStartedPg2
-      },  
-      {
-        path: '/GettingStartedPetOwnerPg1', 
-        name: 'GettingStartedPetOwnerPg1',
-        component: GettingStartedPetOwnerPg1
+        path: '/GettingStartedPetOwner', 
+        name: 'GettingStartedPetOwner',
+        component: GettingStartedPetOwner
       },
       {
-        path: '/GettingStartedServiceProviderPg1', 
-        name: 'GettingStartedServiceProviderPg1',
-        component: GettingStartedServiceProviderPg1
+        path: '/GettingStartedServiceProvider', 
+        name: 'GettingStartedServiceProvider',
+        component: GettingStartedServiceProvider
       },
       {
-        path: '/GettingStartedServiceProviderPg2', 
-        name: 'GettingStartedServiceProviderPg2',
-        component: GettingStartedServiceProviderPg2
-      },{
-        path: '/GettingStartedServiceProviderPg3', 
-        name: 'GettingStartedServiceProviderPg3',
-        component: GettingStartedServiceProviderPg3
+        path: '/Messaging', 
+        name: 'Messaging',
+        component: Messaging
       },
     ]
   
 const router = createRouter({
-  history: createMemoryHistory(),
+  history: createWebHistory(),
+
   routes,
 })
 

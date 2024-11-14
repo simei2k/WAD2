@@ -54,10 +54,21 @@
             <ShopCart @toggleShop="toggleShop" @checkout="checkout()" :shopcartCart="cart" />
         </div>
 
+        </div>
+
+        <div v-if="shopPage === 'item'">
+            <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
+                @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="currItem"
+                :imageSource="currImageSource" />
+        </div>
+
+        <div v-if="shopPage === 'cart'">
+            <ShopCart @toggleShop="toggleShop" @checkout="checkout()" :shopcartCart="cart" />
+        </div>
+
         <div v-if="shopPage === 'checkout'">
             <ShopCheckOut @toggleShop="toggleShop" />
         </div>
-    </div>
 </template>
 
 <script>
@@ -245,8 +256,15 @@ div.shop-cards-container {
     font-size: 0.75em;
 }
 
+
+.shop-item-backbutton {
+    margin: 10px 0 10px 0;
+    font-size: 0.75em;
+}
+
 .shop-item-backbutton-img {
     width: 1.5em;
     height: 1.5em;
 }
+
 </style>
