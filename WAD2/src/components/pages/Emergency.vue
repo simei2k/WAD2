@@ -716,7 +716,7 @@ export default {
 
   methods: {
     async getClinicsCoordinates() {
-    const geocodeUrl = 'http://localhost:3000/api/geocode';
+    const geocodeUrl = 'api/geocode';
     const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
     try {
       const response = await axios.get(geocodeUrl, {
