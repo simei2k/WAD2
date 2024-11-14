@@ -29,7 +29,7 @@
    
           <ul class="navbar-nav ms-auto align-items-center">
             <!-- Profile link -->
-            <li class="nav-item my-2 my-lg-0 mx-2">
+            <li v-if="uid"  class="nav-item my-2 my-lg-0 mx-2">
               <router-link class="nav-link d-flex align-items-center" to="/profile">
                 Profile
               </router-link>
@@ -59,25 +59,25 @@
               </router-link>
             </li>
             <!-- Messaging link -->
-            <li class="nav-item my-2 my-lg-0 mx-2">
+            <li v-if="uid" class="nav-item my-2 my-lg-0 mx-2">
               <router-link class="nav-link d-flex align-items-center" to="/messaging">
                 Messaging
               </router-link>
             </li>
             <!-- Emeergency link -->
-            <li class="nav-item my-2 my-lg-0 mx-2">
+            <li  class="nav-item my-2 my-lg-0 mx-2">
               <router-link class="nav-link d-flex align-items-center" to="/emergency">
                 Emergency
               </router-link>
             </li>
-            <li class="nav-item my-2 my-lg-0 mx-2">
+            <li v-if="!uid" class="nav-item my-2 my-lg-0 mx-2">
                 <div class="button">
                     <router-link class="nav-link d-flex align-items-center" to="/login">
                     Log In
                     </router-link>
                 </div>
             </li>
-            <li class="nav-item my-2 my-lg-0 mx-2">
+            <li v-if="!uid" class="nav-item my-2 my-lg-0 mx-2">
                 <div class="button">
                     <router-link class="nav-link d-flex align-items-center" to="/register">
                     Register
