@@ -84,78 +84,103 @@
                     </router-link>
                 </div>
             </li>
+            <li v-if="uid" class="nav-item my-2 my-lg-0 mx-2">
+            <div class="button">
+              <a class="nav-link d-flex align-items-center" @click.prevent="logout">Log Out</a>
+            </div>
+          </li>
           </ul>
         </div>
       </div>
     </nav>
   </template>
    
-   
 <script>
-   import { ref } from 'vue';
-   import { auth } from '../../firebase';
+ import { ref } from 'vue';
+import { getAuth, signOut } from 'firebase/auth';
    import { onAuthStateChanged } from 'firebase/auth';
    
    export default {
-       name: 'NavBar',
+     name: 'NavBar',
    
-       setup() {
-           const uid = ref(null);
+     setup() {
+       const uid = ref(null);
+       const auth = getAuth()
    
-           // Watch for auth state changes
-           onAuthStateChanged(auth, (user) => {
-               if (user) {
-                   uid.value = user.uid;
-                   console.log("I am logged in");
-               } else {
-                   uid.value = null;
-                   console.log("No user logged in");
-               }
-           });
+       // Watch for auth state changes
+       onAuthStateChanged(auth, (user) => {
+         if (user) {
+           uid.value = user.uid;
+           console.log("I am logged in");
+         } else {
+           uid.value = null;
+           console.log("No user logged in");
+         }
+       });
    
-           // Return uid so it's available in the template
-           return {
-               uid
-           };
+       // Return uid so it's available in the template
+       return {
+         uid
+       };
+     },
+   
+     data() {
+       return {
+         isMenuOpen: false,
+         isMobileView: false,
+       };
+     },
+   
+     computed: {
+       isLoggedIn() {
+         return this.uid != null;
+       }
+     },
+   
+     methods: {
+       navigateToHome() {
+         this.$router.push({ name: 'home' });
        },
-           data() {
-           return {
-           isMenuOpen: false,
-           isMobileView: false,
-           };
+   
+       toggleMenu() {
+         this.isMenuOpen = !this.isMenuOpen;
        },
-       computed: {
-           isLoggedIn() {
-               return this.uid != null;
-           }
+   
+       closeMenu() {
+         this.isMenuOpen = false;
        },
-       methods: {
-           navigateToHome() {
-               this.$router.push({ name: 'home' });
-           },
-           toggleMenu() {
-           this.isMenuOpen = !this.isMenuOpen;
-           },
-           closeMenu() {
-           this.isMenuOpen = false;
-           },
-           handleResize() {
-           // Toggle between mobile and desktop view based on window width
-           this.isMobileView = window.innerWidth <= 768;
-           if (!this.isMobileView) {
-               this.isMenuOpen = false; // Close menu if switching to desktop view
-           }
-           },
+   
+       handleResize() {
+         // Toggle between mobile and desktop view based on window width
+         this.isMobileView = window.innerWidth <= 768;
+         if (!this.isMobileView) {
+           this.isMenuOpen = false; // Close menu if switching to desktop view
+         }
        },
-       created() {
-           this.handleResize(); // Check initial screen size
-           window.addEventListener('resize', this.handleResize);
-       },
-       beforeUnmount() {
-           window.removeEventListener('resize', this.handleResize);
-       },
+   
+       async logout() {
+      try {
+        const auth = getAuth();  // Initialize Firebase Auth
+        await signOut(auth);
+        this.$router.push({ name: 'home' }); // Redirect to login after logout
+        console.log("I am logged out")
+      } catch (error) {
+        console.log("Logout failed:", error);
+      }
+    },
+  },
+     
+   
+     created() {
+       this.handleResize(); // Check initial screen size
+       window.addEventListener('resize', this.handleResize);
+     },
+   
+     beforeUnmount() {
+       window.removeEventListener('resize', this.handleResize);
+     },
    };
-</script>
+</script>   
    
 <style>
 nav{
