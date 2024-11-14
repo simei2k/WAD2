@@ -289,6 +289,30 @@ export default {
   box-sizing: border-box;
 }
 
+.ui.segment .ui.button {
+  display: block; /* Make the button a block-level element */
+  width: 60%; /* Adjust width as needed */
+  margin: 20px auto; /* Center the button with auto margins and add spacing */
+  background-color: #fae1ae; /* Button background color */
+  color: #3c3d37; /* Button text color */
+  padding: 15px 0; /* Increase vertical padding for a taller button */
+  font-size: 16px; /* Adjust font size */
+  font-weight: bold; /* Make text bold */
+  text-align: center; /* Ensure text is centered */
+  border-radius: 10px; /* Rounded corners */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Add smooth hover effects */
+}
+
+.ui.segment .ui.button:hover {
+  background-color: #f29040; /* Change background on hover */
+  color: #ffffff; /* Lighten text on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.ui.segment .ui.button:active {
+  transform: translateY(1px); /* Pressed effect */
+}
+
 /* List Section for Recommended Dog Runs */
 .recommended-list {
   margin-top: 20px;

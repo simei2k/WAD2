@@ -38,8 +38,8 @@
                   <div class="card-content">
                       <h3 class="card-title">Map</h3>
                       <p class="card-description">
-                          Looking for pet resources or nearby veterinarian
-                          clinics? Use the <span>map</span> to find pet stores
+                          Looking for nearby dog runs to bring your dog to?
+                          Use the <span>map</span> to find parks
                           near you!
                       </p>
                       <button @click="navMap" class="card-button">
@@ -259,7 +259,7 @@ export default {
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   max-width: 300px;
-  text-align: left;
+  text-align: center;
 }
 
 .about-box h3 {
