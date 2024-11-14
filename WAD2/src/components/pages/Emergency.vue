@@ -70,7 +70,6 @@
 import axios from 'axios';
 import db from '../../../database'
 import {collection, getDocs} from 'firebase/firestore'
-
 // Import geolocation functionality to calculate distance
 export default {
   name: 'Emergency',
@@ -713,10 +712,9 @@ export default {
   await this.getUserLocation();
   await this.getClinicsCoordinates();  // Ensure clinics coordinates are fetched before calculating distance
 },
-
   methods: {
     async getClinicsCoordinates() {
-    const geocodeUrl = 'api/geocode';
+    const geocodeUrl = "../../api/geocode";
     const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
     try {
       const response = await axios.get(geocodeUrl, {
