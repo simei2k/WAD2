@@ -90,7 +90,7 @@
 
 /* Styles for authentication buttons */
 .btn-auth {
-  background-color: #e59551;
+  background-color: #e59551 !important;
   color: white !important;
   border-radius: 20px;
   padding: 6px 16px;
