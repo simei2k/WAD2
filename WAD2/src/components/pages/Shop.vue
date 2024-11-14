@@ -37,7 +37,7 @@
             <!-- Filter Panel End -->
 
             <!-- Cards -->
-            <div class="shop-cards-container py-3 mx-5">
+            <div class="shop-cards-container py-3 mx-5 d-flex justify-content-center flex-wrap">
                 <div v-for="item in filteredItems" class="d-inline-block justify-content-center">
                     <ShopCard @toggleShop="toggleShop('item')" @click="setcurrItem(item)" :itemObject=item />
                 </div>

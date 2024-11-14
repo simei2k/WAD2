@@ -68,12 +68,12 @@
                         <div class='col-3 d-flex align-items-center'>
                             <label>Quantity</label>
                         </div>
-                        <div class='col'>
-                            <button type="button" class="shop-item-quantity-button d-inline"
+                        <div class='col-sm'>
+                            <button type="button" class="shop-item-quantity-button d-sm-inline d-none"
                                 @click="changeQuantityInput(-1)">-</button>
                             <input id="shop-item-quantity-input" type="number" min="1"
                                 class="form-control w-25 d-inline shop-item-quantity-input" value=1>
-                            <button type="button" class="shop-item-quantity-button d-inline"
+                            <button type="button" class="shop-item-quantity-button d-sm-inline d-none"
                                 @click="changeQuantityInput(1)">+</button>
                         </div>
                     </div>
