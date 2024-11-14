@@ -1,8 +1,5 @@
 <template>
     <div>
-        <!-- Nav Bar -->
-        <NavBar></NavBar>
-
         <!-- Back Button & Cart -->
         <div class="container-fluid">
             <div class="row">

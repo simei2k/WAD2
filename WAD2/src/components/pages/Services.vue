@@ -48,7 +48,7 @@ export default {
             newEventService: {
                 name: '',
                 title: '',
-                image: '../../../public/img/petwalker.jpg',
+                image: '/img/petwalker.jpg',
                 serviceTypeReq: [],
                 skillsExp:'',
                 address: '',
@@ -228,7 +228,7 @@ export default {
                 const eventRef = await addDoc(collection(db,'services'), {
                     name: this.newEventService.name,
                     title: this.newEventService.title,
-                    image: '../../../public/img/petsitter.jpg',
+                    image: '/img/petsitter.jpg',
                     serviceTypeReq: this.newEventService.serviceTypeReq,
                     skillsExp: this.newEventService.skillsExp,
                     address: this.newEventService.address,
@@ -247,7 +247,7 @@ export default {
                 this.newEventService = {
                     name: '',
                     title: '',
-                    image: '../../../public/img/petsitter.jpg',
+                    image: '/img/petsitter.jpg',
                     serviceTypeReq: [],
                     skillsExp:'',
                     address: '',
@@ -1285,7 +1285,7 @@ export default {
                     <div class="col-12 col-lg-7 col-md-12">
                         <div class="input-group-search">
                             <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="searchP" style="border-radius:8px;" class="col-11 col-md-11 searchBar">
-                            <label for="searchP"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
+                            <label for="searchP"><img src="/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
                         </div>
                     </div>
                     
@@ -1395,7 +1395,7 @@ export default {
                     No jobs available for the selected job type.
                 </div>
                 <div v-if="allservices.length===0 && searchQuery.trim()==='' && selectedServiceTypesP.length===0" class="noAvailability">
-                    <img src="../../../public/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
+                    <img src="/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
                     <p class="no-availabililty-text col-12" style="color:#888585">There are no services available now. Please come back another time!</p>
                 </div>
             </div>
@@ -1727,7 +1727,7 @@ export default {
                     No jobs available for the selected job type.
                 </div>
                 <div v-if="alljobs.length === 0 && searchQueryS.trim()==='' && selectedServiceTypesS.length ===0" class="noAvailability">
-                    <img src="../../../public/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
+                    <img src="/img/dogcaticon.png" style="max-width:10%;height:auto" class="no-availability-image col-12">
                     <p class="no-availabililty-text col-12"style="color:#888585;">There are no jobs available now. Please come back another time!</p>
                 </div>
             </div>
