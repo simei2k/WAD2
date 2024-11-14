@@ -281,7 +281,7 @@ svg{
     -webkit-overflow-scrolling: touch; 
     flex-direction: row;
     flex-wrap:nowrap;
-    overflow:auto;
+    /* overflow:auto; */
     padding:10px;
   }
 
