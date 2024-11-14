@@ -714,11 +714,14 @@ export default {
 },
   methods: {
     async getClinicsCoordinates() {
-    const geocodeUrl = "/api/geocode";
+    const geocodeUrl = "https://onemap.gov.sg/api/common/elastic/search";
     const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
     try {
       const response = await axios.get(geocodeUrl, {
-        params: { searchVal: clinic.ADDRESS }
+        params: { searchVal: clinic.ADDRESS,
+          getAddrDetails: "Y",
+          returnGeom: "Y"
+         }
       });
       if (response.data.results && response.data.results[0]) {
         clinic.lat = parseFloat(response.data.results[0]["LATITUDE"]);
