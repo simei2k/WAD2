@@ -29,9 +29,10 @@
 
 <script>
 import OpenAI from 'openai';
+const OpenAI_KEY = import.meta.env.VITE_OPENAI_KEY;
 
 const openai = new OpenAI({
-  apiKey: '', // Replace with your actual API key in .env.local
+  apiKey: OpenAI_KEY, // Replace with your actual API key in .env.local
   dangerouslyAllowBrowser: true,
 });
 
@@ -114,6 +115,7 @@ export default {
   justify-content: space-between;
   background-color: inherit;
   border-radius: 10px;
+  
 }
 
 .chat-window {
