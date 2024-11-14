@@ -75,7 +75,9 @@ export default {
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container-fluid">
             <a class="navbar-brand d-flex align-items-center" href="#">
-            <img src="../assets/cat_icon_2.png" width="50" height="50" class="d-inline-block align-top" alt="">        
+            <RouterLink to="/" class="nav-link">
+                <img src="../assets/cat_icon_2.png" width="50" height="50" class="d-inline-block align-top" alt="">
+            </RouterLink>          
             <span class="ms-2" style="color:#ecdfcc">
                 <RouterLink to="/" class="nav-link">PawPal</RouterLink>
             </span>
