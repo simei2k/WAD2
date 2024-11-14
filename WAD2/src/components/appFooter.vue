@@ -66,7 +66,7 @@ export default {
 .page-container {
     display: flex;
     flex-direction: column;
-    min-height: 60vh;
+    /* min-height: 60vh; */
 }
 
 .content {
