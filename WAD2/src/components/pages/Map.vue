@@ -68,6 +68,7 @@ export default {
       userLocation: null,
       map: null,
       userMarker: null,
+      directionsRenderer: null,
       topDogRuns: [],
       dogRuns: [
         { name: "West Coast Park Dog Run", lat: 1.302750, lng: 103.763250 },
@@ -201,13 +202,19 @@ export default {
         return;
       }
 
+      // Initialize directions service
       const directionsService = new google.maps.DirectionsService();
-      const directionsRenderer = new google.maps.DirectionsRenderer();
 
-      // Attach the directionsRenderer to the map
-      directionsRenderer.setMap(this.map);
+      // Initialize directions renderer if it hasn't been created yet
+      if (!this.directionsRenderer) {
+        this.directionsRenderer = new google.maps.DirectionsRenderer();
+        this.directionsRenderer.setMap(this.map); // Attach renderer to the map
+      } else {
+        // Clear existing route if renderer already exists
+        this.directionsRenderer.setDirections({ routes: [] });
+      }
 
-      // Define the route
+      // Define the route request
       const request = {
         origin: this.userLocation,
         destination: { lat: destinationLat, lng: destinationLng },
@@ -217,12 +224,12 @@ export default {
       // Fetch and display the route
       directionsService.route(request, (result, status) => {
         if (status === google.maps.DirectionsStatus.OK) {
-          directionsRenderer.setDirections(result);
+          this.directionsRenderer.setDirections(result);
         } else {
           this.error = "Unable to fetch directions. Please try again.";
         }
       });
-    }
+    },
   },
 };
 </script>
@@ -243,6 +250,8 @@ export default {
 #map {
   width: 100%;
   height: 100%;
+  margin-top: 21px;
+  margin-left: 5px;
 }
 
 /* Right Column: Input and Results */
