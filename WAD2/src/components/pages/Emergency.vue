@@ -714,8 +714,8 @@ export default {
 },
   methods: {
     async getClinicsCoordinates() {
-    const geocodeUrl = "https://onemap.gov.sg/api/common/elastic/search";
-    const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
+      const geocodeUrl = "/api/geocode"; 
+      const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
     try {
       const response = await axios.get(geocodeUrl, {
         params: { searchVal: clinic.ADDRESS,

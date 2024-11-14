@@ -81,6 +81,8 @@
         const auth = getAuth();
         try {
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+  
           return userCredential.user; // Return the user object upon successful registration
         } catch (error) {
           console.error('Error signing up:', error);
@@ -117,7 +119,10 @@
             address: this.address,
             contactNumber: this.contactNumber,
             petNumber: this.petNumber
-          });
+          }
+        );
+        localStorage.setItem('name', this.name)
+
   
           // Navigate based on account type
           if (this.accountType.includes('service-provider')) {

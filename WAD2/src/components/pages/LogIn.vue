@@ -89,8 +89,9 @@ export default {
                 console.log("Login failed:", error)
             }
         }
+
         return {email, password,errorMessage,login
-    };
+};
         
     }
     
