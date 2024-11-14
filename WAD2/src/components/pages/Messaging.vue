@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <ChatList v-if="!chatSelected" @chatSelected="openChat" />
-    <ChatView v-else :selectedChat="selectedChat" />
+    <ChatView v-else :selectedChat="selectedChat" @back="closeChat"/>
   </div>
 </template>
 
@@ -25,6 +25,10 @@ export default {
       this.chatSelected = true;
       this.selectedChat = chat;
     },
+    closeChat () {
+      this.chatSelected = false;
+      this.selectedChat = null;
+    }
   },
 };
 </script>

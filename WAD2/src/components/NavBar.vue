@@ -95,7 +95,7 @@ export default {
                     <RouterLink to="/map" class="nav-link">Map</RouterLink>            
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
+                    <RouterLink to="/chat" class="nav-link">Chatbot</RouterLink>            
                 </li>
                 <li class="nav-item">
                     <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
