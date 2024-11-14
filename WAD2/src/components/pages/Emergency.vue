@@ -714,7 +714,7 @@ export default {
 },
   methods: {
     async getClinicsCoordinates() {
-    const geocodeUrl = "../../api/geocode";
+    const geocodeUrl = "/api/geocode";
     const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
     try {
       const response = await axios.get(geocodeUrl, {
@@ -723,9 +723,11 @@ export default {
       if (response.data.results && response.data.results[0]) {
         clinic.lat = parseFloat(response.data.results[0]["LATITUDE"]);
         clinic.lon = parseFloat(response.data.results[0]["LONGITUDE"]);
+        console.log(clinic.lat,clinic.lon)
       }
     } catch (error) {
       console.error(`Error fetching geolocation for clinic: ${clinic.NAME}`, error);
+      console.log("I didn not work")
     }
   });
   await Promise.all(fetchCoordinatesPromises);
