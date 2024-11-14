@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- Main Layout -->
-    <div class="layout">
+    <div class="row gx-0">
       <!-- Left Column (Map) -->
-      <div class="map-container">
+      <div class="col-sm-12 col-md-7 map-container">
         <section id="map" ref="map"></section>
       </div>
 
       <!-- Right Column (Search + Results) -->
-      <div class="input-container">
+      <div class="col-sm-12 col-md-5 input-container">
         <form class="ui segment large form">
           <div class="ui message red" v-show="error">{{ error }}</div>
           <div class="ui segment">
@@ -90,7 +90,7 @@ export default {
   methods: {
     initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
-        zoom: 12,
+        zoom: 11,
         center: { lat: 1.3521, lng: 103.8198 }, // Default Singapore center
         mapTypeId: "roadmap",
       });
@@ -264,29 +264,53 @@ export default {
   display: flex;
   flex-direction: row;
   width: 95%;
-  height: 85vh; /* Full viewport height */
+  height: 85vh; 
   margin: 0;
   padding: 0;
 }
 
 /* Left Column: Map */
 .map-container {
-  width: 60%;
-  height: 100%;
-  position: relative;
+  height: 500px; 
 }
 
 #map {
-  width: 100%;
-  height: 100%;
+  width: 95%;
+  height: 95%;
+  margin: 5px;
 }
+
 
 /* Right Column: Input and Results */
 .input-container {
-  width: 40%;
+  /* width: 90%; */
   padding: 20px;
   overflow-y: auto;
   box-sizing: border-box;
+}
+
+.ui.segment .ui.button {
+  display: block; /* Make the button a block-level element */
+  width: 60%; /* Adjust width as needed */
+  margin: 20px auto; /* Center the button with auto margins and add spacing */
+  background-color: #fae1ae; /* Button background color */
+  color: #3c3d37; /* Button text color */
+  padding: 15px 0; /* Increase vertical padding for a taller button */
+  font-size: 16px; /* Adjust font size */
+  font-weight: bold; /* Make text bold */
+  text-align: center; /* Ensure text is centered */
+  border-radius: 10px; /* Rounded corners */
+  transition: background-color 0.3s ease, transform 0.2s ease; /* Add smooth hover effects */
+}
+
+.ui.segment .ui.button:hover {
+  background-color: #f29040; /* Change background on hover */
+  color: #ffffff; /* Lighten text on hover */
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+.ui.segment .ui.button:active {
+  transform: translateY(1px); /* Pressed effect */
 }
 
 /* List Section for Recommended Dog Runs */
