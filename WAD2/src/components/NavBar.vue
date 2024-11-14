@@ -95,7 +95,7 @@ export default {
                     <RouterLink to="/map" class="nav-link">Map</RouterLink>            
                 </li>
                 <li class="nav-item">
-                    <RouterLink to="/chat" class="nav-link">Chat</RouterLink>            
+                    <RouterLink to="/chat" class="nav-link">Chatbot</RouterLink>            
                 </li>
                 <li class="nav-item">
                     <RouterLink to="/shop" class="nav-link">Shop</RouterLink>            
@@ -148,7 +148,6 @@ export default {
 
 <style>
 nav{
-    margin: 5px;
     border-width: calc(2px + .1vw);
     background-color: black;
 }
@@ -171,7 +170,7 @@ li{
     margin: 10px;
 }
 nav .navbar-nav li a{
-  color: #ecdfcc !important;
+  color: #545454 !important;
 }
 
 .nav-link{

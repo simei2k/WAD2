@@ -70,7 +70,6 @@
 import axios from 'axios';
 import db from '../../../database'
 import {collection, getDocs} from 'firebase/firestore'
-
 // Import geolocation functionality to calculate distance
 export default {
   name: 'Emergency',
@@ -713,21 +712,25 @@ export default {
   await this.getUserLocation();
   await this.getClinicsCoordinates();  // Ensure clinics coordinates are fetched before calculating distance
 },
-
   methods: {
     async getClinicsCoordinates() {
-    const geocodeUrl = 'http://localhost:3000/api/geocode';
+    const geocodeUrl = "https://onemap.gov.sg/api/common/elastic/search";
     const fetchCoordinatesPromises = this.clinics.map(async (clinic) => {
     try {
       const response = await axios.get(geocodeUrl, {
-        params: { searchVal: clinic.ADDRESS }
+        params: { searchVal: clinic.ADDRESS,
+          getAddrDetails: "Y",
+          returnGeom: "Y"
+         }
       });
       if (response.data.results && response.data.results[0]) {
         clinic.lat = parseFloat(response.data.results[0]["LATITUDE"]);
         clinic.lon = parseFloat(response.data.results[0]["LONGITUDE"]);
+        console.log(clinic.lat,clinic.lon)
       }
     } catch (error) {
       console.error(`Error fetching geolocation for clinic: ${clinic.NAME}`, error);
+      console.log("I didn not work")
     }
   });
   await Promise.all(fetchCoordinatesPromises);
