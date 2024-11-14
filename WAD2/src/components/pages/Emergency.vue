@@ -15,11 +15,11 @@
         </div>
         <div class="card-body">
           <div class="buttons" >
-            <button class="call" style="border-radius:15px">Call</button>
+            <button class="call" style=" border-radius: 15px">Call</button>
             <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
               Directions
             </a>
-            <button type="button" style="border-radius:15px" class="send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
+            <button type="button" style="border-radius: 15px" class="send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
           </div>
         </div>
         <!-- Clinic Card End -->
@@ -844,7 +844,7 @@ async fetchPetDetails() {
 </script>
 
   
-  <style>
+<style>
 h1 {
   margin-left: 1vw;
   font-family: 'Arial', sans-serif;
@@ -893,34 +893,49 @@ h1 {
   margin: 0.5rem 0;
 }
 
-.buttons {
-  display: flex;
-  justify-content: space-around;
-}
-
 li img{
   border-radius: 50%;
   width: 30%;
   list-style-type: none;
 }
 
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px; /* Even spacing between buttons */
+}
+
 button,
 a.directions-link {
-  background-color: #fae1ae; /* Slightly lighter for contrast */
-  margin: 5px;
-  padding: 10px 20px;
-  border-radius:15px;
-  color: #545454; /* Your original font color */
-  text-align: center;
-  text-decoration: none;
-  border: none;
+  display: inline-flex; /* Ensure uniform alignment for buttons and links */
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffce6d, #f29040); /* Gradient background */
+  color: #3c3d37; /* Text color */
+  padding: 12px 20px; /* Consistent padding */
+  font-size: 16px; /* Font size for all */
+  font-weight: bold;
+  text-decoration: none; /* Remove underline for <a> */
+  border: none; /* Remove border for both */
+  border-radius: 15px; /* Rounded corners */
+  height: 50px; /* Uniform height */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for floating effect */
+  transition: all 0.3s ease; /* Smooth transitions */
 }
 
 button:hover,
 a.directions-link:hover {
-  background-color: #f29040; /* Hover color for buttons */
+  background: linear-gradient(135deg, #f29040, #ffce6d); /* Reverse gradient on hover */
+  color: #ffffff; /* Brighten text on hover */
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Enhance shadow */
+  transform: translateY(-2px); /* Slight lift */
+}
+
+button:active,
+a.directions-link:active {
+  transform: translateY(1px); /* Subtle press effect */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduce shadow */
 }
 
 .modal {
