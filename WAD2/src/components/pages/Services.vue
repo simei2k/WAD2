@@ -11,8 +11,12 @@ export default {
         return {
             isPetOwner: true,
             alerttext: '',
+            isalertVisible: false,
             currentPage: 'Find Services',
             iscurrentPage: [true,false,false,true,false,false],
+            showPage: 'Find Services',
+            previousPage: 'Find Services',
+            transitionName: 'swipe-right',
             showButton: false,
             currServicePage: 'mainServicesPage',
             currJobPage: 'MainJobsPage',
@@ -86,7 +90,7 @@ export default {
         this.getallservices();
         this.getIndivEvents();
         this.getIndivEventsService();
-
+        
     },
     watch: {
         reqServiceTypeP(newValue) {
@@ -111,15 +115,6 @@ export default {
                 this.currentPage= 'Find Services';
             }
         },
-        showalert() {
-            if (this.isPetOwner) {
-                this.alerttext = 'Pet Owner'
-            }
-            else {
-                this.alerttext = 'Service Provider'
-            }
-            alert('You are changing the service mode to ' + this.alerttext)
-        },
         checkpage(index) {
             this.iscurrentPage = [false,false,false,false,false,false];
             if (index === 0 || index === 3) {
@@ -129,6 +124,37 @@ export default {
             else {
                 this.iscurrentPage[index] = true;
             }
+        },
+        pageOrder(page) {
+            const order=['Find Services','Post Jobs','Current Services','Find Jobs','Post Services','Current Services'];
+            return order.indexOf(page);
+        },
+        navigate(page) {
+            const currentPageOrder = this.pageOrder(this.showPage);
+            const targetPageOrder = this.pageOrder(page);
+
+            // Check if we're going forward or backward in the page order
+            if (targetPageOrder > currentPageOrder) {
+                // Going forward (right)
+                this.transitionName = 'swipe-right';
+            } else if (targetPageOrder < currentPageOrder) {
+                // Going backward (left)
+                this.transitionName = 'swipe-left';
+            }
+
+            // Update the current page and previous page
+            this.previousPage = this.showPage;
+            this.showPage = page; // Update the current page
+        },
+        beforeEnter(el) {
+            // Prepare for the entering element: position it off-screen before entering
+            el.style.transform = 'translateX(100%)';
+        },
+
+        // After leave hook for transitions
+        afterLeave(el) {
+            // Reset the previous page position after it leaves
+            el.style.transform = 'translateX(0)';
         },
         showbutton() {
             if (!this.showButton) {
@@ -145,6 +171,17 @@ export default {
         closeListing() {
             this.showOngoingListing = false;
             this.selectedEvent = null;
+        },
+        showalert() {
+            this.isalertVisible = true;
+            setTimeout(() => {
+                this.isalertVisible = false;
+            }, 3000);
+            if (this.isPetOwner) {
+                this.alerttext ='Pet Owner'
+            } else {
+                this.alerttext ='Service Provider'
+            }
         },
         async addJob() {
             try {
@@ -384,56 +421,98 @@ export default {
         },
         async getmypastjobs() {
             try {
-                const getdatabyname = query(collection(db,'pastjobs'), where ('name','==', this.PetOwnerName))
-                const querySnapshot = await getDocs(getdatabyname);
-                this.mypastjobs = querySnapshot.docs.map(doc => {
+                const getdatabynamepj = query(collection(db,'pastjobs'), where ('name','==', this.PetOwnerName))
+                const getdatabylinkedPersonpj = query(collection(db,'pastjobs'), where ('linkedPerson','==', this.PetOwnerName))
+                const getdatabylinkedPersonps = query(collection(db,'pastservices'), where('linkedPerson','==',this.PetOwnerName))
+                const getdatabynameps = query(collection(db,'pastservices'), where ('name','==', this.PetOwnerName))
+                const [querySnapshot1, querySnapshot2, querySnapshot3, querySnapshot4] = await Promise.all([
+                getDocs(getdatabynamepj),
+                getDocs(getdatabylinkedPersonpj),
+                getDocs(getdatabylinkedPersonps),
+                getDocs(getdatabynameps)
+                ]);
+                const pastjobsData1 = querySnapshot1.docs.map(doc => {
                     const data = doc.data();
-                    const start = data.start.replace('T', ' ');
-                    const end = data.end.replace('T', ' ');
                     return {
-                    title: data.title,
-                    start: start,
-                    end: end,
-                    name: data.name,
-                    image: data.image,
-                    serviceTypeReq: data.serviceTypeReq,
-                    specialReq:data.specialReq,
-                    address: data.address,
-                    contactNum: data.contactNum,
-                    payment: data.payment,
-                    status: data.status,
-                    documentId: data.documentId,
-                    linkedPerson: data.linkedPerson,
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
                     };
                 });
+                const pastjobsData2 = querySnapshot2.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
+                    };
+                });
+                const pastservicesData1 = querySnapshot3.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
+                    };
+                });
+                const pastservicesData2 = querySnapshot4.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
+                    };
+                });
+                this.mypastjobs = [...pastjobsData1,...pastjobsData2,...pastservicesData1,...pastservicesData2]
             } catch (error) {
                 console.error("Error fetching events:", error);
             }
         },
         async getmypastservices() {
             try {
-                const getdatabyname = query(collection(db,'pastservices'), where ('name','==', this.ServiceProviderName))
-                const querySnapshot = await getDocs(getdatabyname);
-                this.mypastservices = querySnapshot.docs.map(doc => {
+                const getdatabynameps = query(collection(db,'pastservices'), where ('name','==', this.ServiceProviderName));
+                const getdatabylinkedPersonps = query(collection(db,'pastservices'), where ('linkedPerson','==', this.ServiceProviderName));
+                const getdatabylinkedPersonpj = query(collection(db,'pastjobs'), where('linkedPerson','==',this.ServiceProviderName));
+                const getdatabynamepj = query(collection(db,'pastjobs'), where ('name','==', this.ServiceProviderName));
+                const [querySnapshot1, querySnapshot2, querySnapshot3, querySnapshot4] = await Promise.all([
+                getDocs(getdatabynameps),
+                getDocs(getdatabylinkedPersonps),
+                getDocs(getdatabylinkedPersonpj),
+                getDocs(getdatabynamepj),
+                ]);
+                const pastservicesData1 = querySnapshot1.docs.map(doc => {
                     const data = doc.data();
-                    const start = data.start.replace('T', ' ');
-                    const end = data.end.replace('T', ' ');
                     return {
-                    title: data.title,
-                    start: start,
-                    end: end,
-                    name: data.name,
-                    image: data.image,
-                    serviceTypeReq: data.serviceTypeReq,
-                    skillsExp:data.skillsExp,
-                    address: data.address,
-                    contactNum: data.contactNum,
-                    payment: data.payment,
-                    status: data.status,
-                    documentId: data.documentId,
-                    linkedPerson: data.linkedPerson,
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
                     };
                 });
+                const pastservicesData2 = querySnapshot2.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
+                    };
+                });
+                const pastjobsData1 = querySnapshot3.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
+                    };
+                });
+                const pastjobsData2 = querySnapshot4.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                    ...data,
+                    start: data.start.replace('T', ' '),
+                    end: data.end.replace('T', ' ')
+                    };
+                });
+                this.mypastservices = [...pastservicesData1, ...pastservicesData2, ...pastjobsData1, ...pastjobsData2]
             } catch (error) {
                 console.error("Error fetching events:", error);
             }
@@ -596,6 +675,110 @@ export default {
                     console.log('Updated document:', updatedDocSnap.data());
 
                     const toCollectionRef = doc(db, 'ongoing', id);
+                    await setDoc(toCollectionRef, updatedDocSnap.data());
+                    await deleteDoc(fromCollectionRef);
+                    
+                } else {
+                    console.log("No such document");
+                }
+            } catch (error) {
+                console.error('Error transferring service:', error);
+            }
+        },
+        async cancelOngoingService(id) {
+            try {
+                
+                const fromCollectionRef = doc(db, 'ongoing', id);
+                const docSnap = await getDoc(fromCollectionRef);
+
+                if (docSnap.exists()) {
+                    await updateDoc(fromCollectionRef, {
+                        status: 'cancelled'
+                    });
+                    console.log('Status updated to "cancelled".');
+
+                    const updatedDocSnap = await getDoc(fromCollectionRef);
+                    console.log('Updated document:', updatedDocSnap.data());
+
+                    const toCollectionRef = doc(db, 'pastservices', id);
+                    await setDoc(toCollectionRef, updatedDocSnap.data());
+                    await deleteDoc(fromCollectionRef);
+                    
+                } else {
+                    console.log("No such document");
+                }
+            } catch (error) {
+                console.error('Error transferring service:', error);
+            }
+        },
+        async cancelOngoingJob(id) {
+            try {
+                
+                const fromCollectionRef = doc(db, 'ongoing', id);
+                const docSnap = await getDoc(fromCollectionRef);
+
+                if (docSnap.exists()) {
+                    await updateDoc(fromCollectionRef, {
+                        status: 'cancelled'
+                    });
+                    console.log('Status updated to "cancelled".');
+
+                    const updatedDocSnap = await getDoc(fromCollectionRef);
+                    console.log('Updated document:', updatedDocSnap.data());
+
+                    const toCollectionRef = doc(db, 'pastjobs', id);
+                    await setDoc(toCollectionRef, updatedDocSnap.data());
+                    await deleteDoc(fromCollectionRef);
+                    
+                } else {
+                    console.log("No such document");
+                }
+            } catch (error) {
+                console.error('Error transferring service:', error);
+            }
+        },
+        async completeOngoingService(id) {
+            try {
+                
+                const fromCollectionRef = doc(db, 'ongoing', id);
+                const docSnap = await getDoc(fromCollectionRef);
+
+                if (docSnap.exists()) {
+                    await updateDoc(fromCollectionRef, {
+                        status: 'complete'
+                    });
+                    console.log('Status updated to "cancelled".');
+
+                    const updatedDocSnap = await getDoc(fromCollectionRef);
+                    console.log('Updated document:', updatedDocSnap.data());
+
+                    const toCollectionRef = doc(db, 'pastservices', id);
+                    await setDoc(toCollectionRef, updatedDocSnap.data());
+                    await deleteDoc(fromCollectionRef);
+                    
+                } else {
+                    console.log("No such document");
+                }
+            } catch (error) {
+                console.error('Error transferring service:', error);
+            }
+        },
+        async completeOngoingService(id) {
+            try {
+                
+                const fromCollectionRef = doc(db, 'ongoing', id);
+                const docSnap = await getDoc(fromCollectionRef);
+
+                if (docSnap.exists()) {
+                    await updateDoc(fromCollectionRef, {
+                        status: 'complete'
+                    });
+                    console.log('Status updated to "cancelled".');
+
+                    const updatedDocSnap = await getDoc(fromCollectionRef);
+                    console.log('Updated document:', updatedDocSnap.data());
+
+                    const toCollectionRef = doc(db, 'pastservices', id);
                     await setDoc(toCollectionRef, updatedDocSnap.data());
                     await deleteDoc(fromCollectionRef);
                     
@@ -775,7 +958,6 @@ export default {
 
 
 }
-
 </script>
 <style>
     .ServiceNavBar {
@@ -818,6 +1000,58 @@ export default {
         text-align:left;
         border: 1px solid #f2bc5c;
     }
+    .snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #7c321b;
+        color: #fae1ae;
+        text-align: center;
+        border-radius: 8px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        top: 80px;
+        font-size: 17px;
+        opacity: 0;
+        transition: visibility 0.5s, opacity 0.5s ease-in-out;
+    }
+
+    .snackbar.show {
+        visibility: visible;
+        opacity: 1;
+    }
+    .swipe-right-enter-active,
+    .swipe-right-leave-active {
+    transition: transform 0.5s ease-in-out;
+    }
+
+    .swipe-right-enter,
+    .swipe-right-leave-to {
+    transform: translateX(100%); /* Start from the right */
+    }
+
+    .swipe-right-enter-to,
+    .swipe-right-leave {
+    transform: translateX(0); /* Slide in from the right */
+    }
+
+    /* Define the swipe-left transition (for moving backward) */
+    .swipe-left-enter-active,
+    .swipe-left-leave-active {
+    transition: transform 0.5s ease-in-out;
+    }
+
+    .swipe-left-enter,
+    .swipe-left-leave-to {
+    transform: translateX(-100%); /* Start from the left */
+    }
+
+    .swipe-left-enter-to,
+    .swipe-left-leave {
+    transform: translateX(0); /* Slide in from the left */
+    }
     .NotCurrent {
         color: #888585;
     }
@@ -846,7 +1080,7 @@ export default {
         border-bottom: 3px solid #f29040;
         background-color: #f2bc5c;
         position:relative;
-        height:47px;
+        height:50px;
         transition:  border-color 0.5s ease;
     }
     .calendar-container {
@@ -974,6 +1208,9 @@ export default {
         position: relative;
         border: 5px solid #7c321b
     }
+    input {
+        color: #7c321b;
+    }
 
 
 </style>
@@ -984,56 +1221,89 @@ export default {
     <div class="ServicePage">
     <div class="ServiceNavBar"> <!-- Nav Bar for service page-->
     <div class="row">
-    <div class="col-md-12 col-12 col-lg-3" style="margin-top:12.5px !important;">
+    <div class="col-md-12 col-12 col-lg-4" style="margin-top:12.5px !important;">
         <p :class="{CurrentlyOwner:isPetOwner,NotCurrent:!isPetOwner}"><strong>Pet Owner</strong></p>
             <div class="buttonBackground">#</div>
             <button @click="toggle(); showalert()" :class="{PetOwner:isPetOwner, ServiceProvider:!isPetOwner}"></button>
         <p :class="{CurrentlyOwner:!isPetOwner,NotCurrent:isPetOwner}"><strong>Service Provider</strong></p>
     </div>
-        <div v-if="isPetOwner" class="col-md-8 flex-wrap">
+        <div v-if="isPetOwner" class="col-md-12 col-lg-8 flex-wrap">
             <span>
-                <button @click="currentPage = 'Find Services';checkpage(0)" :class="{curPage:iscurrentPage[0]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Services</strong></button>
-                <button @click="currentPage = 'Post Jobs';checkpage(1)" :class="{curPage:iscurrentPage[1]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Jobs</strong></button>
-                <button @click="currentPage = 'Current Services';checkpage(2)" :class="{curPage:iscurrentPage[2]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
+                <button @click="currentPage = 'Find Services';checkpage(0);navigate('Find Services')" :class="{curPage:iscurrentPage[0]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Services</strong></button>
+                <button @click="currentPage = 'Post Jobs';checkpage(1);navigate('Post Jobs')" :class="{curPage:iscurrentPage[1]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Jobs</strong></button>
+                <button @click="currentPage = 'Current Services';checkpage(2);navigate('Current Services')" :class="{curPage:iscurrentPage[2]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
-        <div v-else-if="!isPetOwner" class="col-md-8 flex-wrap">
+        <div v-else-if="!isPetOwner" class="col-md-12 col-lg-8 flex-wrap">
             <span>
-                <button @click="currentPage = 'Find Jobs';checkpage(3)" :class="{curPage:iscurrentPage[3]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Jobs</strong></button>
-                <button @click="currentPage = 'Post Services';checkpage(4)" :class="{curPage:iscurrentPage[4]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Services</strong></button>
-                <button @click="currentPage = 'Current Jobs';checkpage(5)" :class="{curPage:iscurrentPage[5]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
+                <button @click="currentPage = 'Find Jobs';checkpage(3);navigate('Find Jobs')" :class="{curPage:iscurrentPage[3]}" style="display:inline-block" class="col-4 col-md-4"><strong>Find Jobs</strong></button>
+                <button @click="currentPage = 'Post Services';checkpage(4);navigate('Post Services')" :class="{curPage:iscurrentPage[4]}" style="display:inline-block" class="col-4 col-md-4"><strong>Post Services</strong></button>
+                <button @click="currentPage = 'Current Jobs';checkpage(5);navigate('Current Jobs')" :class="{curPage:iscurrentPage[5]}" style="display:inline-block" class="col-4 col-md-4"><strong>My listings</strong></button>
             </span>
         </div>
     </div>
+    <div :class="['snackbar', { show: isalertVisible }]"><strong>You have changed to {{ alerttext }}</strong></div>
     </div>
     <div class="mainbody"> <!-- main page body-->
+        <transition :name="transitionName" mode="out-in">
         <div v-if="currentPage === 'Find Services'"> <!--Pet Owner: Find Services-->
             <div class="MainServicesPage" v-if="currServicePage==='mainServicesPage'">
-            <div class="FindServicesSearchBar"> <!--Search button, filter button , get recommendation button-->
-                <div class="searchbar">
-                    <button @click="getallservices(),getmyongoingjobs()" style="display:inline; margin-right:5px;border:3px solid #f29040;border-radius:8px;">Reload</button>
-                    <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="search" style="border-radius:8px;">
-                    <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
+            <div class="FindServicesSearchBar container"> <!--Search button, filter button , get recommendation button-->
+                <div class="searchbar row align-items-center">
+                    <div class="col-auto">
+                    <button @click="getallservices(),getmyongoingjobs()" style="margin-right:5px;border:3px solid #f29040;border-radius:8px;"><strong>Reload</strong></button>
+                    </div>
+                    <div class="getRecommendations col-auto">
+                    <button style="border-radius:8px; border: 3px solid #f29040" @click="currServicePage = 'Recommendations Page'"><strong>Get Recommendations</strong></button>
+                    </div>
+                    <div class="col-12 col-lg-7 col-md-12">
+                        <div class="input-group">
+                            <input type="text" v-model="searchQuery" @input="searchServices()" placeholder="Search" id="search" style="border-radius:8px;" class="col-11 col-md-11">
+                            <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;" class="col-1 col-md-1"></label>
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="filterbar">
-                    Filter by:
-                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="mostRecentP"> Most Recent</label>
-                    <label><input type="checkbox" name="filterBys" class="filteroption" v-model="reqServiceTypeP"> Service Types</label>
-                    <div v-if="reqServiceTypeP" class="extrafilteroptions">
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Sitter" v-model="selectedServiceTypesP"> Pet Sitter</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Walker" v-model="selectedServiceTypesP"> Pet Walker</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Groomer" v-model="selectedServiceTypesP"> Pet Groomer</label>
-                        <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesP"> Pet Trainer</label>
+                <div class="filterbar mt-2 row">
+                <label class="form-label col-3 col-sm-3 col-md-2 col-lg-2" style="font-size:large;">Filter by:</label>
+
+                <!-- Most Recent Filter -->
+                <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" v-model="mostRecentP" id="filterMostRecent"/>
+                    <label class="form-check-label" for="filterMostRecent">Most Recent</label>
+                </div>
+
+                <!-- Service Types Filter -->
+                <div class="form-check form-switch col-4 col-sm-4 col-md-3 col-lg-3" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" v-model="reqServiceTypeP" id="filterServiceTypes"/>
+                    <label class="form-check-label" for="filterServiceTypes">Service Types</label>
+                </div>
+
+                <!-- Service Type Filters (Conditional) -->
+                <div v-if="reqServiceTypeP" class="d-flex flex-wrap">
+                    <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Sitter" v-model="selectedServiceTypesP" id="petSitter"/>
+                    <label class="form-check-label" for="petSitter">Pet Sitter</label>
+                    </div>
+                    <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Walker" v-model="selectedServiceTypesP" id="petWalker"/>
+                    <label class="form-check-label" for="petWalker">Pet Walker</label>
+                    </div>
+                    <div class="form-check form-switch mr-2 col-3 col-sm-3 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Groomer" v-model="selectedServiceTypesP" id="petGroomer"/>
+                    <label class="form-check-label" for="petGroomer">Pet Groomer</label>
+                    </div>
+                    <div class="form-check form-switch mr-2 col-3 col-sm-2 col-md-3 col-lg-2" style="font-size:large">
+                    <input type="checkbox" class="form-check-input" value="Pet Trainer" v-model="selectedServiceTypesP" id="petTrainer"/>
+                    <label class="form-check-label" for="petTrainer">Pet Trainer</label>
                     </div>
                 </div>
-                <div class="getRecommendations">
-                    <button style="font-size:medium;border-radius:8px; border: 2px solid #f29040" @click="currServicePage = 'Recommendations Page'">Get Recommendations</button>
                 </div>
             </div>   
             </div>
             <div class="RecommendationsPage" v-else-if="currServicePage==='Recommendations Page'" > <!--when button 'Get Recommendations' is clicked-->
                 <div>
-                    <button @click="currServicePage = 'mainServicesPage'" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
+                    <button @click="currServicePage = 'mainServicesPage',getallservices()" style="background-color: #242424;"><img src="../../../public/img/arrow-121-16.png"> Go back</button>
                 </div>
                 <div class="row">
                 <div class="calendar-container col-6">
@@ -1100,8 +1370,9 @@ export default {
                 </div>
             </div>
         </div>
-        
-        <div v-else-if="currentPage === 'Post Jobs'" class="postJob"> <!--Pet Owner: Post Job-->
+        </transition>
+        <transition :name="transitionName" mode="out-in">
+        <div v-if="currentPage === 'Post Jobs'" class="postJob"> <!--Pet Owner: Post Job-->
             <div class="calendar-container">
                 <div class="row">
                 <vue-cal class="calendar col-6" style="height:750px"  
@@ -1155,8 +1426,10 @@ export default {
                 </div>
             </div>
         </div>
+        </transition>
 
-        <div v-else-if="currentPage === 'Current Services'"> <!--Pet Owner: Current Services-->
+        <transition :name="transitionName" mode="out-in">
+        <div v-if="currentPage === 'Current Services'"> <!--Pet Owner: Current Services-->
             <div style="border-bottom: 3px solid #464545; padding-bottom: 10px;"> <!--All ongoing services-->
                 <h1 style="margin-top: 10px;margin-left:5px;">Ongoing listings</h1>
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
@@ -1242,9 +1515,9 @@ export default {
                                     <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
                                     <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>
                                     <br>
-                                    <button style="border:2px solid red;border-radius:8px;" class="m-2"><strong>Cancel</strong></button>
+                                    <button style="border:2px solid red;border-radius:8px;" class="m-2" @click="cancelOngoingJob(selectedEvent.documentId)"><strong>Cancel</strong></button>
                                     
-                                    <button style="border:2px solid green;border-radius:8px;" class="m-2"><strong>Complete</strong></button>
+                                    <button style="border:2px solid green;border-radius:8px;" class="m-2" @click="completeOngoingService(selectedEvent.documentId)"><strong>Complete</strong></button>
                                 </div>
                                 <div class="text-center mt-3">
                                     <button @click="closeListing()" class="close-btn" style="border:1px solid #f29040;border-radius:8px;"><strong>Close</strong></button>
@@ -1255,14 +1528,25 @@ export default {
                 </div>
             </div>
         </div>
+        </transition>
 
-        <div v-else-if="currentPage === 'Find Jobs'"> <!--Service Provider: Find Jobs-->
+        <transition :name="transitionName" mode="out-in">
+        <div v-if="currentPage === 'Find Jobs'"> <!--Service Provider: Find Jobs-->
             <div class="MainJobsPage" v-if="currJobPage==='MainJobsPage'">
-            <div class="FindJobsSearchBar"> <!--Search button, filter button , get recommendation button-->
-                <div class="searchbar">
-                    <button @click="getalljobs(),getmyongoingservices()" style="display:inline; margin-right:5px;border:3px solid #697565;border-radius:8px;">Reload</button>
-                    <input type="text" v-model="searchQueryS" @input="searchJobs()" placeholder="Search" id="search" style="border-radius:8px;">
-                    <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
+            <div class="FindJobsSearchBar container"> <!--Search button, filter button , get recommendation button-->
+                <div class="searchbar row align-items-center">
+                    <div class="auto">
+                    <button @click="getalljobs(),getmyongoingservices()" style="margin-right:5px;border:3px solid #f29040;border-radius:8px;"><strong>Reload</strong></button>
+                    </div>
+                    <div class="getRecommendations col-auto">
+                    <button style="border-radius:8px; border: 3px solid #f29040" @click="currJobPage = 'Recommendations Page'">Get Recommendations</button>
+                    </div>
+                    <div class="col-12 col-lg-7 col-md-12">
+                        <div class="input-group">
+                        <input type="text" v-model="searchQueryS" @input="searchJobs()" placeholder="Search" id="search" style="border-radius:8px;">
+                        <label for="search"><img src="../../../public/img/searchicon.png" style="width:30px; padding-bottom:1px; margin-left:5px;"></label>
+                        </div>
+                    </div>
                 </div>
                 <div class="filterbar">
                     Filter by:
@@ -1275,9 +1559,7 @@ export default {
                         <label><input type="checkbox" name="filterBys" class="filteroption" value="Pet Trainer" v-model="selectedServiceTypesS"> Pet Trainer</label>
                     </div>
                 </div>
-                <div class="getRecommendations">
-                    <button style="font-size:medium;border-radius:8px; border: 2px solid #697565" @click="currJobPage = 'Recommendations Page'">Get Recommendations</button>
-                </div>
+                
             </div>   
             </div>
             <div class="RecommendationsPage" v-else-if="currJobPage==='Recommendations Page'" > <!--when button 'Get Recommendations' is clicked-->
@@ -1349,8 +1631,10 @@ export default {
                 </div>
             </div>
         </div>
+        </transition>
 
-        <div v-else-if="currentPage === 'Post Services'"> <!--Service Provider: Post Services-->
+        <transition :name="transitionName" mode="out-in">
+        <div v-if="currentPage === 'Post Services'"> <!--Service Provider: Post Services-->
             <div class="calendar-container">
                 <div class="row">
                 <vue-cal class="calendar col-6" style="height:750px"  
@@ -1405,8 +1689,10 @@ export default {
             </div>
 
         </div>
+        </transition>
 
-        <div v-else-if="currentPage === 'Current Jobs'"> <!--Service Provider: Current Jobs-->
+        <transition :name="transitionName" mode="out-in">
+        <div v-if="currentPage === 'Current Jobs'"> <!--Service Provider: Current Jobs-->
             <div style="border-bottom: 3px solid #464545; padding-bottom: 10px;"> <!--All ongoing services-->
                 <h1 style="margin-top: 10px;margin-left:5px;">Ongoing listings</h1>
                 <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
@@ -1493,9 +1779,9 @@ export default {
                                     <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
                                     <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>
                                     <br>
-                                    <button style="border:2px solid red;border-radius:8px;" class="m-2"><strong>Cancel</strong></button>
+                                    <button style="border:2px solid red;border-radius:8px;" class="m-2" @click="cancelOngoingService(selectedEvent.documentId)"><strong>Cancel</strong></button>
                                     
-                                    <button style="border:2px solid green;border-radius:8px;" class="m-2"><strong>Complete</strong></button>
+                                    <button style="border:2px solid green;border-radius:8px;" class="m-2" @click="completeOngoingService(selectedEvent.documendId)"><strong>Complete</strong></button>
                                 </div>
                                 <div class="text-center mt-3">
                                     <button @click="closeListing()" class="close-btn" style="border:1px solid #f29040;border-radius:8px;"><strong>Close</strong></button>
@@ -1506,7 +1792,8 @@ export default {
                 </div>
             </div>
         </div>
-    
+        </transition>
+
     </div>
     </div>
     </template>
