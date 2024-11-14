@@ -111,11 +111,10 @@ export default {
 .chatbot {
   display: flex;
   flex-direction: column;
-  height: 90vh;
+  height: 100vh;
   justify-content: space-between;
   background-color: inherit;
   border-radius: 10px;
-  
 }
 
 .chat-window {
@@ -155,13 +154,12 @@ export default {
 .input-box {
   display: flex;
   padding: 20px;
-  background-color: #ffcf72;
 }
 
 input[type="text"] {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ecdfcc;
+  border: 1px solid #ffcf72;
   border-radius: 5px;
   background-color: transparent;
   color: #545454;
