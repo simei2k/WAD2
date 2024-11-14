@@ -1,92 +1,95 @@
-
 <template>
-    <head><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    </head>
-    <div class="container-fluid box" style="margin-top: 5%">
-        <div class="row">
-            <div class="col-3 profile-bar">
-                <img class="profile_pic" src="../../assets/service_provider_avatar.png">
-                <strong><h1 class="profile-name">{{ name }}</h1></strong>
-                <h2 class="profile-tagline">I love cats</h2>
-                <div class="profile-location">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" fill="#9e4632" class="bi bi-geo-alt" viewBox="0 0 16 16">
-                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
-                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                    </svg>
-                    <p>City Hall</p>
-                </div>
-               
-                    <div class="more-description">
-                        <!--the 3 information below should be populated dynamically-->
-                        <h6>Years of Experience: 8 Years</h6>
-                        <h6>Volunteer & Pet Owner</h6>
-                        <h6>Completed Orders: 8</h6>
-                    </div>
-                </div>
-            <div class="col-9 profile-contents">
-                <!--the 3 information below should be populated dynamically-->
-                <h1>More About {{ name }}</h1>
-                <p>I am a big fan of cats. I have experience of up to 10 years with cats. Currently I have 4 cats at home, and this is my retirement job. yada yada yada yada </p>
-                <h2>Preferences</h2>
-                <p>&#128054; <b>Animals:</b> 10-20kg dogs, cats</p><br>
-                <p>&#128168; <b>Willing to travel:</b> 10km radius</p><br>
-                <p><b>&#128176;Rates:</b></p><br>
-                <p>&#127968;Pet Sitting: $30/h</p><br>
-                <p>&#128694;Pet walking: $40/h</p><br>
-                <p>&#128663;Pet transport: $50</p><br>
-            
-                <div class="reviews">
-                    <h1>What Customers Say</h1>
-                    <h3>Average: 5/5 &#127775; ratings</h3>
-                    <div class="card-container ">
-                        <ul class="cards">
-                          <div class="cardforscroll">
-                                 <li class="review-card card" v-for="(review, index) in reviews" :key="index">
-                                        <div class="card-div">
-                                        <div class="card-body">
-                                            <div class="card-top" style="display: flex; justify-content: space-between; align-items: center;">
-                                            <h1 class="reviewer-name">{{ review.reviewerName }}</h1>
-                                            <img :src="review.reviewerImage" class="reviewer-pic">
-                                            </div>
-                                            <div class="stars">
-                                            <span v-for="n in review.stars" class="fa fa-star checked"></span>
-                                            <span v-for="n in (5 - review.stars)" class="fa fa-star"></span>
-                                            </div>
-                                            <div class="review-text">                                            <p >{{ review.text }}</p>
-                                            </div>
-                                            <div class="review-photos">
-                                            <img :src="review.photo" class="review-photo">
-                                            </div>
-                                            </div>
-                                            </div>
-                                            </li>
-                                          </div>
-                                            </ul>
-                                    </div>  
-                                </div>        
-                <div class="pets" style="margin-top: 10%">
-                    <h1> Pets </h1>
-                     <!-- BS card: Start --> 
-                     <div v-for="(pet,index) in petDetailsArray" :key="index" class="card" style="width: 18rem;"> 
-                         <img :src="pet[6]" class="card-img-top" alt="pet-image"> 
-                         <div class="card-body"> 
-                             <h5 class="card-title">{{  pet[0] }}</h5> 
-                             <p class="card-text">{{ pet[1] }}</p>  
-                         </div> 
-                         <ul class="list-group list-group-flush"> 
-                             <li class="list-group-item">{{ pet[3] }} </li> 
-                             <li  v-if="pet[4] !== ''" class="list-group-item">{{ pet[4] }} </li> 
-                             <li   v-if="pet[4] !== ''" class="list-group-item">{{ pet[5] }}</li> 
-                             <li   class="list-group-item">very cool</li> 
-                         </ul> 
-                         
-                     </div> 
-                     <!-- BS card: End --> 
-                    
-                </div>
-            </div>
+  <head>
+    <!-- Link to Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Add the viewport meta tag for responsive design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <div class="container-fluid box" style="margin-top: 5%">
+    <div class="row">
+      <!-- Profile Bar: Column with fixed width on large screens and full width on small screens -->
+      <div class="col-md-3 profile-bar">
+        <img class="profile_pic img-fluid" src="../../assets/service_provider_avatar.png" alt="Profile Picture">
+        <strong><h1 class="profile-name">{{ name }}</h1></strong>
+        <h2 class="profile-tagline">I love cats</h2>
+        <div class="profile-location">
+          <svg xmlns="http://www.w3.org/2000/svg" width="10%" height="10%" fill="#9e4632" class="bi bi-geo-alt" viewBox="0 0 16 16">
+            <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A32 32 0 0 1 8 14.58a32 32 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10"/>
+            <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          </svg>
+          <p>City Hall</p>
         </div>
+        <div class="more-description">
+          <h6>Years of Experience: 8 Years</h6>
+          <h6>Volunteer & Pet Owner</h6>
+          <h6>Completed Orders: 8</h6>
+        </div>
+      </div>
+
+      <!-- Profile Contents: Larger content section for profile details -->
+      <div class="col-md-9 profile-contents">
+        <h1>More About {{ name }}</h1>
+        <p>I am a big fan of cats. I have experience of up to 10 years with cats. Currently, I have 4 cats at home, and this is my retirement job. yada yada yada yada</p>
+        <h2>Preferences</h2>
+        <p>&#128054; <b>Animals:</b> 10-20kg dogs, cats</p><br>
+        <p>&#128168; <b>Willing to travel:</b> 10km radius</p><br>
+        <p><b>&#128176; Rates:</b></p><br>
+        <p>&#127968; Pet Sitting: $30/h</p><br>
+        <p>&#128694; Pet Walking: $40/h</p><br>
+        <p>&#128663; Pet Transport: $50</p><br>
+
+        <div class="reviews">
+          <h1>What Customers Say</h1>
+          <h3>Average: 5/5 &#127775; ratings</h3>
+          <div class="card-container">
+            <ul class="cards">
+              <div class="cardforscroll">
+                <li class="review-card card" v-for="(review, index) in reviews" :key="index">
+                  <div class="card-div">
+                    <div class="card-body">
+                      <div class="card-top" style="display: flex; justify-content: space-between; align-items: center;">
+                        <h1 class="reviewer-name">{{ review.reviewerName }}</h1>
+                        <img :src="review.reviewerImage" class="reviewer-pic">
+                      </div>
+                      <div class="stars">
+                        <span v-for="n in review.stars" class="fa fa-star checked"></span>
+                        <span v-for="n in (5 - review.stars)" class="fa fa-star"></span>
+                      </div>
+                      <div class="review-text">
+                        <p>{{ review.text }}</p>
+                      </div>
+                      <div class="review-photos">
+                        <img :src="review.photo" class="review-photo">
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </div>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pets" style="margin-top: 10%">
+          <h1>Pets</h1>
+          <!-- Bootstrap Cards for pets -->
+          <div v-for="(pet, index) in petDetailsArray" :key="index" class="card" style="width: 18rem;">
+            <img :src="pet[6]" class="card-img-top" alt="pet-image">
+            <div class="card-body">
+              <h5 class="card-title">{{ pet[0] }}</h5>
+              <p class="card-text">{{ pet[1] }}</p>
+            </div>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">{{ pet[3] }}</li>
+              <li v-if="pet[4] !== ''" class="list-group-item">{{ pet[4] }}</li>
+              <li v-if="pet[5] !== ''" class="list-group-item">{{ pet[5] }}</li>
+              <li class="list-group-item">Very cool</li>
+            </ul>
+          </div>
+          <!-- End of pet cards -->
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>

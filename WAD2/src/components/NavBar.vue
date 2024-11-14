@@ -164,6 +164,8 @@ import { getAuth, signOut } from 'firebase/auth';
         await signOut(auth);
         this.$router.push({ name: 'home' }); // Redirect to login after logout
         console.log("I am logged out")
+        localStorage.removeItem('name')
+        localStorage.set
       } catch (error) {
         console.log("Logout failed:", error);
       }
