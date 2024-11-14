@@ -1,14 +1,14 @@
 <template>
   <div>
     <!-- Main Layout -->
-    <div class="layout">
+    <div class="row gx-0">
       <!-- Left Column (Map) -->
-      <div class="map-container">
+      <div class="col-sm-12 col-md-7 map-container">
         <section id="map" ref="map"></section>
       </div>
 
       <!-- Right Column (Search + Results) -->
-      <div class="input-container">
+      <div class="col-sm-12 col-md-5 input-container">
         <form class="ui segment large form">
           <div class="ui message red" v-show="error">{{ error }}</div>
           <div class="ui segment">
@@ -90,7 +90,7 @@ export default {
   methods: {
     initMap() {
       this.map = new google.maps.Map(this.$refs.map, {
-        zoom: 12,
+        zoom: 11,
         center: { lat: 1.3521, lng: 103.8198 }, // Default Singapore center
         mapTypeId: "roadmap",
       });
@@ -264,26 +264,26 @@ export default {
   display: flex;
   flex-direction: row;
   width: 95%;
-  height: 85vh; /* Full viewport height */
+  height: 85vh; 
   margin: 0;
   padding: 0;
 }
 
 /* Left Column: Map */
 .map-container {
-  width: 60%;
-  height: 100%;
-  position: relative;
+  height: 500px; 
 }
 
 #map {
   width: 100%;
   height: 100%;
+  margin: 5px;
 }
+
 
 /* Right Column: Input and Results */
 .input-container {
-  width: 40%;
+  /* width: 90%; */
   padding: 20px;
   overflow-y: auto;
   box-sizing: border-box;
