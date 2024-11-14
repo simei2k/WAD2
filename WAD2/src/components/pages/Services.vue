@@ -1174,9 +1174,10 @@ export default {
     }
     .reloadButton {
         border-radius: 8px;
-        border:solid 3px ;
+        border: solid 3px ;
         position: absolute;
-        top:150px;
+        margin-left: 1%;
+        height: 40px;
     }
     .card-image {
         width:100%;
@@ -1373,6 +1374,8 @@ export default {
         </transition>
         <transition :name="transitionName" mode="out-in">
         <div v-if="currentPage === 'Post Jobs'" class="postJob"> <!--Pet Owner: Post Job-->
+            <div><button @click="getIndivEvents(),getmyjobs(),transferExpiredJob(),getmypastjobs()"class="reloadButton">Reload</button></div>
+            
             <div class="calendar-container">
                 <div class="row">
                 <vue-cal class="calendar col-6" style="height:750px"  
@@ -1457,7 +1460,6 @@ export default {
                 </div>
             </div>
             </div>
-            <div><button @click="getIndivEvents(),getmyjobs(),transferExpiredJob(),getmypastjobs()"class="reloadButton">Reload</button></div>
             <div v-if="confirmPopup" class="cfmPopup" style="display:flex;">
                 <div class="popupContent"> 
                     <p style="color:#ECDFCC"> Would you like to submit?</p>
