@@ -1,17 +1,17 @@
 <template>
-  <div class="container m-0">
+  <div class="container-fluid m-0">
     <div class="row">
 
-      <div class="col-1 my-auto">
-        Filter:
+      <div class="col-md-1 my-auto">
+        <label for="">Filter:</label>
       </div>
 
-      <div class="col">
-        Search:
-        <input class="mt-1" type="text" id="shop-filter-searchbar" @input="updateFilter">
+      <div class="col-sm">
+        <label>Search:</label>
+        <input class="shop-filterbar-search mt-1 w-75" type="text" id="shop-filter-searchbar" @input="updateFilter">
       </div>
 
-      <div class="col">
+      <div class="col-sm">
         <!-- Min Price -->
         <div class="mb-1">
           <label class="filter-label" for="min-price">Min Price:</label>
@@ -28,18 +28,18 @@
         <!-- Max Price -->
       </div>
 
-      <div class="col">
+      <div class="col-md">
         <!-- Rating -->
         <div class="d-inline-block">
           <label class="filter-label" for="shop-filter-rating-input">Rating:</label>
-          1<span class="fa fa-star checked"></span>
+          <label for="">1</label><span class="fa fa-star checked"></span>
           <input id="shop-filter-rating-input" type="range" class="" value=1 @input="updateFilter" min="1" max="5" />
-          5<span class="fa fa-star checked"></span>
+          <label for="">5</label><span class="fa fa-star checked"></span>
         </div>
         <!-- Rating -->
       </div>
 
-      <div class="col"></div>
+      <!-- <div class="col"></div> -->
 
     </div>
   </div>
@@ -137,10 +137,17 @@ export default {
 
 #shop-filter-rating-input {
   width: 4em;
+  background-color: #ecdfcc;
 }
 
 .stars {
   font-size: 0.7em;
   margin-bottom: 1em;
+}
+
+.shop-filterbar-search, .min-price, .max-price{
+  background-color: #ecdfcc;
+  border: black solid 1px;
+  color: black;
 }
 </style>

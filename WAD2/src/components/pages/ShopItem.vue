@@ -30,26 +30,26 @@
                 <div class='container-fluid'>
                     <div class='row'>
                         <div class='col'>
-                            <h5>{{ itemObject.title }}</h5>
+                            <h5><label>{{ itemObject.title }}</label></h5>
                         </div>
                     </div>
                     <div class='row pb-4'>
                         <div class='col'>
-                            <h6>${{ itemObject.price }}</h6>
+                            <h5 class="mt-3"><label>${{ itemObject.price }}</label></h5>
                         </div>
                     </div>
                     <div class='row pb-2'>
                         <div class='col-3'>
-                            Shipping
+                            <label>Shipping</label>
                         </div>
                         <div class='col'>
-                            {{ itemObject.shipping }}
+                            <label>{{ itemObject.shipping }}</label>
                         </div>
                     </div>
                     <div class='row pb-2'>
                         <!-- TYPE INPUT -->
                         <div class='col-3'>
-                            Type
+                            <label>Type</label>
                         </div>
                         <div class='col-9' v-if="itemObject.types!==undefined">
                             <select id="type-input" class="form-select shop-item-type-select">
@@ -66,7 +66,7 @@
                     <div class='row pb-2'>
                         <!-- QUANTITY INPUT -->
                         <div class='col-3 d-flex align-items-center'>
-                            Quantity
+                            <label>Quantity</label>
                         </div>
                         <div class='col'>
                             <button type="button" class="shop-item-quantity-button d-inline"
@@ -86,13 +86,13 @@
                     </div>
                     <div class='row pt-5'>
                         <div class='col'>
-                            <h4>Item Description</h4>
+                            <h4><label>Item Description</label></h4>
                             <p>{{ itemObject.description }}</p>
                         </div>
                     </div>
                     <div class='row pt-5'>
                         <div class='col'>
-                            <h4>Product Ratings</h4>
+                            <h4><label>Product Ratings</label></h4>
                         </div>
                     </div>
                     <div class='row' v-if="itemObject.reviews!==undefined">
@@ -111,8 +111,8 @@
             <!-- Item Info Column -->
 
         </div>
+        END OF TEMPLATE
     </div>
-
 </template>
 
 <script scoped>

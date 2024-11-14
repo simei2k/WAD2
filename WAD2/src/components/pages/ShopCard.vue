@@ -23,8 +23,8 @@ export default {
         <p class="card-text">$ {{ itemObject.price }}</p>
         <div class="stars">
           <!-- Do math and display no. of stars. No rating above 5 stars -->
-          <span class="fa fa-star checked" v-for="n in Math.min(5, Math.floor(itemObject.rating))"></span>
-          <span class="fa fa-star" v-for="n in 5-Math.min(5, Math.floor(itemObject.rating))"></span>
+          <span class="fa fa-star" v-for="n in Math.min(5, Math.floor(itemObject.rating))"></span>
+          <span class="fa fa-star unchecked" v-for="n in 5-Math.min(5, Math.floor(itemObject.rating))"></span>
         </div>
       </div>
     </div>
@@ -58,4 +58,8 @@ a {
 .stars {
   font-size: 0.7em;
 }
+
+.fa-star.unchecked {
+    color: #d6d6d6;
+  }
 </style>

@@ -11,7 +11,7 @@
         <!-- Nav Bar -->
 
         <!-- Back Button & Cart -->
-        <div class="container">
+        <div class="container-fluid">
             <div class='row'>
                 <div class='col d-flex justify-content-start'>
                     <button v-if="['item', 'cart'].includes(shopPage)" type="button" class="shop-item-backbutton"
@@ -56,15 +56,11 @@
 
         </div>
 
-        <div v-if="shopPage === 'item'">
+        <!-- <div v-if="shopPage === 'item'">
             <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
                 @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="currItem"
                 :imageSource="currImageSource" />
-        </div>
-
-        <div v-if="shopPage === 'cart'">
-            <ShopCart @toggleShop="toggleShop" @checkout="checkout()" :shopcartCart="cart" />
-        </div>
+        </div> -->
 
         <div v-if="shopPage === 'checkout'">
             <ShopCheckOut @toggleShop="toggleShop" />
@@ -241,7 +237,7 @@ export default {
     height: auto;
     /* display: inline-block; */
     color: #ecdfcc;
-    border: 1px solid #ecdfcc;
+    border: 1px solid #545454;
     margin: 0 15px 0 15px;
 }
 

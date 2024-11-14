@@ -22,7 +22,7 @@
                 <img :src="info.imageSource" class="card-img" alt="Product Image">
               </div>
               <div class='col-2 my-auto'>
-                {{ id }}
+                {{ info.name }}
               </div>
               <div class='col-2 my-auto'>
                 {{ info.type }}
