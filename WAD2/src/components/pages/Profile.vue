@@ -73,7 +73,7 @@
           <h1>Pets</h1>
           <!-- Bootstrap Cards for pets -->
           <div v-for="(pet, index) in petDetailsArray" :key="index" class="card" style="width: 18rem;">
-            <img :src="pet[6]" class="card-img-top" alt="pet-image">
+            <img src="../../assets/fatcat.jpg" class="card-img-top" alt="pet-image">
             <div class="card-body">
               <h5 class="card-title">{{ pet[0] }}</h5>
               <p class="card-text">{{ pet[1] }}</p>
@@ -193,6 +193,10 @@ export default {
   flex: 0 0 auto;
   display: flex;
   padding:10px;
+  display: flex;
+  height: 100%;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
   
   .reviewer-name {
@@ -272,7 +276,9 @@ svg{
 }
 
 /* For the scrolling elements */
-
+.card-body{
+  overflow: hidden;
+}
 .card-container {
     width: 100%;
     white-space: nowrap;
@@ -280,14 +286,19 @@ svg{
     height: 40%;
     white-space: nowrap;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch; 
     flex-direction: row;
     flex-wrap:nowrap;
-    /* overflow:auto; */
     padding:10px;
   }
 
+.review-card{
+  flex: 0 0 auto;
+  width: 50%;
+  height: 500px !important;
+  overflow: hidden;
+}
 .cards {
   display: flex;
   scroll-snap-type: x mandatory;
