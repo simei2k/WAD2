@@ -15,7 +15,6 @@
         </div>
         <div class="card-body">
           <div class="buttons" >
-            <button class="call" style=" border-radius: 15px">Call</button>
             <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
               Directions
             </a>
@@ -57,7 +56,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btcn " @click="showModal = false" data-bs-dismiss="modal">Close</button>
-        <button type="button" class=" ">Save changes</button>
       </div>
     </div>
   </div>
