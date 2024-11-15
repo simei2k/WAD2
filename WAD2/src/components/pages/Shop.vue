@@ -1,27 +1,30 @@
 <template>
     <div>
-
-        <head>
-            <link rel="stylesheet"
-                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        </head>
-
-        <!-- Nav Bar -->
-        <NavBar></NavBar>
-        <!-- Nav Bar -->
-
         <!-- Back Button & Cart -->
         <div class="container-fluid">
-            <div class='row'>
-                <div class='col d-flex justify-content-start'>
-                    <button v-if="['item', 'cart'].includes(shopPage)" type="button" class="shop-item-backbutton"
-                        @click="toggleShop('shop')">Back to Shop</button>
+            <div class="row">
+                <!-- Back Button -->
+                <div class="col d-flex justify-content-start">
+                    <button
+                        v-if="['item', 'cart'].includes(shopPage)"
+                        type="button"
+                        class="shop-item-backbutton"
+                        @click="toggleShop('shop')"
+                    >
+                        Back to Shop
+                    </button>
                 </div>
-                <div class='col d-flex justify-content-end '>
-                    <button v-if="['shop', 'item'].includes(shopPage)" type="button" class="shop-item-backbutton"
-                        @click="toggleShop('cart')">
-                        <img src="../../assets/cart.png" class="shop-item-backbutton-img mx-2">Cart
-                        ({{ cartItemCount }})
+
+                <!-- Cart Button -->
+                <div class="col d-flex justify-content-end">
+                    <button
+                        v-if="['shop', 'item'].includes(shopPage)"
+                        type="button"
+                        class="shop-item-backbutton"
+                        @click="toggleShop('cart')"
+                    >
+                        <img src="../../assets/cart.png" class="shop-item-backbutton-img mx-2">
+                        Cart ({{ cartItemCount }})
                     </button>
                 </div>
             </div>

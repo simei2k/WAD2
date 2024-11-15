@@ -1,12 +1,10 @@
 <template>
   <div class="form-group">
-    
-    
     <label for="pet_name">Pet Name:</label>
-    <input type="text" v-model="pet_name" class="form-control pet_name">
-    
+    <input type="text" v-model="pet_name" class="form-control pet_name" />
+
     <label for="pet_type">Type</label>
-    <select v-model="pet_type" class="form-control pet_type">
+    <select v-model="pet_type" class="form-control pet_type" @change="updateBreeds">
       <option>Dog</option>
       <option>Cat</option>
       <option>Bird</option>
@@ -14,37 +12,38 @@
       <option>Lizard</option>
       <option>Snake</option>
     </select><br>
-    
+
     <label for="size">Size</label>
     <select v-model="size" class="form-control name">
       <option>small</option>
       <option>medium</option>
       <option>big</option>
     </select><br>
-    
+
     <label for="breed">Breed</label>
     <select v-model="breed" class="form-control name">
-      <option>Golden</option>
-      <option>Shiba</option>
-      <option>Berner</option>
-      <option>Chihuahua</option>
-      <option>GSD</option>
+      <option v-for="(option, index) in breedOptions" :key="index" :value="option">{{ option }}</option>
     </select><br>
 
     <label for="medical_conditions">Medical Conditions:</label>
     <textarea class="form-control name" v-model="medical_conditions" placeholder="Allergic to water"></textarea>
-  
+
     <label for="dietary_restrictions">Dietary Restrictions:</label>
     <textarea class="form-control name" v-model="dietary_restrictions" placeholder="Allergic to humans"></textarea><br>
-  
-  <div class="addPet">
-    <button class="submit-button" @click ="addPetdb()">Add me!</button>
+
+    <button 
+        class="submit-button" 
+        @click="addPetdb" 
+        :disabled="isSubmitted"
+        :class="{'disabled-button': isSubmitted}">
+        Add me!
+    </button>
   </div>
-</div>
 </template>
+
 <script>
-import { doc, setDoc, collection } from "firebase/firestore"; // Make sure to import these functions
-import db  from "../../../database.js"
+import { doc, setDoc } from "firebase/firestore";
+import db from "../../../database.js";
 
 export default {
   props: ['index'],
@@ -56,20 +55,49 @@ export default {
       breed: '',
       medical_conditions: '',
       dietary_restrictions: '',
+      breedOptions: [],  // Array to store breed options
+      isSubmitted: false // Flag to track if the pet is added
     };
   },
   methods: {
-    
+    // Dynamically update the breed options based on the selected pet type
+    updateBreeds() {
+      switch (this.pet_type) {
+        case 'Dog':
+          this.breedOptions = ['Golden', 'Shiba', 'Berner', 'Chihuahua', 'GSD'];
+          break;
+        case 'Cat':
+          this.breedOptions = ['Persian', 'Siamese', 'Maine Coon', 'Bengal'];
+          break;
+        case 'Bird':
+          this.breedOptions = ['Parrot', 'Canary', 'Finch'];
+          break;
+        case 'Fish':
+          this.breedOptions = ['Goldfish', 'Betta', 'Guppy'];
+          break;
+        case 'Lizard':
+          this.breedOptions = ['Gecko', 'Iguana', 'Chameleon'];
+          break;
+        case 'Snake':
+          this.breedOptions = ['Corn Snake', 'Ball Python', 'Boa Constrictor'];
+          break;
+        default:
+          this.breedOptions = [];
+          break;
+      }
+    },
 
+    // Function to add the pet to Firestore
     async addPetdb() {
       try {
-        // Reference to the 'petowners' collection and the document for the specific owner
+        // Retrieve the owner name from local storage
         const owner = localStorage.getItem('name');
-    
-    // Log to check the owner value
+
+        // Log to check the owner value
         console.log(owner);
 
-        await setDoc(doc(db,'petowners',owner, 'pets', this.pet_name), {
+        // Add pet details to Firestore under the specific owner and pet name
+        await setDoc(doc(db, 'petowners', owner, 'pets', this.pet_name), {
           pet_name: this.pet_name,
           pet_type: this.pet_type,
           size: this.size,
@@ -79,14 +107,19 @@ export default {
         });
 
         console.log('Pet details added successfully');
+        
+        // Disable the button after successful submission
+        this.isSubmitted = true;
       } catch (error) {
         console.error('Error adding pet details:', error);
-        console.log(localStorage.getItem('name'))
+        console.log(localStorage.getItem('name'));
       }
     }
   }
-  }
+}
 </script>
+
+
 
 <style>
 label{
@@ -133,5 +166,10 @@ option{
 .begin{
     text-align: center;
     
+}
+.disabled-button {
+  background-color: #ccc; /* Light gray background */
+  cursor: not-allowed; /* Change cursor to indicate the button is not clickable */
+  pointer-events: none; /* Disable any interaction with the button */
 }
 </style>
