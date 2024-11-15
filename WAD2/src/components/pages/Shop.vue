@@ -1,28 +1,21 @@
 <template>
     <div>
+
         <!-- Back Button & Cart -->
         <div class="container-fluid">
             <div class="row">
                 <!-- Back Button -->
                 <div class="col d-flex justify-content-start">
-                    <button
-                        v-if="['item', 'cart'].includes(shopPage)"
-                        type="button"
-                        class="shop-item-backbutton"
-                        @click="toggleShop('shop')"
-                    >
+                    <button v-if="['item', 'cart'].includes(shopPage)" type="button" class="shop-item-backbutton"
+                        @click="toggleShop('shop')">
                         Back to Shop
                     </button>
                 </div>
 
                 <!-- Cart Button -->
                 <div class="col d-flex justify-content-end">
-                    <button
-                        v-if="['shop', 'item'].includes(shopPage)"
-                        type="button"
-                        class="shop-item-backbutton"
-                        @click="toggleShop('cart')"
-                    >
+                    <button v-if="['shop', 'item'].includes(shopPage)" type="button" class="shop-item-backbutton"
+                        @click="toggleShop('cart')">
                         <img src="../../assets/cart.png" class="shop-item-backbutton-img mx-2">
                         Cart ({{ cartItemCount }})
                     </button>
@@ -50,24 +43,40 @@
 
         <div v-if="shopPage === 'item'">
             <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
-                @minusQuantity="minusQuantity" :itemObject="currItem" />
+                @minusQuantity="minusQuantity" @showPopup="showPopup" :itemObject="currItem" />
         </div>
 
         <div v-if="shopPage === 'cart'">
             <ShopCart @toggleShop="toggleShop" @checkout="checkout()" :shopcartCart="cart" />
         </div>
 
+        <!-- POP UP -->
+        <div v-if="confirmPopup" class="cfmPopup" style="display:flex;">
+            <div class="popupContent">
+                <p style="color:#ECDFCC">Item added to Cart</p>
+                <div style="display:flex;">
+                    <!-- <button type="submit" class="col-3"
+                    @click="showButton = false; confirmPopup = false; addService(); getIndivEventsService();"
+                    style="border-radius:8px; border: 3px solid #697565;">Yes</button> -->
+                    <div class="col-9"></div>
+                    <button class="col-3" @click="clearPopup()"
+                        style="border-radius:8px; border: 3px solid #697565;">OK</button>
+                </div>
+            </div>
         </div>
+        <!-- POP UP -->
 
-        <!-- <div v-if="shopPage === 'item'">
+    </div>
+
+    <!-- <div v-if="shopPage === 'item'">
             <ShopItem @addToCart="addToCart" @toggleShop="toggleShop" @addQuantity="addQuantity"
                 @minusQuantity="minusQuantity" :itemId="currItemId" :quantity="currQuantity" :itemObject="currItem"
                 :imageSource="currImageSource" />
         </div> -->
 
-        <div v-if="shopPage === 'checkout'">
-            <ShopCheckOut @toggleShop="toggleShop" />
-        </div>
+    <div v-if="shopPage === 'checkout'">
+        <ShopCheckOut @toggleShop="toggleShop" />
+    </div>
 </template>
 
 <script>
@@ -90,6 +99,7 @@ export default {
     },
     data() {
         return {
+            confirmPopup: false,
             shopPage: 'shop',
             currItem: {},
             currQuantity: 1,
@@ -187,6 +197,13 @@ export default {
             this.filter.search = filter.search
             console.log("Shop.vue > updateShopCards()", filter)
         },
+        clearPopup() {
+            this.confirmPopup = false
+            console.log('clearPopup')
+        },
+        showPopup() {
+            this.confirmPopup = true
+        },
     },
     computed: {
         cartItemCount() {
@@ -201,7 +218,7 @@ export default {
                     Number(item.price) >= Number(this.filter.minPrice)
                     && Number(item.price) <= Number(this.filter.maxPrice)
                     && Number(item.rating) >= Number(this.filter.minRating)
-                    && (item.title.toLowerCase().includes(this.filter.search.toLowerCase()) || this.filter.search==='')
+                    && (item.title.toLowerCase().includes(this.filter.search.toLowerCase()) || this.filter.search === '')
                 ) {
                     filtered.push(item)
                 } else {
@@ -231,6 +248,10 @@ export default {
         //     return lowest
         // }
     },
+    beforeRouteLeave(to, from) {
+        this.clearPopup()
+        console.log('beforeRouteLeave')
+    }
 }
 </script>
 
@@ -266,4 +287,25 @@ div.shop-cards-container {
     height: 1.5em;
 }
 
+/* POPUP */
+.cfmPopup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(0, 0, 0, 0.5);
+}
+
+.popupContent {
+    background-color: #242424;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    border: 3px solid #f29040;
+    margin: auto;
+    width: 20%;
+}
+
+/* POPUP */
 </style>
