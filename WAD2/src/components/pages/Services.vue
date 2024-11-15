@@ -917,6 +917,16 @@ export default {
             }
             return filteredJobs;
         },
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            return new Intl.DateTimeFormat("en-GB", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+            }).format(date);
+        },
     },
 
        
@@ -1099,6 +1109,8 @@ export default {
         color: #242424;
         border-radius: 50%;
         margin-right: 10px;
+        width:25px;
+        height:80%;
     }
     .jobButton {
         border: 3px solid #f29040;
@@ -1107,7 +1119,7 @@ export default {
         display:flex;
     }  
     .createJobForm {
-        border: 3px solid #697565;
+        border: 3px solid #7c321b;
         border-radius: 15px; 
         padding: 20px;
         width:35%;
@@ -1166,6 +1178,7 @@ export default {
     .card-text {
         color: #ECDFCC;
         width: 100%;
+        font-size:large !important;
     }
     .card-fixed {
         border-radius: 15px !important;
@@ -1180,7 +1193,7 @@ export default {
     }
     .reloadButton {
         border-radius: 8px;
-        border: solid 3px ;
+        border: solid 3px #f29040 ;
         position: absolute;
         margin-left: 1%;
         height: 40px;
@@ -1354,7 +1367,7 @@ export default {
                     
                 </vue-cal>
                 </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-6" style="text-align:center">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-6">
                     <strong style="font-size:x-large">Input the time block u wish to search for services</strong><br>
                     <strong style="font-size:large">Start date & time:</strong><input type="datetime-local" name="Datetime" v-model="newTimeP.start" @input="updateTimeP()"><br>
                     <strong style="font-size:large">End date & time:</strong><input type="datetime-local" name="Datetime" v-model="newTimeP.end" @input="updateTimeP()"> <br>
@@ -1364,15 +1377,15 @@ export default {
                     <div class="card card-fixed w-100">
                     <img :src="service.image" class="card-image"/>
                     <div class="card-body" style="margin-top:2px;; border-top: 3px solid #7c321b">
-                        <h3> {{ service.title }}</h3>
-                        <h5> {{ service.name }}</h5>
-                        <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
-                        <p class="card-text">Services Provided: <br> {{ service.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ service.address }}</p>
-                        <p class="card-text">Contact Number: {{ service.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ service.payment }} / hour</p>
-                        <p class="card-text">Skills & Experiences: <br> {{ service.skillsExp }}</p>
-                        <button @click="ongoingService(service.documentId)">Accept Service</button>
+                        <h3><strong>{{ service.title }}</strong></h3>
+                        <h5 style="text-align:center"><strong> {{ service.name }}</strong></h5>
+                        <p class="card-text"><strong>Period of service:</strong> <br><strong>From:</strong> {{ formatDate(service.start) }}<br><strong>To:</strong> {{ formatDate(service.end) }}</p>
+                        <p class="card-text"><strong>Services Provided:</strong> <br> {{ service.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text"><strong>Address: </strong>{{ service.address }}</p>
+                        <p class="card-text"><strong>Contact Number: </strong>{{ service.contactNum }}</p>
+                        <p class="card-text"><strong>Payment:</strong> ${{ service.payment }} / hour</p>
+                        <p class="card-text"><strong>Skills & Experiences:</strong> <br> {{ service.skillsExp }}</p>
+                        <button @click="ongoingService(service.documentId)"><strong>Accept Service</strong></button>
                     </div>
                     </div>
                     </div>
@@ -1382,20 +1395,20 @@ export default {
             </div> 
             <div v-if="currServicePage==='mainServicesPage'"> <!--Find Services (Service listings using cards)-->
                 <div v-if="searchServices().length > 0">
-                <div class="row" style="margin-top:10px;padding-left:5px;padding-right:5px;">
-                <div v-for="service in searchServices()" :key="service.documentId" class="col-3">
+                <div class="row" style="margin-top:10px;padding-left:20px;padding-right:20px;">
+                <div v-for="service in searchServices()" :key="service.documentId" class="col-12 col-sm-12 col-md-6 col-lg-3">
                     <div class="card card-fixed w-100">
                     <img :src="service.image" class="card-image" style="width:100%;height:70%"/>
-                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #464545">
-                        <h3> {{ service.title }}</h3>
-                        <h5> {{ service.name }}</h5>
-                        <p class="card-text">Period of service: <br> {{ service.start }} - {{ service.end }}</p>
-                        <p class="card-text">Services Provided: <br> {{ service.serviceTypeReq.join(',') }}</p>
-                        <p class="card-text">Address: {{ service.address }}</p>
-                        <p class="card-text">Contact Number: {{ service.contactNum }}</p>
-                        <p class="card-text">Payment: ${{ service.payment }} / hour</p>
-                        <p class="card-text">Skills & Experiences: <br> {{ service.skillsExp }}</p>
-                        <button @click="ongoingService(service.documentId)">Accept Service</button>
+                    <div class="card-body" style="margin-top:2px;; border-top: 3px solid #7c321b">
+                        <h3><strong>{{ service.title }}</strong></h3>
+                        <h5 style="text-align:center"><strong> {{ service.name }}</strong></h5>
+                        <p class="card-text"><strong>Period of service:</strong> <br><strong>From:</strong> {{ formatDate(service.start) }}<br><strong>To:</strong> {{ formatDate(service.end) }}</p>
+                        <p class="card-text"><strong>Services Provided:</strong> <br> {{ service.serviceTypeReq.join(',') }}</p>
+                        <p class="card-text"><strong>Address: </strong>{{ service.address }}</p>
+                        <p class="card-text"><strong>Contact Number: </strong>{{ service.contactNum }}</p>
+                        <p class="card-text"><strong>Payment:</strong> ${{ service.payment }} / hour</p>
+                        <p class="card-text"><strong>Skills & Experiences:</strong> <br> {{ service.skillsExp }}</p>
+                        <button @click="ongoingService(service.documentId)"><strong>Accept Service</strong></button>
                     </div>
                     </div>
                 </div>
@@ -1420,34 +1433,36 @@ export default {
             
             <div class="calendar-container">
                 <div class="row">
-                <vue-cal class="calendar col-6" style="height:750px"  
+                <vue-cal class="calendar col-lg-6 col-md-12" style="height:750px"  
                 hide-title-bar
                 :events="jobevents"
                 :disable-views="['years']"
                 >
                     
                 </vue-cal>
-                <div v-if="!showButton" class="col-6" style="display: flex; justify-content: center; align-items: center;">
+                <div v-if="!showButton" class="col-lg-6 col-md-12" style="display: flex; justify-content: center; align-items: center;">
                     <button v-if="!showButton" @click="showbutton()" class="jobButton">
-                        <span class="addIcon">## </span><span style="position: relative; right: 27px; bottom: 2px;">+</span>Create a new Job
+                        <span class="addIcon">## </span><span style="position: relative; right: 28px; bottom: 1px;color:white;">+</span>Create a new Job
                     </button>
                 </div>
 
-                <div class="col-6" style="display: flex; justify-content: center; align-items: flex-start;">
+                <div class="col-lg-6 col-md-12" style="display: flex; justify-content: center; align-items: flex-start; margin-top:5px;">
                     <div v-if="showButton" class="createJobForm" style="width: 80%; padding: 20px; background-color: #f5f5f5; border-radius: 10px;">
                         <!-- Create a new job listing -->
                         <form @submit.prevent="showconfirmPopup">
-                            <h1 style="text-align:center; color: #697565;">New Job Listing</h1>
-                            <div style="border: 1.5px solid #697565; margin-bottom: 10px;"></div>
+                            <h1 style="text-align:center; color: #7c321b !important;"><strong>New Job Listing</strong></h1>
+                            <div style="border: 1.5px solid; margin-bottom: 10px;"></div>
 
                             <div class="input-group">
                                 <label for="Name">Name:</label>
-                                <input type="text" id="Name" name="Name" v-model="newEvent.name" class="input-field">
+                                <input type="text" id="Name" name="Name" v-model="newEvent.name" class="input-field" required>
+                                <span v-if="errors.name" class="error">{{ errors.name }}</span>
                             </div>
 
                             <div class="input-group">
                                 <label for="Title">Title:</label>
-                                <input type="text" id="Title" name="Title" v-model="newEvent.title" class="input-field">
+                                <input type="text" id="Title" name="Title" v-model="newEvent.title" class="input-field" required>
+                                <span v-if="errors.title" class="error">{{ errors.title }}</span>
                             </div>
 
                             <div style="padding-top: 15px;">
@@ -1464,36 +1479,37 @@ export default {
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Trainer"> Pet Trainer
                                 </label>
+                                <span v-if="errors.serviceTypeReq" class="error">{{ errors.serviceTypeReq }}</span>
                             </div>
 
                             <div style="padding-top: 15px;">
                                 <label for="SpecialRequirements">Special Requirements:</label><br>
-                                <textarea id="SpecialRequirements" name="SpecialRequirements" class="input-field" rows="5" v-model="newEvent.specialReq"></textarea>
+                                <textarea id="SpecialRequirements" name="SpecialRequirements" class="input-field" rows="5" v-model="newEvent.specialReq" style="background-color:#f2bc5c"></textarea>
                             </div>
 
                             <div class="input-group">
                                 <label for="Address">Address:</label>
-                                <input type="text" id="Address" name="Address" v-model="newEvent.address" class="input-field">
+                                <input type="text" id="Address" name="Address" v-model="newEvent.address" class="input-field" required>
                             </div>
 
                             <div class="input-group">
                                 <label for="Contact">Contact number:</label>
-                                <input type="text" id="Contact" name="Contact" v-model="newEvent.contactNum" class="input-field">
+                                <input type="text" id="Contact" name="Contact" v-model="newEvent.contactNum" class="input-field" required>
                             </div>
 
                             <div class="input-group">
                                 <label for="StartDate">Start Date & Time:</label>
-                                <input type="datetime-local" id="StartDate" name="StartDate" v-model="newEvent.startDateTime" class="input-field">
+                                <input type="datetime-local" id="StartDate" name="StartDate" v-model="newEvent.startDateTime" class="input-field" required>
                             </div>
 
                             <div class="input-group">
                                 <label for="EndDate">End Date & Time:</label>
-                                <input type="datetime-local" id="EndDate" name="EndDate" v-model="newEvent.endDateTime" class="input-field">
+                                <input type="datetime-local" id="EndDate" name="EndDate" v-model="newEvent.endDateTime" class="input-field" required>
                             </div>
 
                             <div class="input-group">
                                 <label for="Payment">Payment (/hr):</label>
-                                <input type="text" id="Payment" name="Payment" v-model="newEvent.payment" class="input-field">
+                                <input type="text" id="Payment" name="Payment" v-model="newEvent.payment" class="input-field" required>
                             </div>
 
                             <button type="submit" class="submit-button">Create</button>
@@ -1760,7 +1776,7 @@ export default {
                 </vue-cal>
                 <div v-if="!showButton" class="col-6" style="display: flex; justify-content: center; align-items: center;">
                     <button v-if="!showButton" @click="showbutton()" class="jobButton">
-                        <span class="addIcon">## </span><span style="position: relative; right: 27px; bottom: 2px;">+</span>Create a new Service
+                        <span class="addIcon">## </span><span style="position: relative; right: 28px; bottom: 1px;color:white;">+</span>Create a new Service
                     </button>
                 </div>
 
