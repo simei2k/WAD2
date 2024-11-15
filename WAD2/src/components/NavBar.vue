@@ -65,6 +65,7 @@
   </div>
 </template>
 
+
 <script>
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
