@@ -138,7 +138,7 @@ export default {
                     quantity: Number(document.getElementById('shop-item-quantity-input').value),
                     imageSource: this.getImageUrl(this.itemObject.images),
                 }
-                console.log("ShopItem > addTOCart() > cartItem", cartItem)
+                // console.log("ShopItem > addTOCart() > cartItem", cartItem)
                 this.$emit('addToCart', cartItem)
             } else {
                 alert("Please select a type!") // Change to display modal

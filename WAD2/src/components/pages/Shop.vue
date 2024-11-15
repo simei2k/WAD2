@@ -155,22 +155,22 @@ export default {
             // Toggle shop from cards to item
             this.shopPage = shopPage
             this.currQuantity = 1
-            console.log('Shop.vue > toggleShop()', shopPage)
+            // console.log('Shop.vue > toggleShop()', shopPage)
         },
         setcurrItem(item) {
             this.currItem = item
-            console.log(this.currItem)
+            // console.log(this.currItem)
         },
         addQuantity() {
             this.currQuantity += 1
-            console.log('Shop.vue > addQuantity()', this.currQuantity)
+            // console.log('Shop.vue > addQuantity()', this.currQuantity)
         },
         minusQuantity() {
             this.currQuantity -= 1
             if (this.currQuantity < 1) {
                 this.currQuantity = 1
             }
-            console.log('Shop.vue > minusQuantity()', this.currQuantity)
+            // console.log('Shop.vue > minusQuantity()', this.currQuantity)
         },
         addToCart(itemObj) {
             if (itemObj.id in this.cart) {
@@ -182,10 +182,10 @@ export default {
                 this.cart[itemObj.id].type = itemObj.type
                 this.cart[itemObj.id].imageSource = itemObj.imageSource
             }
-            console.log('Shop.vue > addToCart()', this.cart)
+            // console.log('Shop.vue > addToCart()', this.cart)
         },
         checkout() {
-            console.log('checkout')
+            // console.log('checkout')
             this.cart = {}
             this.currItemId = ''
             this.currQuantity = 1
@@ -195,11 +195,11 @@ export default {
             this.filter.maxPrice = filter.maxPrice
             this.filter.minRating = filter.minRating
             this.filter.search = filter.search
-            console.log("Shop.vue > updateShopCards()", filter)
+            // console.log("Shop.vue > updateShopCards()", filter)
         },
         clearPopup() {
             this.confirmPopup = false
-            console.log('clearPopup')
+            // console.log('clearPopup')
         },
         showPopup() {
             this.confirmPopup = true
@@ -235,7 +235,7 @@ export default {
                     highest = item.price
                 }
             }
-            console.log(highest)
+            // console.log(highest)
             return highest
         },
         // lowestItemPrice(){
@@ -250,7 +250,7 @@ export default {
     },
     beforeRouteLeave(to, from) {
         this.clearPopup()
-        console.log('beforeRouteLeave')
+        // console.log('beforeRouteLeave')
     }
 }
 </script>
