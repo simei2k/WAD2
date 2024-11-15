@@ -112,7 +112,7 @@ export default {
           photo: "https://images.unsplash.com/photo-1730991336267-0c3672605f42?q=80&w=1886&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
         {
-          reviewerName: "DogLover",
+          reviewerName: "CryingEveryday",
           reviewerImage: "https://avatar.iran.liara.run/public/12",
           stars: 1,
           text: "CatWoman ate my dog",
@@ -164,14 +164,11 @@ export default {
     console.log('Error fetching pet details:', error);
   }
 }, 
-    async fetchUserDetails(){
-        //if user is petowner
-    }
+    
     },
     mounted() {
     // Fetch pet details when the component is mounted
     this.fetchPetDetails();
-    this.fetchUserDetails();
 
     // Auto scroll to bottom when reviews are loaded
     this.$nextTick(() => {

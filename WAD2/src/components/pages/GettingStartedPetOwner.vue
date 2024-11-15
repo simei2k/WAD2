@@ -1,45 +1,54 @@
 <template>
-    <div class="registration">
-      <h1>Getting Started</h1>
-      <div v-for="(pet, index) in pets" :key="index">
-        <pet-form :index="index"></pet-form>
-      </div>
-      
-      <div class="add-pet-button">
-        <button @click="addPet">Add Another Pet</button>
-      </div>
-  
-      <div class="begin">
-        <RouterLink to="/profile" class="nav-link">
-          <button class="submit-button" @click="submitPets">Begin!</button>
-        </RouterLink>
-      </div>
+  <div class="registration">
+    <h1>Getting Started</h1>
+    <div v-for="(pet, index) in pets" :key="index">
+      <pet-form :index="index" v-model="pets[index]" />
     </div>
-  </template>
-  
-  <script>
-  import PetForm from './petForm.vue'; // Import your pet-form component
-  
-  export default {
-    components: {
-      PetForm
+
+    <div class="add-pet-button">
+      <button @click="addPet" :disabled="pets.length >= 5">Add Another Pet</button>
+      <!-- Disabling the button if there are already 5 pets, can be adjusted -->
+    </div>
+
+    <div class="begin">
+      <RouterLink to="/profile" class="nav-link">
+        <button class="submit-button" @click="submitPets">Begin!</button>
+      </RouterLink>
+    </div>
+  </div>
+</template>
+
+<script>
+import PetForm from './petForm.vue'; // Import your pet-form component
+
+export default {
+  components: {
+    PetForm
+  },
+  data() {
+    return {
+      pets: [{ petName: '', animalType: '', breed: '' }]  // Initial structure for pet form data
+    };
+  },
+  methods: {
+    addPet() {
+      // Add a new empty object for a new pet form
+      this.pets.push({ petName: '', animalType: '', breed: '' });
     },
-    data() {
-      return {
-        pets: [{}]  // Initially one empty object to represent the first pet form
-      };
-    },
-    methods: {
-      addPet() {
-        this.pets.push({});  // Adds a new pet form
-      },
-      submitPets() {
-        // Handle submission logic for all pets
-        console.log(this.pets);
-      }
+    submitPets() {
+      // Log all the pets data when the form is submitted
+      console.log(this.pets);
+      
+      // You could process the data further here, e.g., save to a database or Firestore
+
+      // Optionally, clear the data after submission or navigate elsewhere
+      this.pets = [];  // Clear the pets data
+      this.$router.push('/profile'); // Navigate to profile page or another route
     }
-  };
-  </script>
+  }
+};
+</script>
+
   
 
   
