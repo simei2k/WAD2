@@ -805,6 +805,7 @@ async fetchPetDetails() {
 
     // Sort clinics by distance in ascending order
     this.clinics.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
+    this.clinics = this.clinics.slice(0,10)
 
     // Wait until the DOM has been updated before scrolling
     this.$nextTick(() => {
