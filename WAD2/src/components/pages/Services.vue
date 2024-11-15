@@ -92,7 +92,7 @@ export default {
         this.getallservices();
         this.getIndivEvents();
         this.getIndivEventsService();
-        
+        this.getUserInfo();
     },
     watch: {
         reqServiceTypeP(newValue) {
@@ -107,6 +107,11 @@ export default {
     }
     },
     methods: {
+        getUserInfo() {
+            this.PetOwnerName = localStorage.getItem('name');
+            this.ServiceProviderName = localStorage.getItem('name');
+            console.log(this.PetOwnerName)
+        },
         toggle() {
             if (this.isPetOwner) {
                 this.isPetOwner = false;
