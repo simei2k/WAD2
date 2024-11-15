@@ -1,67 +1,60 @@
 <template>
-  
-  <div style="margin-top: 5%">
-    <h1>Emergency Clinics Nearby</h1>
-  
-    <div class="clinics">
-  <div class="card-container">
-    <ul class="cards">
-      <li id="clinic-list" v-for="clinic in clinics" :key="clinic.NAME" class="card" >
-        <!-- Clinic Card Start -->
-        <div class="card-body">
-          <h3 class="card-title"><b>{{ clinic.NAME }}</b></h3>
-          <p class="card-text">&#128205; {{ clinic.distance ? clinic.distance : 'Fetching distance...' }} km away</p>    
-          <h4 class="card-text">{{ clinic.TYPE }}</h4>          
-        </div>
-        <div class="card-body">
-          <div class="buttons" >
-            <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-link">
-              Directions
-            </a>
-            <button type="button" style="border-radius: 15px" class="send" data-bs-toggle="modal" data-bs-target="#exampleModal" @click="fetchPetDetails">Send Pet Details</button>
+  <div class="page-wrapper">
+    <h1 class="page-title">Emergency Clinics Nearby</h1>
+
+    <div class="clinic-cards-container">
+      <ul class="clinic-cards">
+        <li v-for="clinic in clinics" :key="clinic.NAME" class="clinic-card">
+          <!-- Clinic Card -->
+          <div class="clinic-card-body">
+            <h3 class="clinic-name">{{ clinic.NAME }}</h3>
+            <p class="clinic-info">
+              <span class="icon">&#128205;</span> {{ clinic.distance ? clinic.distance : 'Fetching distance...' }} km away
+            </p>
+            <p class="clinic-type">{{ clinic.TYPE }}</p>
           </div>
-        </div>
-        <!-- Clinic Card End -->
-      </li>
-    </ul>
-  </div>
-</div>
-<!-- Button trigger modal -->
-
-
-
-<div v-if="showModal" class="modal fade show" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false" style="display: block;" id="exampleModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Pet Details</h5>
-        <button type="button" class="btn-close" @click="showModal = false" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Render pet details -->
-      <ul>
-        <li v-for="(pet, index) in petDetailsArray" :key="index">
-
-          <img class :src="pet[6]"  alt="Pet image"><br>
-          <strong>{{ pet[0] }}</strong> <!-- Pet Name -->
-          <ul>
-            <li>Type: {{ pet[1] }} </li> <!-- Pet Type -->
-            <li>Size: {{ pet[2] }} </li> <!-- Pet Size -->
-            <li>Breed: {{ pet[3] }} </li> <!-- Pet Breed -->
-            <li v-if="pet[4] !== ''">{{ pet[4] }} </li> <!-- Pet Dietary Restrictions -->
-            <li v-if="pet[5] !== ''">{{ pet[5] }} </li> 
-          </ul>
+          <div class="clinic-card-footer">
+            <a :href="getDirectionsUrl(clinic)" target="_blank" class="directions-button">Directions</a>
+            <button class="send-details-button" @click="fetchPetDetails" data-bs-toggle="modal" data-bs-target="#exampleModal">Send Pet Details</button>
+          </div>
         </li>
       </ul>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btcn " @click="showModal = false" data-bs-dismiss="modal">Close</button>
+    </div>
+
+    <!-- Modal for Pet Details -->
+    <div v-if="showModal" class="modal fade show" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="false" style="display: block;">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Pet Details</h5>
+            <button type="button" class="close-modal" @click="showModal = false" aria-label="Close">✕</button>
+          </div>
+          <div class="modal-body">
+            <ul class="pet-details-list">
+              <li v-for="(pet, index) in petDetailsArray" :key="index" class="pet-detail-item">
+                <img :src="pet[6]" alt="Pet Image" class="pet-image" />
+                <div class="pet-info">
+                  <strong>{{ pet[0] }}</strong>
+                  <ul class="pet-info-list">
+                    <li>Type: {{ pet[1] }}</li>
+                    <li>Size: {{ pet[2] }}</li>
+                    <li>Breed: {{ pet[3] }}</li>
+                    <li v-if="pet[4]">Dietary Restrictions: {{ pet[4] }}</li>
+                    <li v-if="pet[5]">Other Details: {{ pet[5] }}</li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="modal-close-button" @click="showModal = false">Close</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
 </template>
+
 
   
   <script>
@@ -843,137 +836,189 @@ async fetchPetDetails() {
 </script>
 
   
-<style>
-h1 {
-  margin-left: 1vw;
+<style>/* General Page Layout */
+.page-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.page-title {
   font-family: 'Arial', sans-serif;
-  color: #ecdfcc; /* Your original font color */
+  color: #f29040;
   font-weight: bold;
-  text-align: center;
+  margin-bottom: 40px;
 }
 
-.clinics {
-  margin: 2rem auto;
-  text-align: center;
-  width: 90vw;
-}
-
-.card-container {
+/* Clinics Container */
+.clinic-cards-container {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
 }
-.cards {
-  list-style-type: none;
+
+.clinic-cards {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
   justify-content: center;
 }
 
-.card:hover {
-  transform: scale(1.05);
-}
-
-.card-body {
-  margin-bottom: 1rem;
-}
-
-.card-title {
-  font-size: 1.5rem;
-  color: #ecdfcc; /* Your original font color */
-}
-
-.card-text {
-  font-size: 1rem;
-  color: #7c321b; /* Your original font color */
-  margin: 0.5rem 0;
-}
-
-li img{
-  border-radius: 50%;
-  width: 30%;
-  list-style-type: none;
-}
-
-.buttons {
+/* Clinic Card */
+.clinic-card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  width: 350px;
   display: flex;
-  justify-content: space-around;
-  gap: 10px; /* Even spacing between buttons */
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-button,
-a.directions-link {
-  display: inline-flex; /* Ensure uniform alignment for buttons and links */
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ffce6d, #f29040); /* Gradient background */
-  color: #3c3d37; /* Text color */
-  padding: 12px 20px; /* Consistent padding */
-  font-size: 16px; /* Font size for all */
+.clinic-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+.clinic-card-body {
+  padding: 20px;
+  text-align: left;
+}
+
+.clinic-name {
+  font-size: 1.4rem;
+  color: #f29040;
   font-weight: bold;
-  text-decoration: none; /* Remove underline for <a> */
-  border: none; /* Remove border for both */
-  border-radius: 15px; /* Rounded corners */
-  height: 50px; /* Uniform height */
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Shadow for floating effect */
-  transition: all 0.3s ease; /* Smooth transitions */
+  margin-bottom: 8px;
 }
 
-button:hover,
-a.directions-link:hover {
-  background: linear-gradient(135deg, #f29040, #ffce6d); /* Reverse gradient on hover */
-  color: #ffffff; /* Brighten text on hover */
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2); /* Enhance shadow */
-  transform: translateY(-2px); /* Slight lift */
-}
-
-button:active,
-a.directions-link:active {
-  transform: translateY(1px); /* Subtle press effect */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Reduce shadow */
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);  /* Semi-transparent background */
+.clinic-info {
+  font-size: 1rem;
+  color: #7c321b;
+  margin-bottom: 10px;
   display: flex;
-  justify-content: center;
   align-items: center;
+}
+
+.clinic-type {
+  font-size: 1rem;
+  color: #3c3d37;
+  margin-bottom: 15px;
+}
+
+/* Footer Buttons */
+.clinic-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  background-color: #f8f8f8;
+}
+
+.directions-button,
+.send-details-button {
+  background: linear-gradient(135deg, #ffce6d, #f29040);
+  color: #ffffff;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.directions-button:hover,
+.send-details-button:hover {
+  background: linear-gradient(135deg, #f29040, #ffce6d);
+}
+
+/* Modal Styling */
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-  background-color: #3C3D37 !important ;
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
   padding: 20px;
-  border-radius: 5px;
-  width: 60%;
-  max-width: 500px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.close {
-  font-size: 24px;
+.modal-header,
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header .close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
   cursor: pointer;
-  position: absolute;
-  top: 10px;
-  right: 20px;
 }
 
-@media (max-width: 768px) {
-  .card {
-    width: 100%;
-    margin: 0.5rem;
-  }
+.modal-body {
+  padding: 20px;
 }
-.modal-backdrop {
-   background-color: #3C3D37 ;
+
+.pet-details-list {
+  list-style: none;
+  padding: 0;
+}
+
+.pet-detail-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.pet-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.pet-info {
+  text-align: left;
+}
+
+.modal-close-button {
+  background-color: #3c3d37;
+  color: #ffffff;
+  padding: 10px 20px;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-close-button:hover {
+  background-color: #7c321b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .clinic-card {
+    width: 100%;
+  }
+
+  .modal-content {
+    width: 95%;
+  }
 }
 
 </style>

@@ -20,14 +20,13 @@
                   v-model="address"
                   ref="autocomplete"
                 />
-                <i class="dot circle link icon" @click="locatorButtonPressed"></i>
               </div>
             </div>
             <button class="ui button primary-button" @click.prevent="findBestDogRuns">Find Dog Runs</button>
           </div>
         </form>
 
-        <!-- Recommended Dog Runs List (Horizontal Scroll) -->
+        <!-- Recommended Dog Runs List -->
         <section class="ui segment results-section">
           <h2 class="ui header">Top 5 Recommended Dog Runs</h2>
           <h5 class="sub-header">
@@ -281,8 +280,8 @@ export default {
 
 .primary-button {
   width: 100%;
-  background-color: #fae1ae;
-  color: #3c3d37;
+  background-color: #f29040;
+  color: #fff;
   padding: 12px;
   border-radius: 8px;
   font-weight: bold;
@@ -290,20 +289,23 @@ export default {
 }
 
 .primary-button:hover {
-  background-color: #f29040;
-  color: #ffffff;
+  background-color: #ffc757;
+  color: #000000;
 }
 
 /* Recommended List Section */
 .results-section {
-  padding: 20px;
-  background: #fafafa;
+  /* margin-top: 20px; */
+  padding-top: 10px;
+  background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .sub-header {
+  font-size: 1rem;
   color: #697565;
+  /* margin-bottom: 10px; */
 }
 
 /* Scrollable Recommended List */

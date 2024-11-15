@@ -1,60 +1,30 @@
 <template>
     <div class="page-container">
-        <!-- Main content container -->
-        <div class="content">
-            <!-- Your main content goes here -->
+      <!-- Main content container -->
+      <div class="content">
+        <!-- Your main content goes here -->
+      </div>
+  
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <!-- Social Links -->
+          <div class="social-links-container">
+            <span class="line"></span>
+            <ul class="social-links">
+              <li><a href="https://twitter.com" target="_blank" aria-label="Twitter"><img src="../assets/x.png" alt="Twitter Logo" /></a></li>
+              <li><a href="https://instagram.com" target="_blank" aria-label="Instagram"><img src="../assets/instagram.png" alt="Instagram Logo" /></a></li>
+              <li><a href="https://facebook.com" target="_blank" aria-label="Facebook"><img src="../assets/facebook.png" alt="Facebook Logo" /></a></li>
+            </ul>
+            <span class="line"></span>
+          </div>
+          <!-- Copyright -->
+          <p>&copy; 2024 PawPal. All Rights Reserved.</p>
         </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="container">
-                <!-- Social Links with Horizontal Lines -->
-                <div class="social-links-container">
-                    <span class="line"></span>
-                    <ul class="social-links">
-                        <li>
-                            <a
-                                href="https://twitter.com"
-                                target="_blank"
-                                aria-label="Twitter"
-                            >
-                                <img src="../assets/x.png" alt="Twitter Logo" />
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="https://instagram.com"
-                                target="_blank"
-                                aria-label="Instagram"
-                            >
-                                <img
-                                    src="../assets/instagram.png"
-                                    alt="Instagram Logo"
-                                />
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                href="https://facebook.com"
-                                target="_blank"
-                                aria-label="Facebook"
-                            >
-                                <img
-                                    src="../assets/facebook.png"
-                                    alt="Facebook Logo"
-                                />
-                            </a>
-                        </li>
-                    </ul>
-                    <span class="line"></span>
-                </div>
-                <!-- Copyright -->
-                <p>&copy; 2024 PawPal. All Rights Reserved.</p>
-            </div>
-        </footer>
+      </footer>
     </div>
-</template>
-
+  </template>
+  
 <script>
 export default {
     name: 'AppFooter',
@@ -64,16 +34,15 @@ export default {
 <style scoped>
 /* Footer stay near to bottom no matter what */
 .page-container {
-    display: flex;
-    flex-direction: column;
-    /* min-height: 60vh; */
+    display: grid;
+    grid-template-rows: auto 1fr auto; /* Header (if any), content, footer */
+    height: 100%; /* Uses the browser's height */
 }
 
 .content {
-    flex: 1;
+    margin: 20px; /* Optional: Add spacing for the content */
 }
 
-/* Footer Styling */
 .footer {
     background-color: #1d1d1d;
     color: rgb(139, 5, 5);
@@ -84,6 +53,7 @@ export default {
         0 0 5px 3px rgba(255, 255, 255, 0.1),
         0 4px 40px rgb(68, 68, 72);
 }
+
 
 .container {
     padding: 0 12px 10px;
