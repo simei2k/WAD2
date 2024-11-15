@@ -81,11 +81,11 @@ button:focus-visible {
   width:100%;
   background-color: #f2ebdd;
   color: #ecdfcc;
-  font-family: "Trebuchet MS"
-
-
+  font-family: "Trebuchet MS";
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

@@ -5,7 +5,6 @@ import Chat from '../components/pages/Chatbot.vue'
 import Profile from '../components/pages/Profile.vue'
 import Services from '../components/pages/Services.vue'
 import Emergency from '../components/pages/Emergency.vue'
-import Messaging from '../components/pages/Messaging.vue'
 import Map from '../components/pages/Map.vue'
 import login from '../components/pages/LogIn.vue'
 import register from '../components/pages/register.vue'
@@ -70,11 +69,6 @@ const routes =[
         path: '/GettingStartedServiceProvider', 
         name: 'GettingStartedServiceProvider',
         component: GettingStartedServiceProvider
-      },
-      {
-        path: '/Messaging', 
-        name: 'Messaging',
-        component: Messaging
       },
     ]
   

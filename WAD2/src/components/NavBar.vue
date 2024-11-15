@@ -39,9 +39,6 @@
                       <li class="nav-item mx-2">
                           <router-link class="nav-link" to="/shop">Shop</router-link>
                       </li>
-                      <li v-if="uid" class="nav-item mx-2">
-                          <router-link class="nav-link" to="/messaging">Messaging</router-link>
-                      </li>
                       <li class="nav-item mx-2">
                           <router-link class="nav-link" to="/emergency">Emergency</router-link>
                       </li>
