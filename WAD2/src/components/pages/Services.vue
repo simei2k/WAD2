@@ -80,6 +80,8 @@ export default {
                 start:'',
                 end:'',
             },
+            errorsP: {},
+            errorsS: {},
             }
     },
     props: {
@@ -142,27 +144,21 @@ export default {
             const currentPageOrder = this.pageOrder(this.showPage);
             const targetPageOrder = this.pageOrder(page);
 
-            // Check if we're going forward or backward in the page order
             if (targetPageOrder > currentPageOrder) {
-                // Going forward (right)
+                
                 this.transitionName = 'swipe-right';
             } else if (targetPageOrder < currentPageOrder) {
-                // Going backward (left)
+                
                 this.transitionName = 'swipe-left';
             }
 
-            // Update the current page and previous page
             this.previousPage = this.showPage;
-            this.showPage = page; // Update the current page
+            this.showPage = page; 
         },
         beforeEnter(el) {
-            // Prepare for the entering element: position it off-screen before entering
             el.style.transform = 'translateX(100%)';
         },
-
-        // After leave hook for transitions
         afterLeave(el) {
-            // Reset the previous page position after it leaves
             el.style.transform = 'translateX(0)';
         },
         showbutton() {
@@ -172,6 +168,24 @@ export default {
         },
         showconfirmPopup() {
             this.confirmPopup = true;
+        },
+        validateFormP() {
+            this.errorsP = {};
+
+            if (!this.newEvent.name) this.errorsP.name = 'Name is required';
+            if (!this.newEvent.title) this.errorsP.title = 'Title is required';
+            if (this.newEvent.serviceTypeReq.length === 0) this.errorsP.serviceTypeReq = 'Select at least one service';
+            if (!this.newEvent.address) this.errorsP.address = 'Address is required';
+            if (!this.newEvent.contactNum) this.errorsP.contactNum = 'Contact number is required';
+            if (!this.newEvent.startDateTime) this.errorsP.startDateTime = 'Start date and time is required';
+            if (!this.newEvent.endDateTime) this.errorsP.endDateTime = 'End date and time is required';
+
+            if (!this.newEvent.payment) {
+                this.errorsP.payment = 'Payment is required';
+            } else if (parseFloat(this.newEvent.payment) > 50) {
+                this.errorsP.payment = 'Payment cannot exceed $50 per hour';
+            }
+            console.log(this.errorsP)
         },
         viewMore(event) {
             this.selectedEvent = event;
@@ -1137,7 +1151,8 @@ export default {
         width:35%;
         align-content:center;
         box-shadow:10px 10px 5px  rgb(71, 71, 71);
-        
+        height:750px;
+        overflow:auto;
     }
     
     .searchbar {
@@ -1276,6 +1291,12 @@ export default {
         background-color: #fae1ae !important;
         border-color: #f29040 !important;
     }
+
+    .error {       /* Makes the span a block element */
+    color: red;            /* Error message color */
+    font-size: 12px;       /* Smaller font size */ 
+    text-align:right;      /* Space between input field and error message */
+    }
     
 </style>
 <template>
@@ -1288,7 +1309,7 @@ export default {
     <div class="col-md-12 col-12 col-lg-4" style="margin-top:12.5px !important;">
         <p :class="{CurrentlyOwner:isPetOwner,NotCurrent:!isPetOwner}"><strong>Pet Owner</strong></p>
             <div class="buttonBackground">#</div>
-            <button @click="toggle(); showalert()" :class="{PetOwner:isPetOwner, ServiceProvider:!isPetOwner}"></button>
+            <button @click="toggle(); showalert();getallservices();getalljobs();" :class="{PetOwner:isPetOwner, ServiceProvider:!isPetOwner}"></button>
         <p :class="{CurrentlyOwner:!isPetOwner,NotCurrent:isPetOwner}"><strong>Service Provider</strong></p>
     </div>
         <div v-if="isPetOwner" class="col-md-12 col-lg-8 col-12">
@@ -1461,7 +1482,7 @@ export default {
                 <div class="col-lg-6 col-md-12" style="display: flex; justify-content: center; align-items: flex-start; margin-top:5px;">
                     <div v-if="showButton" class="createJobForm" style="width: 80%; padding: 20px; background-color: #f5f5f5; border-radius: 10px;">
                         <!-- Create a new job listing -->
-                        <form @submit.prevent="showconfirmPopup">
+                        <form @submit.prevent="showconfirmPopup()">
                             <h1 style="text-align:center; color: #7c321b !important;"><strong>New Job Listing</strong></h1>
                             <div style="border: 1.5px solid; margin-bottom: 10px;"></div>
 
@@ -1469,11 +1490,13 @@ export default {
                                 <label for="Name">Name:</label>
                                 <input type="text" id="Name" name="Name" v-model="newEvent.name" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.name" class="error">{{ errorsP.name }}</div>
 
                             <div class="input-group">
                                 <label for="Title">Title:</label>
                                 <input type="text" id="Title" name="Title" v-model="newEvent.title" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.title" class="error">{{ errorsP.title }}</div>
 
                             <div style="padding-top: 15px;">
                                 <label>Type of service needed:</label><br>
@@ -1489,6 +1512,7 @@ export default {
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Trainer"> Pet Trainer
                                 </label>
+
                             </div>
 
                             <div style="padding-top: 15px;">
@@ -1500,28 +1524,33 @@ export default {
                                 <label for="Address">Address:</label>
                                 <input type="text" id="Address" name="Address" v-model="newEvent.address" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.address" class="error">{{ errorsP.address }}</div>
 
                             <div class="input-group">
                                 <label for="Contact">Contact number:</label>
                                 <input type="text" id="Contact" name="Contact" v-model="newEvent.contactNum" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.contactNum" class="error">{{ errorsP.contactNum }}</div>
 
                             <div class="input-group">
                                 <label for="StartDate">Start Date & Time:</label>
                                 <input type="datetime-local" id="StartDate" name="StartDate" v-model="newEvent.startDateTime" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.startDateTime" class="error">{{ errorsP.startDateTime }}</div>
 
                             <div class="input-group">
                                 <label for="EndDate">End Date & Time:</label>
                                 <input type="datetime-local" id="EndDate" name="EndDate" v-model="newEvent.endDateTime" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.endDateTime" class="error">{{ errorsP.endDateTime }}</div>
 
                             <div class="input-group">
                                 <label for="Payment">Payment (/hr):</label>
                                 <input type="text" id="Payment" name="Payment" v-model="newEvent.payment" class="input-field" required>
                             </div>
+                            <div v-if="errorsP.payment" class="error">{{ errorsP.payment }}</div>
 
-                            <button type="submit" class="submit-button">Create</button>
+                            <button type="submit" class="submit-button" @click="validateFormP()">Create</button>
                         </form>
                     </div>
                 </div>
@@ -1622,7 +1651,7 @@ export default {
                                 <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
                                 <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
                                 <div class="text-center">
-                                    
+
                                     <button style="border:2px solid red;border-radius:8px;" class="m-2" @click="cancelOngoingJob(selectedEvent.documentId)"><strong>Cancel</strong></button>
                                     
                                     <button style="border:2px solid green;border-radius:8px;" class="m-2" @click="completeOngoingService(selectedEvent.documentId)"><strong>Complete</strong></button>
@@ -1953,6 +1982,7 @@ export default {
                                 <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
                                 <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
                                 <div class="text-center">
+
                                     <button style="border:2px solid red;border-radius:8px;" class="m-2" @click="cancelOngoingService(selectedEvent.documentId)"><strong>Cancel</strong></button>
                                     
                                     <button style="border:2px solid green;border-radius:8px;" class="m-2" @click="completeOngoingService(selectedEvent.documendId)"><strong>Complete</strong></button>
@@ -2003,7 +2033,7 @@ input[type="text"], input[type="datetime-local"], textarea {
 .input-group {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 .input-group label {
