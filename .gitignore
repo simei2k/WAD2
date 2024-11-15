@@ -1,5 +1,0 @@
-node_module
-dist
-*.local
-.DS.Store
-.env
