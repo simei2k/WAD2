@@ -58,8 +58,8 @@ export default {
                 payment: '',
                 status: '',
             },
-            PetOwnerName: "PetOwnerF", //need to connect to login so every calendar and my listings page are to the person
-            ServiceProviderName: "ServiceProviderF", //need to connect to login so every calendar and my listings page are to the person
+            PetOwnerName: "", //need to connect to login so every calendar and my listings page are to the person
+            ServiceProviderName: "", //need to connect to login so every calendar and my listings page are to the person
             selectedEvent: null,
             showOngoingListing: false,
             searchQuery: '',
@@ -88,11 +88,13 @@ export default {
     
   },
     mounted() {
+
+        this.getUserInfo();
         this.getalljobs();
         this.getallservices();
         this.getIndivEvents();
         this.getIndivEventsService();
-        
+ 
     },
     watch: {
         reqServiceTypeP(newValue) {
@@ -107,6 +109,10 @@ export default {
     }
     },
     methods: {
+        getUserInfo(){
+            this.PetOwnerName = localStorage.getItem('name')
+            this.ServiceProviderName = localStorage.getItem('name')
+        },
         toggle() {
             if (this.isPetOwner) {
                 this.isPetOwner = false;
@@ -116,6 +122,9 @@ export default {
                 this.isPetOwner = true;
                 this.currentPage= 'Find Services';
             }
+        },
+        viewProfile(personName){ 
+            this.$router.push({ name: 'otherProfile', params: { name: personName } });
         },
         checkpage(index) {
             this.iscurrentPage = [false,false,false,false,false,false];
@@ -400,7 +409,10 @@ export default {
                     documentId: data.documentId,
                     linkedPerson: data.linkedPerson,
                     };
-                });
+                }
+                
+            );
+
             } catch (error) {
                 console.error("Error fetching events:", error);
             }
@@ -1198,7 +1210,7 @@ export default {
     .card-fixed {
         border-radius: 15px !important;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-        height:600px !important;
+        height:1000px !important;
         width:400px !important;
         padding:0px;
     }
@@ -1500,7 +1512,7 @@ export default {
                                 <label class="checkbox-label">
                                     <input type="checkbox" name="ServiceCheckBox" v-model="newEvent.serviceTypeReq" value="Pet Trainer"> Pet Trainer
                                 </label>
-                                <span v-if="errorsP.serviceTypeReq" class="error">{{ errorsP.serviceTypeReq }}</span>
+
                             </div>
 
                             <div style="padding-top: 15px;">
@@ -1639,10 +1651,7 @@ export default {
                                 <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
                                 <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
                                 <div class="text-center">
-                                    <!--<button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.name }}'s Profile</strong></button>
-                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
-                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>-->
-                                    <br>
+
                                     <button style="border:2px solid red;border-radius:8px;" class="m-2" @click="cancelOngoingJob(selectedEvent.documentId)"><strong>Cancel</strong></button>
                                     
                                     <button style="border:2px solid green;border-radius:8px;" class="m-2" @click="completeOngoingService(selectedEvent.documentId)"><strong>Complete</strong></button>
@@ -1973,10 +1982,7 @@ export default {
                                 <p><strong>Skills & Experiences:</strong> {{ selectedEvent.skillsExp }}</p>
                                 <p><strong>Status:</strong>{{ selectedEvent.status }}</p>
                                 <div class="text-center">
-                                    <!--<button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.name }}'s Profile</strong></button>
-                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>{{ selectedEvent.linkedPerson }}'s Profile</strong></button>
-                                    <button style="border:1px solid #f29040;border-radius:8px;" class="m-2"><strong>Chat</strong></button>-->
-                                    <br>
+
                                     <button style="border:2px solid red;border-radius:8px;" class="m-2" @click="cancelOngoingService(selectedEvent.documentId)"><strong>Cancel</strong></button>
                                     
                                     <button style="border:2px solid green;border-radius:8px;" class="m-2" @click="completeOngoingService(selectedEvent.documendId)"><strong>Complete</strong></button>
