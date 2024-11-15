@@ -1,123 +1,100 @@
 <template>
-  <div class="chatbot">
-    <div class="chat-window">
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        :class="message.user ? 'user' : 'bot'"
-      >
-        {{ message.text }}
-      </div>
-      <div v-if="isLoading" class="bot loading-indicator">
-        typing...
+  <div id="app">
+    <div class="chatbot">
+      <h1>Chatbot</h1>
+      <div class="chat-area">
+        <div v-for="(message, index) in messages" :key="index" class="message">
+          <span :class="message.role">{{ message.text }}</span>
+        </div>
       </div>
     </div>
-    <div class="input-box">
-      <input
-        type="text"
-        v-model="userMessage"
-        @keyup.enter="sendMessage"
-        placeholder="Type a message..."
-        :disabled="isLoading"
-      />
-      <button @click="sendMessage" :disabled="isLoading">
-        Send
-      </button>
-    </div>
+    <div class="question-input">
+        <input
+          v-model="newQuestion"
+          @keyup.enter="askQuestion"
+          placeholder="Ask a pet-related question..."
+        />
+      </div>
   </div>
 </template>
 
 <script>
-import OpenAI from 'openai';
+import axios from "axios";
+import OpenAI from "openai";
+import { useToast } from "vue-toastification";
 const OpenAI_KEY = import.meta.env.VITE_OPENAI_KEY;
-
-const openai = new OpenAI({
-  apiKey: OpenAI_KEY, // Replace with your actual API key in .env.local
-  dangerouslyAllowBrowser: true,
-});
 
 export default {
   data() {
     return {
-      userMessage: "",
       messages: [],
-      conversation: [],
-      isLoading: false,
+      newQuestion: "", // Holds the user's new question
+      toast: useToast()
     };
   },
   methods: {
-    async sendMessage() {
-      if (this.userMessage.trim() === "" || this.isLoading) return;
+    // Ask the question directly if it is pet-related
+    async askQuestion() {
+      // Check if the question contains pet-related keywords
+      const petKeywords = ["pet", "dog", "cat", "animal", "fish", "bird", "reptile", "lizard", "snake"];
+      const isPetRelated = petKeywords.some(keyword =>
+        this.newQuestion.toLowerCase().includes(keyword)
+      );
 
-      const userMessageText = this.userMessage.trim();
-      this.userMessage = "";
+      if (isPetRelated) {
+        // Add the user's question to the messages
+        this.messages.push({ role: "user", text: this.newQuestion });
 
-      this.messages.push({
-        text: userMessageText,
-        user: true
-      });
+        // Store and clear the input field
+        const question = this.newQuestion;
+        this.newQuestion = "";
 
-      this.conversation.push({
-        role: "user",
-        content: userMessageText
-      });
+        // Call the OpenAI API
+        try {
+          const response = await axios.post(
+            "https://api.openai.com/v1/chat/completions",
+            {
+              model: "gpt-3.5-turbo",
+              messages: [{ role: "user", content: question }],
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${OpenAI_KEY}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
 
-      this.isLoading = true;
-
-      try {
-        this.messages.push({
-          text: "",
-          user: false
-        });
-
-        const stream = await openai.chat.completions.create({
-          model: "gpt-3.5-turbo",
-          messages: this.conversation,
-          stream: true,
-        });
-
-        let accumulatedResponse = "";
-
-        for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content || "";
-          accumulatedResponse += content;
-          
-          this.messages[this.messages.length - 1] = {
-            text: accumulatedResponse,
-            user: false
-          };
+          // Add the chatbot's response to the messages
+          const reply = response.data?.choices?.[0]?.message?.content || "Sorry, an error occurred.";
+          this.messages.push({ role: "bot", text: reply });
+        } catch (error) {
+          console.error("API error:", error);
+          this.messages.push({ role: "bot", text: "Sorry, an error occurred." });
         }
-
-        this.conversation.push({
-          role: "assistant",
-          content: accumulatedResponse
-        });
-
-      } catch (error) {
-        console.error("Error calling OpenAI:", error);
-        this.messages.push({
-          text: "Sorry, an error occurred. Please try again.",
-          user: false
-        });
-      } finally {
-        this.isLoading = false;
+      } else {
+          this.toast.warning("Please enter a pet-related question.", {
+          position: "top-right",
+          timeout: 5000,
+          closeOnClick: true,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          draggable: true,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: false,
+          hideProgressBar: true,
+          closeButton: "button",
+          icon: true,
+          rtl: false
+});
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style>
 .chatbot {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  justify-content: space-between;
-  background-color: inherit;
-  border-radius: 10px;
-}
-
-.chat-window {
   flex-grow: 1;
   background-color: inherit;
   color: white;
@@ -127,68 +104,130 @@ export default {
   flex-direction: column;
 }
 
-.user {
-  align-self: flex-end;
-  background-color: #fae1ae;
-  color: #7c321b;
-  border-radius: 10px 10px 0px 10px;
-  padding: 10px;
-  margin-bottom: 10px;
-  max-width: 70%;
-  word-wrap: break-word;
-  word-break: break-word;
-}
-
-.bot {
-  align-self: flex-start;
-  background-color: #ffcf72;
-  color: #7c321b;
-  border-radius: 10px 10px 10px 0px;
-  padding: 10px;
-  margin-bottom: 10px;
-  max-width: 70%;
-  word-wrap: break-word;
-  word-break: break-word;
-}
-
-.input-box {
+.questions {
   display: flex;
-  padding: 20px;
+  flex-direction: column;
+  gap: 0.5em;
+  margin-bottom: 1em;
 }
 
-input[type="text"] {
+.questions button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5em;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.questions button:hover {
+  background: #0056b3;
+}
+
+.question-input {
+  display: flex;
   flex: 1;
   padding: 10px;
   border: 1px solid #ffcf72;
   border-radius: 5px;
   background-color: transparent;
   color: #545454;
+  margin-bottom: 0;
 }
 
-input[type="text"]::placeholder {
-  color: #545454;
-  opacity: 0.7;
+.question-input input {
+  flex: 1;
+  padding: 0.5em;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
 }
 
-button {
-  margin-left: 10px;
-  padding: 10px 20px;
-  background-color: #ecdfcc;
-  color: #3c3d37;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: opacity 0.2s;
+.chat-area {
+  border: 1px solid #ddd;
+  padding: 1em;
+  border-radius: 8px;
+  min-height: 500px;
+  background: #f9f9f9;
+  box-sizing: border-box;
 }
 
-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.message {
+  margin: 0.5em 0;
 }
 
-.loading-indicator {
+.message .user {
+  color: blue;
+  font-weight: bold;
+}
+
+.message .bot {
+  color: green;
   font-style: italic;
-  opacity: 0.8;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  #app {
+    max-width: 90%;
+  }
+
+  .chatbot {
+    padding: 1em;
+  }
+}
+
+@media (max-width: 768px) {
+  #app {
+    max-width: 100%;
+    padding: 0.5em;
+  }
+
+  .chatbot {
+    padding: 0.8em;
+  }
+
+  .question-input input {
+    padding: 0.4em;
+  }
+
+  .questions button {
+    padding: 0.4em;
+  }
+
+  .chat-area {
+    min-height: 150px;
+    padding: 0.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatbot {
+    padding: 0.5em;
+  }
+
+  h1 {
+    font-size: 1.2em;
+  }
+
+  .question-input input {
+    padding: 0.3em;
+    font-size: 0.9em;
+  }
+
+  .questions button {
+    padding: 0.3em;
+    font-size: 0.9em;
+  }
+
+  .chat-area {
+    min-height: 120px;
+    padding: 0.6em;
+  }
+
+  .message .user, .message .bot {
+    font-size: 0.9em;
+  }
 }
 </style>
-  
