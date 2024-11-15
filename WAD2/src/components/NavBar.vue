@@ -67,7 +67,6 @@
 
 
 <script>
-/* Vue component script */
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 export default {
